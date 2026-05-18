@@ -1,0 +1,180 @@
+{% extends "admin_panel/base.html" %}
+
+{% block page_title %}Staff Attendance - Today ({{ now|date:"Y-m-d" }}){% endblock %}
+
+{% block content %}
+<style>
+    .attendance-table {
+        width: 100%;
+        background: white;
+        color: #111;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .attendance-table th {
+        background: #0a0e27;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+    .attendance-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e1e4e8;
+    }
+    .btn {
+        padding: 5px 15px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+    .btn-in { background: #28a745; color: white; }
+    .btn-out { background: #dc3545; color: white; }
+    .btn-absent { background: #6c757d; color: white; }
+    .status-present { color: green; font-weight: bold; }
+    .status-late { color: orange; font-weight: bold; }
+    .status-absent { color: red; font-weight: bold; }
+    .staff-photo {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+    }
+    .photo-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        font-size: 18px;
+    }
+    .reason-text {
+        font-size: 12px;
+        color: #6c757d;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 500px;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .close:hover {
+        color: black;
+    }
+</style>
+
+<h2>Staff Attendance Management</h2>
+<p>Today's Date: {{ now|date:"l, F d, Y" }}</p>
+
+<table class="attendance-table">
+    <thead>
+        <tr>
+            <th>Photo</th>
+            <th>Staff Name</th>
+            <th>Email</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Status</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in attendances %}
+        <tr>
+            <td>
+                {% if item.attendance.photo %}
+                    <img src="{{ item.attendance.photo.url }}" alt="Attendance Photo" class="staff-photo" onclick="showPhotoModal('{{ item.attendance.photo.url }}', '{{ item.staff.username }} Attendance Photo')">
+                {% elif item.staff.profile_picture %}
+                    <img src="{{ item.staff.profile_picture.url }}" alt="Staff Photo" class="staff-photo" onclick="showPhotoModal('{{ item.staff.profile_picture.url }}', '{{ item.staff.username }}')">
+                {% else %}
+                    <div class="photo-placeholder" title="No photo uploaded">{{ item.staff.username|first|upper }}</div>
+                {% endif %}
+            </td>
+            <td>{{ item.staff.username }}</td>
+            <td>{{ item.staff.email }}</td>
+            <td>
+                {% if item.attendance.check_in %}
+                    {{ item.attendance.check_in|time:"g:i A" }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>
+                {% if item.attendance.check_out %}
+                    {{ item.attendance.check_out|time:"g:i A" }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>
+                <span class="status-{{ item.attendance.status }}">{{ item.attendance.status|upper }}</span>
+            </td>
+            <td>
+                {% if item.attendance.reason %}
+                    <div class="reason-text" title="{{ item.attendance.reason }}">{{ item.attendance.reason }}</div>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" style="text-align:center">No staff members found</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Photo Modal -->
+<div id="photoModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePhotoModal()">&times;</span>
+        <h3 id="photoTitle">Photo</h3>
+        <img id="photoImg" src="" alt="Photo" style="width:100%; max-height:400px; object-fit:contain;">
+    </div>
+</div>
+
+<script>
+function showPhotoModal(src, title) {
+    document.getElementById('photoImg').src = src;
+    document.getElementById('photoTitle').textContent = title;
+    document.getElementById('photoModal').style.display = 'block';
+}
+
+function closePhotoModal() {
+    document.getElementById('photoModal').style.display = 'none';
+}
+
+// Close photo modal when clicking outside
+window.onclick = function(event) {
+    if (event.target == document.getElementById('photoModal')) {
+        closePhotoModal();
+    }
+}
+</script>
+{% endblock %}

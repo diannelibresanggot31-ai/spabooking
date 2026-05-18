@@ -1,0 +1,89 @@
+{% extends "admin_panel/base.html" %}
+
+{% block page_title %}Rooms - View Only{% endblock %}
+
+{% block content %}
+<style>
+    .info-card {
+        background: white;
+        color: #111;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    .admin-hint {
+        background: rgba(201,168,76,0.12);
+        border-left: 4px solid #c9a84c;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .go-to-admin-btn {
+        background: #c9a84c;
+        color: #0f1624;
+        padding: 8px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e1e4e8;
+    }
+    th {
+        background: #0a0e27;
+        color: white;
+    }
+    .room-available {
+        color: green;
+        font-weight: bold;
+    }
+    .room-booked {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+<div class="admin-hint">
+    <p><strong>📌 Note:</strong> To add, edit, or delete rooms, please use Django Admin.</p>
+    <a href="/admin/services/room/" class="go-to-admin-btn">🔧 Manage Rooms in Django Admin →</a>
+</div>
+
+<div class="info-card">
+    <h3>🚪 Available Rooms</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Room Number</th>
+                <th>Type</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for room in rooms %}
+            <tr>
+                <td><strong>{{ room.room_number }}</strong></td>
+                <td>{{ room.get_room_type_display }}</td>
+                <td>
+                    {% if room.is_available %}
+                    <span class="room-available">✅ Available</span>
+                    {% else %}
+                    <span class="room-booked">🔴 Booked</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" style="text-align:center">No rooms yet</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

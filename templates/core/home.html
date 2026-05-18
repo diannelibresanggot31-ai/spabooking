@@ -1,0 +1,778 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪷 JAM Massage & Spa - Natural Healing and Wellness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0d1117;
+            color: #e8e0f0;
+            min-height: 100vh;
+        }
+
+        /* ══════════════════════════════
+           DESKTOP NAVBAR
+        ══════════════════════════════ */
+        .navbar {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(20, 25, 45, 0.97);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255,215,0,0.1);
+            padding: 0 5%;
+            display: flex; align-items: center;
+            height: 68px; gap: 40px;
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem; font-weight: 700;
+            color: #ffd700; letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+        .nav-logo small {
+            display: block; font-size: 0.5rem;
+            color: rgba(255,255,255,0.4); letter-spacing: 2px;
+            text-transform: uppercase; font-family: 'Inter', sans-serif;
+        }
+        .nav-links {
+            display: flex; gap: 28px; align-items: center; flex: 1;
+        }
+        .nav-links a {
+            color: rgba(255,255,255,0.65);
+            text-decoration: none; font-size: 0.88rem; font-weight: 500;
+            transition: color 0.2s; padding-bottom: 2px;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-links a:hover { color: #ffd700; border-bottom-color: rgba(255,215,0,0.4); }
+        .nav-actions { display: flex; gap: 10px; align-items: center; margin-left: auto; }
+        .nav-btn {
+            background: none; border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.85); padding: 8px 20px;
+            border-radius: 50px; font-size: 0.85rem; font-weight: 500;
+            cursor: pointer; text-decoration: none; transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-btn:hover { border-color: #ffd700; color: #ffd700; }
+        .nav-btn.filled {
+            background: #ffd700; color: #141b26;
+            border-color: #ffd700; font-weight: 700;
+        }
+        .nav-btn.filled:hover { background: #ffec6e; }
+
+        /* ══════════════════════════════
+           HERO
+        ══════════════════════════════ */
+        .hero {
+            position: relative; width: 100%;
+            height: 580px; overflow: hidden;
+        }
+        .slider { position: relative; width: 100%; height: 100%; }
+        .slide {
+            position: absolute; inset: 0; opacity: 0;
+            transition: opacity 0.7s ease-in-out;
+            background-size: cover; background-position: center;
+            display: flex; align-items: center;
+        }
+        .slide.active { opacity: 1; z-index: 1; }
+        .slide-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg,
+                rgba(18, 23, 41, 0.92) 0%,
+                rgba(20, 25, 45, 0.72) 45%,
+                rgba(17, 22, 41, 0.2) 100%);
+        }
+        .slide-content {
+            position: relative; z-index: 2;
+            max-width: 560px; padding: 0 6% ;
+        }
+        .slide-eyebrow {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 3px;
+            text-transform: uppercase; color: #ffd700;
+            margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+        }
+        .slide-eyebrow::before {
+            content: ''; display: block; width: 28px; height: 2px; background: #ffd700;
+        }
+        .slide-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.4rem; font-weight: 700;
+            color: #ffffff; line-height: 1.15;
+            margin-bottom: 18px;
+        }
+        .slide-content h2 em { color: #ffd700; font-style: normal; }
+        .slide-content p {
+            font-size: 1rem; color: rgba(255,255,255,0.7);
+            line-height: 1.7; margin-bottom: 32px; max-width: 420px;
+        }
+        .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+        .hero-book-btn {
+            background: #ffd700; color: #0d1117;
+            border: none; padding: 15px 36px;
+            border-radius: 50px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; text-decoration: none;
+            transition: all 0.2s; font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .hero-book-btn:hover { background: #ffec6e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,215,0,0.3); }
+        .hero-outline-btn {
+            background: transparent; color: white;
+            border: 1.5px solid rgba(255,255,255,0.35);
+            padding: 15px 32px; border-radius: 50px;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            text-decoration: none; transition: all 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .hero-outline-btn:hover { border-color: #ffd700; color: #ffd700; }
+
+        /* Slider controls */
+        .slider-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.08); backdrop-filter: blur(6px);
+            color: white; border: 1px solid rgba(255,255,255,0.15);
+            width: 46px; height: 46px; border-radius: 50%;
+            cursor: pointer; font-size: 1rem; z-index: 20;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .slider-btn:hover { background: rgba(255,215,0,0.8); border-color: #ffd700; color: #0d1117; }
+        .prev-btn { left: 24px; }
+        .next-btn { right: 24px; }
+        .dots-container {
+            position: absolute; bottom: 28px; left: 6%;
+            display: flex; gap: 8px; z-index: 20;
+        }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.35); cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #ffd700; width: 22px; border-radius: 6px; }
+
+        /* Hero stats bar */
+        .hero-stats {
+            position: absolute; bottom: 0; right: 0;
+            width: 42%; background: rgba(18, 23, 41, 0.85);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,215,0,0.12);
+            border-left: 1px solid rgba(255,215,0,0.08);
+            display: flex; z-index: 5;
+        }
+        .hero-stat {
+            flex: 1; padding: 20px 16px; text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.06);
+        }
+        .hero-stat:last-child { border-right: none; }
+        .hs-num { font-size: 1.6rem; font-weight: 800; color: #ffd700; }
+        .hs-label { font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+        /* ══════════════════════════════
+           SEARCH BAR
+        ══════════════════════════════ */
+        .search-section {
+            background: #0f1520;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 18px 6%;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .search-wrap { flex: 1; position: relative; }
+        .search-icon-wrap {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: rgba(255,255,255,0.3); font-size: 1rem;
+        }
+        .search-input {
+            width: 100%; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            padding: 13px 16px 13px 44px; color: rgba(255,255,255,0.7);
+            font-size: 0.9rem; font-family: 'Inter', sans-serif;
+            outline: none; transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: rgba(255,215,0,0.4); }
+        .search-input::placeholder { color: rgba(255,255,255,0.3); }
+        .search-filter-btn {
+            background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.25);
+            color: #ffd700; padding: 12px 22px; border-radius: 12px;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif; white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .search-filter-btn:hover { background: rgba(255,215,0,0.18); }
+
+        /* ══════════════════════════════
+           MAIN CONTENT WRAPPER
+        ══════════════════════════════ */
+        .main-content {
+            max-width: 1400px; margin: 0 auto;
+            padding: 50px 5%;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
+        }
+
+        /* ── Section titles ── */
+        .section-top {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem; font-weight: 700; color: #e8e0f0;
+        }
+        .section-sub { font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-top: 4px; }
+        .view-all {
+            font-size: 0.82rem; color: #ffd700;
+            text-decoration: none; font-weight: 600;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .view-all:hover { text-decoration: underline; }
+
+        /* ── CATEGORIES GRID ── */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 50px;
+        }
+        .category-card {
+            position: relative; border-radius: 16px;
+            overflow: hidden; cursor: pointer;
+            aspect-ratio: 3 / 2.5;
+            transition: transform 0.25s, box-shadow 0.25s;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .category-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
+        .category-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .cat-placeholder {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem;
+            background: linear-gradient(135deg, #1a0a2e, #2d1063);
+        }
+        .cat-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.05) 55%);
+        }
+        .cat-label {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 14px 14px 12px;
+        }
+        .cat-name {
+            font-size: 0.82rem; font-weight: 800;
+            color: white; letter-spacing: 1.5px; text-transform: uppercase;
+        }
+        .cat-count { font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
+        .cat-icon {
+            position: absolute; top: 12px; left: 12px;
+            font-size: 1.4rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        }
+
+        /* ── FEATURES STRIP ── */
+        .features-strip {
+            display: grid; grid-template-columns: repeat(4,1fr);
+            gap: 16px; margin-bottom: 50px;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px; padding: 22px 18px;
+            text-align: center; transition: all 0.2s;
+        }
+        .feature-card:hover { background: rgba(255,215,0,0.05); border-color: rgba(255,215,0,0.2); }
+        .feature-icon { font-size: 1.8rem; margin-bottom: 10px; }
+        .feature-title { font-size: 0.85rem; font-weight: 700; color: #e8e0f0; }
+        .feature-desc { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+        /* ── SIDEBAR (right column) ── */
+        .sidebar-col { display: flex; flex-direction: column; gap: 20px; }
+
+        /* Join Inner Circle card */
+        .join-card {
+            background: linear-gradient(145deg, #141b24, #1a2235);
+            border-radius: 18px; padding: 28px 22px;
+            text-align: center;
+            border: 1px solid rgba(255,215,0,0.14);
+        }
+        .join-badge {
+            display: inline-block; background: rgba(255,215,0,0.12);
+            border: 1px solid rgba(255,215,0,0.25); color: #ffd700;
+            font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; padding: 4px 12px;
+            border-radius: 20px; margin-bottom: 16px;
+        }
+        .join-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem; font-weight: 700;
+            color: #ffd700; margin-bottom: 10px;
+        }
+        .join-card p {
+            font-size: 0.82rem; color: rgba(255,255,255,0.55);
+            line-height: 1.7; margin-bottom: 22px;
+        }
+        .join-btn {
+            display: block; width: 100%;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(255,255,255,0.2);
+            color: white; padding: 13px;
+            border-radius: 12px; font-size: 0.88rem;
+            font-weight: 600; cursor: pointer;
+            text-decoration: none; text-align: center;
+            transition: all 0.2s; font-family: 'Inter', sans-serif;
+            margin-bottom: 12px;
+        }
+        .join-btn:hover { background: rgba(255,215,0,0.12); border-color: #ffd700; color: #ffd700; }
+        .join-btn.gold {
+            background: #ffd700; border-color: #ffd700; color: #0d1117; font-weight: 700;
+        }
+        .join-btn.gold:hover { background: #ffec6e; }
+        .join-login {
+            font-size: 0.78rem; color: rgba(255,255,255,0.38);
+        }
+        .join-login a { color: #ffd700; text-decoration: none; font-weight: 600; }
+        .join-login a:hover { text-decoration: underline; }
+
+        /* Contact quick card */
+        .contact-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px; padding: 22px 20px;
+        }
+        .contact-card h4 {
+            font-size: 0.9rem; font-weight: 700;
+            color: #e8e0f0; margin-bottom: 14px;
+        }
+        .contact-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .contact-row:last-child { margin-bottom: 0; }
+        .c-icon { font-size: 1rem; width: 20px; text-align: center; }
+        .c-text { font-size: 0.8rem; color: rgba(255,255,255,0.55); }
+
+        /* Contact button styles */
+        .contact-btn {
+            display: block; width: 100%;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(255,255,255,0.2);
+            color: #ffd700; padding: 10px 12px;
+            border-radius: 8px; font-size: 0.85rem;
+            font-weight: 600; cursor: pointer;
+            text-decoration: none; text-align: center;
+            transition: all 0.2s; font-family: 'Inter', sans-serif;
+            margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .contact-btn:hover { background: rgba(255,215,0,0.12); border-color: #ffd700; }
+        .contact-btn:last-child { margin-bottom: 0; }
+
+        /* ══════════════════════════════
+           FOOTER
+        ══════════════════════════════ */
+        .footer {
+            background: #070a10;
+            border-top: 1px solid rgba(255,215,0,0.08);
+            padding: 30px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px;
+        }
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem; color: #ffd700; font-weight: 700;
+        }
+        .footer-text { font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+
+        /* ══════════════════════════════
+           LOCATION MODAL
+        ══════════════════════════════ */
+        .modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.85); z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #141b24; border-radius: 22px;
+            padding: 32px 28px; max-width: 380px; width: 90%;
+            text-align: center; position: relative;
+            border: 1px solid rgba(255,215,0,0.15); color: white;
+        }
+        .close-modal {
+            position: absolute; top: 14px; right: 20px;
+            font-size: 1.5rem; cursor: pointer; color: rgba(255,255,255,0.4);
+            transition: color 0.2s;
+        }
+        .close-modal:hover { color: #ffd700; }
+        .open-maps {
+            display: inline-block; margin-top: 14px;
+            background: #34a853; color: white;
+            padding: 11px 24px; border-radius: 50px;
+            text-decoration: none; font-size: 0.88rem; font-weight: 600;
+            transition: background 0.2s;
+        }
+        .open-maps:hover { background: #28a745; }
+
+        /* ══════════════════════════════
+           BOTTOM NAV — mobile only
+        ══════════════════════════════ */
+        .bottom-nav { display: none; }
+
+        /* ══════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════ */
+        @media (max-width: 1100px) {
+            .categories-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-strip { grid-template-columns: repeat(2, 1fr); }
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar-col { flex-direction: row; flex-wrap: wrap; }
+            .join-card, .contact-card { flex: 1; min-width: 280px; }
+            .join-card { position: static; }
+        }
+        @media (max-width: 768px) {
+            body { padding-bottom: 70px; }
+            .navbar { display: none; }
+            .hero { height: 420px; }
+            .slide-content h2 { font-size: 2rem; }
+            .slide-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.75) 55%, rgba(10,12,20,0.98) 100%); }
+            .slide { align-items: flex-end; }
+            .slide-content { padding: 0 20px 24px; max-width: 100%; }
+            .hero-stats { width: 100%; position: static; border: none; background: #0f1520; border-top: 1px solid rgba(255,215,0,0.1); }
+            .hero-actions { flex-direction: column; }
+            .hero-book-btn, .hero-outline-btn { text-align: center; }
+            .search-section { padding: 12px 16px; }
+            .main-content { padding: 24px 16px; grid-template-columns: 1fr; }
+            .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .features-strip { grid-template-columns: repeat(2, 1fr); }
+            .section-title { font-size: 1.3rem; }
+            .sidebar-col { flex-direction: column; }
+            .footer { flex-direction: column; text-align: center; }
+            .bottom-nav {
+                display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+                background: rgba(10,12,20,0.97); backdrop-filter: blur(12px);
+                border-top: 1px solid rgba(255,215,0,0.1);
+                z-index: 200; padding: 8px 0 10px;
+            }
+            .bn-item {
+                flex: 1; display: flex; flex-direction: column;
+                align-items: center; gap: 3px; cursor: pointer;
+                text-decoration: none; padding: 4px 0; transition: all 0.2s;
+            }
+            .bn-icon { font-size: 1.2rem; }
+            .bn-label { font-size: 0.62rem; font-weight: 500; color: rgba(255,255,255,0.45); }
+            .bn-item.active .bn-label { color: #ffd700; }
+        }
+        @media (max-width: 480px) {
+            .hero { height: 360px; }
+            .slide-content h2 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── DESKTOP NAVBAR ── -->
+
+    <nav class="navbar">
+        <div class="nav-logo">🪷 JAM<small>Massage & Spa</small></div>
+        </div>
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <a href="{% if user.role == 'staff' %}/staff-dashboard/{% else %}/customer-dashboard/{% endif %}" class="nav-btn">Dashboard</a>
+                <a href="/logout/" class="nav-btn filled">Logout</a>
+            {% else %}
+                <a href="/login/" class="nav-btn">Login</a>
+                <a href="/register/" class="nav-btn filled">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- ── HERO SLIDER ── -->
+    <div class="hero">
+        <div class="slider" id="mainSlider">
+            {% if slider_images %}
+                {% for slide in slider_images %}
+                <div class="slide {% if forloop.first %}active{% endif %}"
+                     style="background-image: url('{{ slide.image.url }}');">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <div class="slide-eyebrow">Luxury Spa Experience</div>
+                        <h2>{{ slide.title|default:"Come and Feel Natural <em>Healing and Wellness</em>" }}</h2>
+                        <p>{{ slide.subtitle|default:"Escape to a world of luxury and wellness. Book your curated spa experience today." }}</p>
+                        <div class="hero-actions">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="slide active"
+                     style="background-image: url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1600&q=80');">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <div class="slide-eyebrow">Luxury Spa Experience</div>
+                        <h2>Come and Feel Natural <em>Healing and Wellness</em></h2>
+                        <p>Escape to a world of luxury and wellness. Book your curated spa experience today.</p>
+                        <div class="hero-actions">
+                            {% if user.is_authenticated %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="slide"
+                     style="background-image: url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=1600&q=80');">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <div class="slide-eyebrow">Premium Wellness</div>
+                        <h2>Feel the <em>Difference</em></h2>
+                        <p>Experience premium treatments by certified therapists in a calming sanctuary.</p>
+                        <div class="hero-actions">
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <button class="slider-btn prev-btn" onclick="changeSlide(-1)">❮</button>
+        <button class="slider-btn next-btn" onclick="changeSlide(1)">❯</button>
+        <div class="dots-container" id="dotsContainer"></div>
+        <div class="hero-stats">
+            <div class="hero-stat"><div class="hs-num">500+</div><div class="hs-label">Happy Clients</div></div>
+            <div class="hero-stat"><div class="hs-num">20+</div><div class="hs-label">Services</div></div>
+        </div>
+    </div>
+
+
+
+    <!-- ── MAIN CONTENT ── -->
+    <div class="main-content">
+        <!-- LEFT: Categories + Features -->
+        <div>
+            <!-- CATEGORIES -->
+            <div id="categories">
+                <div class="section-top">
+                    <div>
+                        <div class="section-title">Explore Categories</div>
+                        <div class="section-sub">Choose from our relaxing treatments</div>
+                    </div>
+                </div>
+                <div class="categories-grid">
+                    {% for category in categories %}
+                    <div class="category-card"
+                         data-category="{{ category.name|urlencode|escapejs }}"
+                         data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+                         onclick="handleCategoryClick(this)">
+                        {% if category.image %}
+                            <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                        {% else %}
+                            <div class="cat-placeholder">{{ category.icon }}</div>
+                        {% endif %}
+                        <div class="cat-overlay"></div>
+                        <div class="cat-icon">{{ category.icon }}</div>
+                        <div class="cat-label">
+                            <div class="cat-name">{{ category.name }}</div>
+                            <div class="cat-count">{{ category.active_services_count }} services</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- FEATURES -->
+            <div class="section-top">
+                <div>
+                    <div class="section-title">Why Choose Us</div>
+                    <div class="section-sub">Experience the JAM difference</div>
+                </div>
+            </div>
+            <div class="features-strip">
+                <div class="feature-card"><div class="feature-icon">🏆</div><div class="feature-title">Expert Therapists</div><div class="feature-desc">Certified & experienced professionals</div></div>
+                <div class="feature-card"><div class="feature-icon">🌿</div><div class="feature-title">Natural Products</div><div class="feature-desc">100% organic, skin-safe ingredients</div></div>
+                <div class="feature-card"><div class="feature-icon">🏠</div><div class="feature-title">Relaxing Ambiance</div><div class="feature-desc">Serene spaces designed for healing</div></div>
+                <div class="feature-card"><div class="feature-icon">💯</div><div class="feature-title">Affordable Rates</div><div class="feature-desc">Premium quality at fair prices</div></div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+        <div class="sidebar-col">
+            <!-- JOIN THE INNER CIRCLE — /register/ -->
+            <div class="join-card" id="join">
+                <div class="join-badge">✦ Exclusive</div>
+                <h3>Join the Inner Circle</h3>
+                <p>Register now to receive exclusive offers and personalized wellness recommendations.</p>
+                {% if user.is_authenticated %}
+                    <a href="/customer-dashboard/" class="join-btn gold">Go to Dashboard</a>
+                    <div class="join-login">Already a member. <a href="/logout/">Log out</a></div>
+                {% else %}
+                    <a href="/register/" class="join-btn gold">Sign Up with Email</a>
+                    <a href="/login/" class="join-btn">Log In</a>
+                    <div class="join-login">Already a member? <a href="/login/">Log in here</a></div>
+                {% endif %}
+            </div>
+
+            <!-- CONTACT -->
+            <div class="contact-card">
+                <h4>📞 Contact Us</h4>
+                <div class="contact-row"><span class="c-icon">📞</span><span class="c-text">0948 525 4950</span></div>
+                <div class="contact-row"><span class="c-icon">📞</span><span class="c-text">0909 954 9734</span></div>
+                <div class="contact-row"><span class="c-icon">⏰</span><span class="c-text">Mon–Sat · 8AM – 6PM</span></div>
+                <a href="mailto:jammassageandspa2024@gmail.com" class="contact-btn">📧 Email Us</a>
+                <a href="#" class="contact-btn" onclick="showLocationModal()">📍 View Location</a>
+                <a href="https://www.facebook.com/profile.php?id=61555161254937" target="_blank" class="contact-btn">f Facebook</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <div class="footer">
+        <div class="nav-logo" style="font-family:'Playfair Display',serif;font-size:1.1rem;color:#ffd700;font-weight:700;">🪷 JAM Massage & Spa</div>
+        <div class="footer-text"> Come and Feel Natural Healing and Wellness</div>
+    </div>
+
+    <!-- ── MOBILE BOTTOM NAV ── -->
+    <div class="bottom-nav">
+        <a href="/" class="bn-item active"><span class="bn-icon">🏠</span><span class="bn-label">Home</span></a>
+        <a href="{% if user.is_authenticated %}/customer-dashboard/{% else %}/login/{% endif %}" class="bn-item"><span class="bn-icon">✨</span><span class="bn-label">Explore</span></a>
+        <a href="#" class="bn-item" onclick="showLocationModal()"><span class="bn-icon">📍</span><span class="bn-label">Location</span></a>
+        {% if user.is_authenticated %}
+            <a href="/logout/" class="bn-item"><span class="bn-icon">⏻</span><span class="bn-label">Logout</span></a>
+        {% else %}
+            <a href="/login/" class="bn-item"><span class="bn-icon">→</span><span class="bn-label">Login</span></a>
+        {% endif %}
+    </div>
+
+    <!-- ── LOCATION MODAL ── -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 style="color:#ffd700;font-family:'Playfair Display',serif;margin-bottom:16px;">📍 Our Location</h3>
+            <div style="margin:1rem 0;font-size:0.88rem;line-height:2;color:rgba(255,255,255,0.7);">
+                <p>MONTALBO BLDG., RIZAL ST., SURIGAO CITY</p>
+            </div>
+            <a href="https://www.google.com/maps/place/Jam+MASSAGE+%26+SPA/@9.785552,125.4883196,17.27z/data=!4m6!3m5!1s0x330136b849cfd98b:0x45dedf4b4dbac16a!8m2!3d9.7856296!4d125.4905602!16s%2Fg%2F11y750qs2f?entry=ttu&g_ep=EgoyMDI2MDUxMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="open-maps">🗺️ Open in Google Maps</a>
+        </div>
+    </div>
+
+    <script>
+    let currentSlide = 0, slides = [], totalSlides = 0, autoSlideInterval, touchStartX = 0, touchEndX = 0;
+
+   function handleCategoryClick(element) {
+    var categoryName = element.getAttribute('data-category');
+    var isAuthenticated = element.getAttribute('data-authenticated') === 'true';
+    
+    if (isAuthenticated) {
+        location.href = '/customer-dashboard/?category=' + encodeURIComponent(categoryName);
+    } else {
+        location.href = '/login/';
+    }
+}
+
+    function initSlider() {
+        slides = document.querySelectorAll('#mainSlider .slide');
+        totalSlides = slides.length;
+        if (!totalSlides) return;
+        let ai = 0;
+        for (let i = 0; i < totalSlides; i++) {
+            if (slides[i].classList.contains('active')) {
+                ai = i;
+                break;
+            }
+        }
+        currentSlide = ai;
+        showSlide(currentSlide);
+        createDots();
+        if (totalSlides > 1) {
+            startAutoSlide();
+            addTouchSwipe();
+        }
+    }
+
+    function showSlide(i) {
+        if (!totalSlides) return;
+        if (i < 0) i = totalSlides - 1;
+        if (i >= totalSlides) i = 0;
+        slides.forEach((s, idx) => {
+            s.classList.remove('active');
+            const d = document.querySelector('.dot[data-index="' + idx + '"]');
+            if (d) d.classList.remove('active');
+        });
+        slides[i].classList.add('active');
+        const ad = document.querySelector('.dot[data-index="' + i + '"]');
+        if (ad) ad.classList.add('active');
+        currentSlide = i;
+    }
+
+    function changeSlide(d) {
+        if (totalSlides <= 1) return;
+        showSlide(currentSlide + d);
+        resetAutoSlide();
+    }
+
+    function goToSlide(i) {
+        showSlide(i);
+        resetAutoSlide();
+    }
+
+    function createDots() {
+        const dc = document.getElementById('dotsContainer');
+        if (!dc || totalSlides <= 1) return;
+        dc.innerHTML = '';
+        for (let i = 0; i < totalSlides; i++) {
+            const d = document.createElement('div');
+            d.className = 'dot';
+            if (i === currentSlide) d.classList.add('active');
+            d.setAttribute('data-index', i);
+            d.onclick = (function(idx) {
+                return function() {
+                    goToSlide(idx);
+                };
+            })(i);
+            dc.appendChild(d);
+        }
+    }
+
+    function startAutoSlide() {
+        if (totalSlides <= 1) return;
+        if (autoSlideInterval) clearInterval(autoSlideInterval);
+        autoSlideInterval = setInterval(function() {
+            changeSlide(1);
+        }, 4500);
+    }
+
+    function resetAutoSlide() {
+        if (autoSlideInterval) {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+    }
+
+    function addTouchSwipe() {
+        const sc = document.querySelector('.hero');
+        if (!sc) return;
+        sc.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            resetAutoSlide();
+        }, { passive: true });
+        sc.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+            startAutoSlide();
+        });
+        sc.addEventListener('mousedown', function(e) {
+            touchStartX = e.screenX;
+            resetAutoSlide();
+        });
+        sc.addEventListener('mouseup', function(e) {
+            touchEndX = e.screenX;
+            handleSwipe();
+            startAutoSlide();
+        });
+    }
+
+    function handleSwipe() {
+        const t = 50;
+        if (touchEndX < touchStartX - t) changeSlide(1);
+        if (touchEndX > touchStartX + t) changeSlide(-1);
+    }
+
+    function showLocationModal() {
+        document.getElementById('locationModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('locationModal').style.display = 'none';
+    }
+
+    window.onclick = function(e) {
+        if (e.target.classList.contains('modal')) e.target.style.display = 'none';
+    };
+
+    window.addEventListener('load', initSlider);
+</script>

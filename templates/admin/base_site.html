@@ -1,0 +1,160 @@
+{% extends "admin/base.html" %}
+
+{% block extrastyle %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ── GLOBAL RESET FOR DJANGO ADMIN ── */
+body { background: #0d1117 !important; font-family: 'Inter', sans-serif !important; color: #e2dcc8 !important; }
+
+/* ── HEADER ── */
+#header {
+    background: #0d1117 !important;
+    border-bottom: 1px solid rgba(201,168,76,0.18) !important;
+    padding: 0 28px !important;
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+#branding h1 { font-family: 'Playfair Display', serif !important; font-size: 18px !important; }
+#branding h1 a { color: #c9a84c !important; text-decoration: none !important; }
+#branding h1 a:hover { color: #e0c46a !important; }
+
+/* ── USER TOOLS ── */
+#user-tools { font-size: 13px !important; }
+#user-tools a { color: rgba(255,255,255,0.55) !important; text-decoration: none !important; transition: color 0.2s !important; }
+#user-tools a:hover { color: #c9a84c !important; }
+
+/* ── DASHBOARD BUTTON ── */
+.dashboard-nav-link {
+    background: #c9a84c !important;
+    color: #0d1117 !important;
+    padding: 7px 16px !important;
+    border-radius: 50px !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    margin-right: 14px !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    transition: background 0.2s !important;
+}
+.dashboard-nav-link:hover { background: #e0c46a !important; color: #0d1117 !important; }
+
+/* ── NAV SIDEBAR ── */
+#nav-sidebar { background: #111827 !important; border-right: 1px solid rgba(201,168,76,0.1) !important; }
+#nav-sidebar .module caption {
+    background: rgba(201,168,76,0.12) !important;
+    color: #c9a84c !important;
+    font-size: 10px !important; letter-spacing: 1.5px !important; text-transform: uppercase !important;
+    font-weight: 700 !important; border-bottom: 1px solid rgba(201,168,76,0.1) !important;
+}
+#nav-sidebar a { color: rgba(255,255,255,0.6) !important; font-size: 13px !important; }
+#nav-sidebar a:hover { background: rgba(201,168,76,0.1) !important; color: #c9a84c !important; }
+
+/* ── MAIN CONTENT AREA ── */
+#content { background: #111827 !important; color: #e2dcc8 !important; }
+#content-main { padding: 32px 36px 48px !important; }
+
+/* ── ALL TEXT ── */
+body, #content, .module, p, h1, h2, h3, h4, label, th, td, li, .help, .description { color: #e2dcc8 !important; }
+
+/* ── MODULE HEADERS ── */
+.module h2, .module caption, .inline-group h2 {
+    background: rgba(201,168,76,0.1) !important;
+    color: #c9a84c !important;
+    border-bottom: 1px solid rgba(201,168,76,0.15) !important;
+    font-size: 12px !important; letter-spacing: 1.5px !important; text-transform: uppercase !important;
+}
+
+/* ── TABLE HEADERS ── */
+thead th { background: #0d1117 !important; color: rgba(255,255,255,0.5) !important; font-size: 11px !important; letter-spacing: 1px !important; text-transform: uppercase !important; }
+
+/* ── TABLE ROWS ── */
+.results tr { background: rgba(255,255,255,0.03) !important; }
+.results tr:hover { background: rgba(201,168,76,0.06) !important; }
+.results td { color: #e2dcc8 !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; font-size: 13px !important; }
+.results th a { color: rgba(255,255,255,0.55) !important; }
+
+/* ── LINKS ── */
+a:link, a:visited { color: #c9a84c !important; }
+a:hover { color: #e0c46a !important; }
+
+/* ── BUTTONS ── */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #c9a84c !important; color: #0d1117 !important;
+    border: none !important; border-radius: 8px !important; font-weight: 700 !important;
+}
+.button:hover, input[type=submit]:hover { background: #e0c46a !important; }
+
+/* ── BREADCRUMBS ── */
+div.breadcrumbs { background: #0d1117 !important; color: rgba(255,255,255,0.4) !important; border-bottom: 1px solid rgba(201,168,76,0.1) !important; font-size: 13px !important; }
+div.breadcrumbs a { color: #c9a84c !important; }
+
+/* ── FORM INPUTS ── */
+input, select, textarea {
+    background: rgba(255,255,255,0.05) !important;
+    color: #e2dcc8 !important;
+    border: 1px solid rgba(201,168,76,0.2) !important;
+    border-radius: 8px !important;
+}
+input:focus, select:focus, textarea:focus { border-color: #c9a84c !important; outline: none !important; }
+input::placeholder { color: rgba(255,255,255,0.25) !important; }
+
+/* ── HELP TEXT ── */
+.help, .help-block { color: rgba(255,255,255,0.4) !important; }
+
+/* ── FILTER SIDEBAR ── */
+#changelist-filter { background: #0d1117 !important; border-left: 1px solid rgba(201,168,76,0.1) !important; }
+#changelist-filter h2 { background: rgba(201,168,76,0.1) !important; color: #c9a84c !important; font-size: 11px !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; }
+#changelist-filter a { color: rgba(255,255,255,0.6) !important; }
+#changelist-filter a:hover { color: #c9a84c !important; }
+#changelist-filter li.selected a { color: #c9a84c !important; font-weight: 600 !important; }
+
+/* ── PAGINATOR ── */
+.paginator { background: #0d1117 !important; color: rgba(255,255,255,0.4) !important; border-top: 1px solid rgba(201,168,76,0.1) !important; }
+.paginator a:link, .paginator a:visited { color: #c9a84c !important; }
+
+/* ── DASHBOARD MODULE TABLES ── */
+.dashboard .module table { background: #111827 !important; }
+.dashboard .module caption { background: rgba(201,168,76,0.1) !important; color: #c9a84c !important; }
+
+/* ── FOOTER ── */
+#footer { background: #0d1117 !important; color: rgba(255,255,255,0.25) !important; border-top: 1px solid rgba(201,168,76,0.08) !important; font-size: 12px !important; }
+
+/* ── MESSAGES ── */
+.messagelist .success { background: rgba(74,222,128,0.12) !important; color: #4ade80 !important; border: 1px solid rgba(74,222,128,0.2) !important; border-radius: 10px !important; }
+.errornote { background: rgba(248,113,113,0.12) !important; color: #f87171 !important; border: 1px solid rgba(248,113,113,0.2) !important; border-radius: 10px !important; }
+.messagelist li { border-radius: 10px !important; }
+
+/* ── OBJECT TOOLS ── */
+.object-tools a { background: rgba(201,168,76,0.12) !important; color: #c9a84c !important; border: 1px solid rgba(201,168,76,0.25) !important; border-radius: 20px !important; }
+.object-tools a:hover { background: rgba(201,168,76,0.22) !important; }
+
+/* ── SUBMIT ROW ── */
+.submit-row { background: #0d1117 !important; border-top: 1px solid rgba(201,168,76,0.1) !important; }
+
+/* ── INLINE GROUPS ── */
+.inline-related, .tabular.inline-related { background: rgba(255,255,255,0.02) !important; border: 1px solid rgba(201,168,76,0.1) !important; border-radius: 10px !important; }
+
+/* ── SEARCH ── */
+#searchbar { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(201,168,76,0.2) !important; color: #e2dcc8 !important; border-radius: 8px !important; }
+#toolbar { background: #0d1117 !important; border-bottom: 1px solid rgba(201,168,76,0.1) !important; }
+</style>
+{% endblock %}
+
+{% block title %}JAM Massage & Spa Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">🪷 JAM Massage & Spa</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block userlinks %}
+    <a href="/admin-dashboard/" class="dashboard-nav-link">📊 Dashboard</a>
+    {% if user.has_usable_password %}
+        <a href="{% url 'admin:password_change' %}">Change password</a> /
+    {% endif %}
+    <a href="{% url 'admin:logout' %}">Log out</a>
+{% endblock %}

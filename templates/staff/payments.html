@@ -1,0 +1,337 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments - Staff Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c9a84c;
+            --dark: #0f1624;
+            --dark-2: #141d2e;
+            --dark-3: #1a2336;
+            --white: #ffffff;
+            --text-light: #a8b8d0;
+            --text-mid: #d8d9e0;
+            --radius: 16px;
+            --shadow: 0 18px 48px rgba(0,0,0,0.35);
+            --success: #49d246;
+            --warning: #fbbf24;
+            --error: #f87171;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: radial-gradient(circle at top, rgba(201,168,76,0.12), transparent 32%),
+                        linear-gradient(180deg, #0f1624 0%, #0b1220 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; cursor: pointer; }
+        .sidebar {
+            position: fixed; inset: 0 auto 0 0;
+            width: 260px; max-width: 100%;
+            background: rgba(13,18,32,0.97);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            transform: translateX(-100%);
+            transition: transform 0.28s ease;
+            z-index: 40;
+            padding: 24px 18px;
+        }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-header { margin-bottom: 28px; }
+        .sidebar-header h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--primary); }
+        .sidebar-header p { margin-top: 8px; font-size: 13px; color: var(--text-light); }
+        .nav-list { list-style: none; margin-top: 20px; display: grid; gap: 10px; }
+        .nav-list a {
+            display: block; padding: 12px 14px; border-radius: 14px;
+            background: rgba(255,255,255,0.04); color: var(--text-mid);
+            transition: background 0.2s ease;
+        }
+        .nav-list a:hover { background: rgba(201,168,76,0.15); color: var(--white); }
+        .nav-list a.active { background: rgba(201,168,76,0.15); color: var(--primary); }
+        .sidebar-footer { margin-top: 28px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .sidebar-footer p { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+        .logout-btn {
+            width: 100%; padding: 11px 14px; border-radius: 10px;
+            background: rgba(248,113,113,0.15); color: #f8a8a8;
+            border: none; font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .logout-btn:hover { background: rgba(248,113,113,0.25); }
+        .overlay {
+            position: fixed; inset: 0; z-index: 30;
+            background: rgba(0,0,0,0.55); opacity: 0; pointer-events: none; 
+            transition: opacity 0.25s ease;
+        }
+        .overlay.show { opacity: 1; pointer-events: auto; }
+        .main {
+            min-height: 100vh;
+            padding: 24px;
+            padding-left: 24px;
+            max-width: 1360px;
+            margin: 0 auto;
+        }
+        .topbar {
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 26px;
+        }
+        .hamburger {
+            width: 44px; height: 44px; border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 8px;
+            transition: background 0.2s ease;
+        }
+        .hamburger:hover { background: rgba(201,168,76,0.14); }
+        .hamburger span {
+            display: block; width: 18px; height: 2px; background: var(--white); border-radius: 2px;
+        }
+        .hamburger span + span { margin-top: 5px; }
+        .topbar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            letter-spacing: -0.02em;
+        }
+        .stats-grid {
+            display: grid; gap: 14px; margin-bottom: 24px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px; padding: 18px; box-shadow: var(--shadow);
+        }
+        .stat-card h3 { font-size: 13px; color: var(--text-light); margin-bottom: 10px; font-weight: 500; }
+        .stat-card .value { font-size: 28px; color: var(--white); font-weight: 700; }
+        .filters-section {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px; padding: 18px; margin-bottom: 24px; display: grid; gap: 14px;
+            grid-template-columns: 1fr 1fr auto;
+            align-items: end;
+        }
+        .filter-group label {
+            display: block; font-size: 12px; color: var(--text-light);
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .filter-group input,
+        .filter-group select {
+            width: 100%; padding: 10px 12px; border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03);
+            color: var(--white); font-size: 13px;
+        }
+        .filter-group select option { background: #0f1624; color: white; }
+        .filter-group input::placeholder { color: rgba(255,255,255,0.4); }
+        .search-btn {
+            padding: 10px 18px; background: var(--primary); color: var(--dark);
+            border: none; border-radius: 10px; font-weight: 600; font-size: 13px;
+        }
+        .search-btn:hover { background: #e0c46a; }
+        .table-container {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px; overflow: hidden; box-shadow: var(--shadow);
+        }
+        .table {
+            width: 100%; border-collapse: collapse;
+        }
+        .table th {
+            background: rgba(255,255,255,0.05); padding: 14px 16px;
+            text-align: left; font-size: 12px; font-weight: 600;
+            color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .table td {
+            padding: 14px 16px; font-size: 13px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .table tbody tr:hover { background: rgba(201,168,76,0.06); }
+        .badge {
+            display: inline-block; padding: 6px 10px; border-radius: 999px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-pending {
+            background: rgba(251,191,36,0.15); color: #fbe08a;
+        }
+        .badge-verified {
+            background: rgba(73,210,70,0.15); color: #a4f1a0;
+        }
+        .badge-rejected {
+            background: rgba(248,113,113,0.15); color: #f8a8a8;
+        }
+        .customer-name { display: flex; align-items: center; gap: 8px; }
+        .customer-avatar {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: rgba(201,168,76,0.2); display: flex;
+            align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 600;
+        }
+        .proof-link {
+            color: var(--primary); text-decoration: underline;
+        }
+        .proof-link:hover { opacity: 0.8; }
+        .empty-state {
+            text-align: center; padding: 48px 24px; color: var(--text-light);
+        }
+        .empty-state p { margin-top: 8px; }
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .filters-section { grid-template-columns: 1fr; }
+            .table { font-size: 12px; }
+            .table td, .table th { padding: 10px 12px; }
+        }
+        @media (max-width: 640px) {
+            .main { padding: 16px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .table-container { overflow-x: auto; }
+            .topbar { gap: 12px; }
+            .topbar-title { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Staff menu</h2>
+            <p>Quick navigation</p>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'staff:staff_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'staff:attendance' %}">Attendance</a></li>
+            <li><a href="{% url 'staff:staff_payments' %}" class="active">Payments</a></li>
+            <li><a href="{% url 'staff:staff_schedule' %}">Schedule</a></li>
+            <li><a href="/">Customer home</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>View payment information and track customer payment status.</p>
+            <form action="{% url 'staff:staff_logout' %}" method="post" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">🚪 Log Out</button>
+            </form>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="main">
+        <div class="topbar">
+            <button class="hamburger" id="sidebarToggle" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div>
+                <div class="topbar-title">Payments</div>
+                <p style="color: var(--text-light); font-size: 13px; margin-top: 4px;">Track customer payment status</p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Verified</h3>
+                <div class="value">₱{{ verified_total|floatformat:0 }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Payment</h3>
+                <div class="value">₱{{ pending_total|floatformat:0 }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Verified Count</h3>
+                <div class="value">{{ verified_count }}</div>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Count</h3>
+                <div class="value">{{ pending_count }}</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label>Search Customer / Booking</label>
+                <form method="get" style="display: grid; gap: 0;">
+                    <input type="text" name="search" placeholder="Enter name or booking #" value="{{ search_query }}">
+            </div>
+            <div class="filter-group">
+                <label>Filter by Status</label>
+                <select name="status" onchange="this.form.submit()">
+                    <option value="all" {% if filter_status == 'all' %}selected{% endif %}>All Payments</option>
+                    <option value="pending" {% if filter_status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="verified" {% if filter_status == 'verified' %}selected{% endif %}>Verified</option>
+                    <option value="rejected" {% if filter_status == 'rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            <button type="submit" class="search-btn">Search</button>
+                </form>
+        </div>
+
+        <!-- Payments Table -->
+        <div class="table-container">
+            {% if payments %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Payment ID</th>
+                            <th>Booking #</th>
+                            <th>Customer</th>
+                            <th>Service</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Reference</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td>#{{ payment.id }}</td>
+                            <td><strong>{{ payment.booking.booking_number }}</strong></td>
+                            <td>
+                                <div class="customer-name">
+                                    <div class="customer-avatar">
+                                        {{ payment.booking.customer.username|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div>{{ payment.booking.customer.first_name }} {{ payment.booking.customer.last_name }}</div>
+                                        <div style="font-size: 11px; color: var(--text-light);">{{ payment.booking.customer.username }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ payment.booking.service.name|default:"—" }}</td>
+                            <td><strong>₱{{ payment.amount }}</strong></td>
+                            <td>{{ payment.get_payment_method_display }}</td>
+                            <td>{{ payment.gcash_reference|default:"—" }}</td>
+                            <td><span class="badge badge-{{ payment.status }}">{{ payment.status }}</span></td>
+                            <td>{{ payment.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <p style="font-size: 16px;">No payments found</p>
+                    <p>{% if search_query %}No results for "{{ search_query }}"{% elif filter_status != 'all' %}No {{ filter_status }} payments{% else %}All payments loaded{% endif %}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

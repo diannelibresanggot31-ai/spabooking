@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule - Staff Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c9a84c;
+            --dark: #0f1624;
+            --dark-2: #141d2e;
+            --dark-3: #1a2336;
+            --white: #ffffff;
+            --text-light: #a8b8d0;
+            --text-mid: #d8d9e0;
+            --radius: 16px;
+            --shadow: 0 18px 48px rgba(0,0,0,0.35);
+            --success: #49d246;
+            --warning: #fbbf24;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: radial-gradient(circle at top, rgba(201,168,76,0.12), transparent 32%),
+                        linear-gradient(180deg, #0f1624 0%, #0b1220 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; cursor: pointer; }
+        .sidebar {
+            position: fixed; inset: 0 auto 0 0;
+            width: 260px; max-width: 100%;
+            background: rgba(13,18,32,0.97);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            transform: translateX(-100%);
+            transition: transform 0.28s ease;
+            z-index: 40;
+            padding: 24px 18px;
+            overflow-y: auto;
+        }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-header { margin-bottom: 28px; }
+        .sidebar-header h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--primary); }
+        .sidebar-header p { margin-top: 8px; font-size: 13px; color: var(--text-light); }
+        .nav-list { list-style: none; margin-top: 20px; display: grid; gap: 10px; }
+        .nav-list a {
+            display: block; padding: 12px 14px; border-radius: 14px;
+            background: rgba(255,255,255,0.04); color: var(--text-mid);
+            transition: background 0.2s ease;
+        }
+        .nav-list a:hover { background: rgba(201,168,76,0.15); color: var(--white); }
+        .nav-list a.active { background: rgba(201,168,76,0.15); color: var(--primary); }
+        .sidebar-footer { margin-top: auto; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .sidebar-footer p { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+        .logout-btn {
+            width: 100%; padding: 11px 14px; border-radius: 10px;
+            background: rgba(248,113,113,0.15); color: #f8a8a8;
+            border: none; font-size: 13px; font-weight: 600;
+            transition: background 0.2s ease;
+        }
+        .logout-btn:hover { background: rgba(248,113,113,0.25); }
+        .overlay {
+            position: fixed; inset: 0; z-index: 30;
+            background: rgba(0,0,0,0.55); opacity: 0; pointer-events: none; 
+            transition: opacity 0.25s ease;
+        }
+        .overlay.show { opacity: 1; pointer-events: auto; }
+        .main {
+            min-height: 100vh;
+            padding: 24px;
+            padding-left: 24px;
+            max-width: 1360px;
+            margin: 0 auto;
+        }
+        .topbar {
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 26px;
+        }
+        .hamburger {
+            width: 44px; height: 44px; border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 8px;
+            transition: background 0.2s ease;
+        }
+        .hamburger:hover { background: rgba(201,168,76,0.14); }
+        .hamburger span {
+            display: block; width: 18px; height: 2px; background: var(--white); border-radius: 2px;
+        }
+        .hamburger span + span { margin-top: 5px; }
+        .topbar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            letter-spacing: -0.02em;
+        }
+        .schedule-grid {
+            display: grid; gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            margin-bottom: 24px;
+        }
+        .schedule-card {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px; padding: 20px; box-shadow: var(--shadow);
+        }
+        .schedule-date {
+            font-size: 14px; color: var(--text-light); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 12px;
+        }
+        .schedule-time {
+            font-size: 24px; font-weight: 700; color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .schedule-time-details {
+            font-size: 13px; color: var(--text-mid); margin-bottom: 12px;
+        }
+        .schedule-availability {
+            display: inline-block; padding: 6px 10px; border-radius: 999px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+        }
+        .availability-available {
+            background: rgba(73,210,70,0.15); color: #a4f1a0;
+        }
+        .availability-unavailable {
+            background: rgba(248,113,113,0.15); color: #f8a8a8;
+        }
+        .bookings-section {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px; overflow: hidden; box-shadow: var(--shadow);
+        }
+        .section-header {
+            background: rgba(255,255,255,0.05); padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 16px; font-weight: 600;
+        }
+        .bookings-list {
+            padding: 0;
+        }
+        .booking-item {
+            padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 16px; align-items: center;
+        }
+        .booking-item:last-child { border-bottom: none; }
+        .booking-item:hover { background: rgba(201,168,76,0.06); }
+        .booking-time {
+            font-size: 14px; font-weight: 600; color: var(--primary);
+        }
+        .booking-customer {
+            font-size: 13px;
+        }
+        .booking-service {
+            font-size: 13px; color: var(--text-mid);
+        }
+        .booking-status {
+            display: inline-block; padding: 6px 10px; border-radius: 999px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+        }
+        .status-pending {
+            background: rgba(251,191,36,0.15); color: #fbe08a;
+        }
+        .status-confirmed {
+            background: rgba(73,210,70,0.15); color: #a4f1a0;
+        }
+        .empty-state {
+            text-align: center; padding: 48px 24px; color: var(--text-light);
+        }
+        .empty-state p { margin-top: 8px; }
+        @media (max-width: 768px) {
+            .schedule-grid { grid-template-columns: 1fr; }
+            .booking-item { grid-template-columns: 1fr; gap: 8px; }
+            .main { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Staff menu</h2>
+            <p>Quick navigation</p>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'staff:staff_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'staff:attendance' %}">Attendance</a></li>
+            <li><a href="{% url 'staff:staff_payments' %}">Payments</a></li>
+            <li><a href="{% url 'staff:staff_schedule' %}" class="active">Schedule</a></li>
+            <li><a href="/">Customer home</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>View your work schedule and upcoming bookings.</p>
+            <form action="{% url 'staff:staff_logout' %}" method="post" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">🚪 Log Out</button>
+            </form>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="main">
+        <div class="topbar">
+            <button class="hamburger" id="sidebarToggle" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div>
+                <div class="topbar-title">Your Schedule</div>
+                <p style="color: var(--text-light); font-size: 13px; margin-top: 4px;">Work schedule and bookings for the next 30 days</p>
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="bookings-section">
+            <div class="section-header">📅 Calendar — {{ calendar_year }} / {{ calendar_month }}</div>
+            <div style="padding:16px">
+                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-bottom:8px; color:var(--text-light);">
+                    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:8px;">
+                    {% for cell in calendar_cells %}
+                        {% if not cell.in_month %}
+                            <div style="padding:10px; background:rgba(255,255,255,0.02); border-radius:8px; color:var(--text-light);">{{ cell.day }}</div>
+                        {% else %}
+                            <div style="padding:10px; background:rgba(201,168,76,0.06); border-radius:8px; position:relative;">
+                                <div style="font-weight:700">{{ cell.day }}</div>
+                                {% if cell.booking_count and cell.booking_count > 0 %}
+                                    <div style="position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.08); padding:4px 6px; border-radius:999px; font-size:12px;">{{ cell.booking_count }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings list below calendar -->
+        <div class="bookings-section" style="margin-top:16px;">
+            <div class="section-header">📋 Bookings This Month</div>
+            <div style="padding:16px;">
+                {% if bookings_by_day %}
+                    {% for cell in calendar_cells %}
+                        {% if cell.in_month and cell.bookings %}
+                            <div style="margin-bottom:12px;">
+                                <div style="font-weight:700;">{{ cell.date|date:"F j, Y" }} ({{ cell.booking_count }})</div>
+                                <div>
+                                    {% for b in cell.bookings %}
+                                        <div style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-top:6px;">
+                                            <div style="font-weight:600;">
+                                                {% if b.customer.first_name or b.customer.last_name %}
+                                                    {{ b.customer.first_name }} {{ b.customer.last_name }}
+                                                {% else %}
+                                                    {{ b.customer.username }}
+                                                {% endif %}
+                                                <span style="font-weight:400;color:var(--text-light);"> ({{ b.customer.username }})</span>
+                                            </div>
+                                            <div style="font-size:13px;color:var(--text-light);">{{ b.booking_time|time:"H:i" }} · {% if b.service %}{{ b.service.name }}{% else %}N/A{% endif %}</div>
+                                            {% if b.customer.email %}
+                                                <div style="font-size:12px;color:var(--text-light);">{{ b.customer.email }}</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">No bookings for this month.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Schedules -->
+        {% if schedules %}
+            <div class="schedule-grid">
+                {% for schedule in schedules %}
+                    <div class="schedule-card">
+                        <div class="schedule-date">
+                            {{ schedule.date|date:"l, M d" }}
+                        </div>
+                        <div class="schedule-time">
+                            {{ schedule.start_time|time:"H:i" }}
+                        </div>
+                        <div class="schedule-time-details">
+                            to {{ schedule.end_time|time:"H:i" }}
+                        </div>
+                        <span class="schedule-availability {% if schedule.is_available %}availability-available{% else %}availability-unavailable{% endif %}">
+                            {% if schedule.is_available %}✓ Available{% else %}✗ Unavailable{% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p style="font-size: 16px;">No schedule available</p>
+                <p>Your work schedule will appear here once it's assigned.</p>
+            </div>
+        {% endif %}
+
+        <!-- Upcoming Bookings -->
+        {% if upcoming_bookings %}
+            <div class="bookings-section">
+                <div class="section-header">📅 Upcoming Bookings on Your Shift</div>
+                <div class="bookings-list">
+                    {% for booking in upcoming_bookings %}
+                        <div class="booking-item">
+                            <div class="booking-time">
+                                {{ booking.booking_date|date:"M d" }} at {{ booking.booking_time|time:"H:i" }}
+                            </div>
+                            <div class="booking-customer">
+                                👤 {{ booking.customer.first_name }} {{ booking.customer.last_name }}
+                            </div>
+                            <div class="booking-service">
+                                🛀 {{ booking.service.name }}
+                            </div>
+                            <span class="booking-status status-{{ booking.status }}">
+                                {{ booking.get_status_display }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

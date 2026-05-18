@@ -1,0 +1,374 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - JAM Massage & Spa</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c9a84c;
+            --dark: #0f1624;
+            --dark-2: #141d2e;
+            --dark-3: #1a2336;
+            --white: #ffffff;
+            --text-light: #a8b8d0;
+            --text-mid: #d8d9e0;
+            --radius: 16px;
+            --shadow: 0 18px 48px rgba(0,0,0,0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: radial-gradient(circle at top, rgba(201,168,76,0.12), transparent 32%),
+                        linear-gradient(180deg, #0f1624 0%, #0b1220 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; }
+        .sidebar {
+            position: fixed; inset: 0 auto 0 0;
+            width: 260px; max-width: 100%;
+            background: rgba(13,18,32,0.97);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            transform: translateX(-100%);
+            transition: transform 0.28s ease;
+            z-index: 40;
+            padding: 24px 18px;
+        }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-header { margin-bottom: 28px; }
+        .sidebar-header h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--primary); }
+        .sidebar-header p { margin-top: 8px; font-size: 13px; color: var(--text-light); }
+        .nav-list { list-style: none; margin-top: 20px; display: grid; gap: 10px; }
+        .nav-list a {
+            display: block; padding: 12px 14px; border-radius: 14px;
+            background: rgba(255,255,255,0.04); color: var(--text-mid);
+            transition: background 0.2s ease;
+        }
+        .nav-list a:hover { background: rgba(201,168,76,0.15); color: var(--white); }
+        .sidebar-footer { margin-top: 28px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .sidebar-footer p { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+        .logout-btn {
+            width: 100%; padding: 11px 14px; border-radius: 10px;
+            background: rgba(248,113,113,0.15); color: #f8a8a8;
+            border: none; font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .logout-btn:hover { background: rgba(248,113,113,0.25); }
+        .overlay,
+        .chat-panel {
+            position: fixed; inset: 0; z-index: 30;
+        }
+        .overlay { background: rgba(0,0,0,0.55); opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+        .overlay.show { opacity: 1; pointer-events: auto; }
+        .main {
+            min-height: 100vh;
+            padding: 24px;
+            padding-left: 24px;
+            max-width: 1360px;
+            margin: 0 auto;
+        }
+        .topbar {
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 26px;
+        }
+        .hamburger {
+            width: 44px; height: 44px; border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 8px; cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .hamburger:hover { background: rgba(201,168,76,0.14); }
+        .hamburger span {
+            display: block; width: 18px; height: 2px; background: var(--white); border-radius: 2px;
+        }
+        .hamburger span + span { margin-top: 5px; }
+        .topbar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            letter-spacing: -0.02em;
+        }
+        .topbar-actions {
+            margin-left: auto; display: flex; align-items: center; gap: 10px;
+        }
+        .topbar-button {
+            width: 44px; height: 44px; border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.05);
+            color: var(--white); cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .badge { min-width: 20px; height: 20px; border-radius: 999px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--primary); color: var(--dark); font-size: 12px; font-weight: 700;
+        }
+        .cards-grid {
+            display: grid; gap: 18px; margin-bottom: 24px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .card {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 24px; padding: 24px; box-shadow: var(--shadow);
+        }
+        .card h3 { font-size: 15px; color: var(--text-light); margin-bottom: 12px; }
+        .card .value { font-size: 38px; color: var(--white); line-height: 1; }
+        .section-grid {
+            display: grid; gap: 20px;
+            grid-template-columns: 2fr 1.1fr;
+        }
+        .panel { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 24px; padding: 24px; box-shadow: var(--shadow);
+        }
+        .panel h2 { font-size: 18px; margin-bottom: 16px; }
+        .panel p { color: var(--text-light); line-height: 1.7; }
+        .table {
+            width: 100%; border-collapse: collapse; margin-top: 14px;
+        }
+        .table th, .table td { padding: 12px 10px; text-align: left; font-size: 14px; }
+        .table th { color: var(--text-light); font-weight: 600; }
+        .table tr + tr td { border-top: 1px solid rgba(255,255,255,0.08); }
+        .status-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+        }
+        .status-confirmed { background: rgba(73,210,70,0.16); color: #a4f1a0; }
+        .status-pending { background: rgba(251,191,36,0.15); color: #fbe08a; }
+        .status-cancelled { background: rgba(248,113,113,0.16); color: #f8a8a8; }
+        .chat-panel {
+            top: 60px; right: 24px; left: auto; bottom: auto;
+            width: min(420px, calc(100% - 32px)); max-height: calc(100% - 80px);
+            margin: auto 0 0 auto;
+            background: rgba(12,16,28,0.98);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 28px; overflow: hidden;
+            transform: translateY(-20px) scale(0.98);
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            display: flex; flex-direction: column;
+            box-shadow: var(--shadow);
+        }
+        .chat-panel.show { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+        .chat-header { padding: 22px 22px 18px; background: rgba(255,255,255,0.03); }
+        .chat-header h3 { font-size: 18px; margin-bottom: 6px; }
+        .chat-header p { color: var(--text-light); font-size: 13px; }
+        .chat-body { overflow: auto; padding: 18px 22px; flex: 1; display: grid; gap: 12px; }
+        .chat-message { max-width: 85%; padding: 14px 16px; border-radius: 18px; line-height: 1.5; font-size: 14px; }
+        .chat-message.self { margin-left: auto; background: rgba(201,168,76,0.18); }
+        .chat-message.other { margin-right: auto; background: rgba(255,255,255,0.08); }
+        .chat-footer { padding: 16px 20px; background: rgba(255,255,255,0.02); display: grid; gap: 10px; }
+        .chat-footer form { display: grid; gap: 10px; }
+        .chat-footer textarea {
+            width: 100%; min-height: 96px; border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
+            color: var(--white); padding: 14px 16px; resize: vertical;
+        }
+        .chat-footer button {
+            width: 100%; border: none; border-radius: 16px;
+            padding: 14px; background: var(--primary); color: var(--dark);
+            font-weight: 700; cursor: pointer;
+        }
+        .partner-list { display: grid; gap: 10px; margin-bottom: 18px; }
+        .partner-item { display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,0.03);
+            color: var(--text-mid);
+        }
+        .partner-item.active { background: rgba(201,168,76,0.14); color: var(--white); }
+        .partner-item a { flex: 1; }
+        .partner-item span { font-size: 12px; color: var(--text-light); }
+        @media (max-width: 980px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .section-grid { grid-template-columns: 1fr; }
+            .chat-panel { right: 12px; left: 12px; top: 80px; max-height: calc(100% - 120px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Staff menu</h2>
+            <p>Tap the menu icon to open this panel.</p>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'staff:staff_dashboard' %}" class="active">Dashboard</a></li>
+            <li><a href="{% url 'staff:attendance' %}">Attendance</a></li>
+            <li><a href="{% url 'staff:staff_payments' %}">Payments</a></li>
+            <li><a href="{% url 'staff:staff_schedule' %}">Schedule</a></li>
+            <li><a href="/">Customer home</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>Message button opens chat with admin or customers directly.</p>
+            <form action="{% url 'staff:staff_logout' %}" method="post" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">🚪 Log Out</button>
+            </form>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="main">
+        <div class="topbar">
+            <button class="hamburger" id="sidebarToggle" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div>
+                <div class="topbar-title">Staff Dashboard</div>
+                <p style="color: var(--text-light); font-size: 13px; margin-top: 4px;">Welcome back, {{ user.username }}.</p>
+            </div>
+            <div class="topbar-actions">
+                <button class="topbar-button" id="chatToggle" title="Open chat">💬</button>
+                {% if unread_messages_count > 0 %}
+                    <span class="badge">{{ unread_messages_count }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="cards-grid">
+            <div class="card">
+                <h3>Total appointments today</h3>
+                <div class="value">{{ total_today }}</div>
+            </div>
+            <div class="card">
+                <h3>Confirmed</h3>
+                <div class="value">{{ confirmed_today }}</div>
+            </div>
+            <div class="card">
+                <h3>Pending</h3>
+                <div class="value">{{ pending_today }}</div>
+            </div>
+        </div>
+        <div class="section-grid">
+            <section class="panel">
+                <h2>Today's booking schedule</h2>
+                {% if bookings %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Customer</th>
+                                <th>Service</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                                <tr>
+                                    <td>{{ booking.booking_time|time:'H:i' }}</td>
+                                    <td>{{ booking.customer.username }}</td>
+                                    <td>{{ booking.service.name }}</td>
+                                    <td>
+                                        <span class="status-pill {% if booking.status == 'confirmed' %}status-confirmed{% elif booking.status == 'pending' %}status-pending{% else %}status-cancelled{% endif %}">
+                                            {{ booking.status|capfirst }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p style="margin-top: 12px; color: var(--text-light);">No appointments are scheduled for today.</p>
+                {% endif %}
+            </section>
+            <section class="panel">
+                <h2>Attendance summary</h2>
+                <p>Present: <strong>{{ my_present_count }}</strong></p>
+                <p>Late: <strong>{{ my_late_count }}</strong></p>
+                <p>Absent: <strong>{{ my_absent_count }}</strong></p>
+                {% if today_attendance %}
+                    <p style="margin-top: 14px; color: var(--text-light);">Today: {{ today_attendance.status|capfirst }} at {{ today_attendance.date|date:'M d, Y' }}</p>
+                {% else %}
+                    <p style="margin-top: 14px; color: var(--text-light);">No attendance record has been marked for today.</p>
+                {% endif %}
+                <a href="{% url 'staff:attendance' %}" style="display:inline-block; margin-top:16px; background: var(--primary); color: var(--dark); padding: 10px 16px; border-radius: 14px; font-weight:700;">Mark attendance</a>
+                <div style="margin-top: 20px;">
+                    <h3 style="font-size: 15px; margin-bottom: 12px;">Recent attendance</h3>
+                    {% if attendances %}
+                        <table class="table">
+                            <tbody>
+                                {% for item in attendances %}
+                                    <tr>
+                                        <td>{{ item.date|date:'M d' }}</td>
+                                        <td>{{ item.status|capfirst }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p style="color: var(--text-light);">No attendance records yet.</p>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <h3>Staff Chat</h3>
+            {% if selected_chat_partner %}
+                <p>Conversation with {{ selected_chat_partner.username }}</p>
+            {% else %}
+                <p>Select a partner to start a message.</p>
+            {% endif %}
+        </div>
+        <div class="chat-body">
+            <div class="partner-list">
+                {% for partner in chat_partners %}
+                    <div class="partner-item {% if selected_chat_partner and partner.id == selected_chat_partner.id %}active{% endif %}">
+                        <a href="?conv_with={{ partner.id }}">{{ partner.username }}</a>
+                        <span>{{ partner.role|capfirst }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if chat_messages %}
+                {% for message in chat_messages %}
+                    <div class="chat-message {% if message.sender == user %}self{% else %}other{% endif %}">
+                        <strong>{{ message.sender.username }}:</strong>
+                        <div style="margin-top: 6px;">{{ message.message }}</div>
+                        <div style="margin-top: 8px; font-size: 12px; color: var(--text-light);">{{ message.timestamp|date:'M d, H:i' }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: var(--text-light);">No messages in this conversation yet.</p>
+            {% endif %}
+        </div>
+        <div class="chat-footer">
+            <form method="post" action="/staff-dashboard/">
+                {% csrf_token %}
+                {% if selected_chat_partner %}
+                    <input type="hidden" name="receiver_id" value="{{ selected_chat_partner.id }}">
+                {% endif %}
+                <textarea name="message" placeholder="Type your message..." rows="4"></textarea>
+                <button type="submit">Send message</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const chatToggle = document.getElementById('chatToggle');
+        const chatPanel = document.getElementById('chatPanel');
+
+        function closeAll() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            chatPanel.classList.remove('show');
+        }
+
+        sidebarToggle.addEventListener('click', () => {
+            const open = sidebar.classList.toggle('open');
+            overlay.classList.toggle('show', open);
+            chatPanel.classList.remove('show');
+        });
+
+        chatToggle.addEventListener('click', () => {
+            const open = chatPanel.classList.toggle('show');
+            overlay.classList.toggle('show', open);
+            sidebar.classList.remove('open');
+        });
+
+        overlay.addEventListener('click', closeAll);
+    </script>
+</body>
+</html>

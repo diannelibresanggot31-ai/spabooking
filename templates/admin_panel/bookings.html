@@ -1,0 +1,177 @@
+{% extends "admin_panel/base.html" %}
+
+{% block page_title %}Manage Bookings{% endblock %}
+
+{% block content %}
+<style>
+    .filters {
+        background: white;
+        color: #111;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .filter-select {
+        padding: 8px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    .booking-table {
+        width: 100%;
+        background: white;
+        color: #111;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .booking-table th {
+        background: #0a0e27;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+    .booking-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e1e4e8;
+    }
+    .status-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    .badge-pending { background: #fff3cd; color: #856404; }
+    .badge-verify { background: #d4edda; color: #155724; }
+    .badge-complete { background: #cce5ff; color: #004085; }
+    .badge-cancelled { background: #f8d7da; color: #721c24; }
+    .status-form {
+        display: inline;
+    }
+    .status-select {
+        padding: 6px 10px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        font-size: 13px;
+    }
+    .update-btn {
+        margin-left: 8px;
+        padding: 8px 14px;
+        min-width: 90px;
+        border-radius: 10px;
+        border: none;
+        background: #1f6feb;
+        color: white;
+        font-size: 13px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .update-btn:hover {
+        background: #155bb5;
+    }
+    .page-header {
+        margin-bottom: 22px;
+    }
+    .page-header h2 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        color: #111827;
+    }
+    .page-header p {
+        margin: 0;
+        color: #4b5563;
+        line-height: 1.6;
+    }
+    .filter-label {
+        font-size: 14px;
+        color: #374151;
+        font-weight: 600;
+    }
+</style>
+
+<div class="page-header">
+    <div>
+        <h2>Booking Management</h2>
+        <p>Use this page to review customer bookings and update statuses. Select a status filter to display only Pending, Verify, Complete, or Cancelled bookings.</p>
+    </div>
+</div>
+
+<div class="filters">
+    <span class="filter-label">Filter by status:</span>
+    <form method="get" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <select name="status" class="filter-select" onchange="this.form.submit()">
+            <option value="">All Status</option>
+            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="verify" {% if status_filter == 'verify' %}selected{% endif %}>Verify</option>
+            <option value="complete" {% if status_filter == 'complete' %}selected{% endif %}>Complete</option>
+            <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+        </select>
+    </form>
+</div>
+
+<table class="booking-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Booking #</th>
+            <th>Customer</th>
+            <th>Service / Package</th>
+            <th>Room</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Update Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.id }}</td>
+            <td>{{ booking.booking_number|default:booking.id }}</td>
+            <td>{{ booking.customer.username }}</td>
+            <td>{% if booking.service %}{{ booking.service.name }}{% elif booking.package %}{{ booking.package.name }}{% else %}—{% endif %}</td>
+            <td>{% if booking.room %}Room {{ booking.room.room_number }}{% else %}—{% endif %}</td>
+            <td>{{ booking.booking_date }}</td>
+            <td>{{ booking.booking_time|time:"g:i A" }}</td>
+            <td>₱{{ booking.total_amount }}</td>
+            {% comment %} normalize status display and class for legacy values {% endcomment %}
+            {% if booking.status == 'confirmed' %}
+                {% with status_class='verify' status_label='Verify' %}
+                    <td><span class="status-badge badge-{{ status_class }}">{{ status_label }}</span></td>
+                {% endwith %}
+            {% elif booking.status == 'completed' %}
+                {% with status_class='complete' status_label='Complete' %}
+                    <td><span class="status-badge badge-{{ status_class }}">{{ status_label }}</span></td>
+                {% endwith %}
+            {% else %}
+                <td><span class="status-badge badge-{{ booking.status }}">{{ booking.status|title }}</span></td>
+            {% endif %}
+            <td>
+                <form method="post" action="{% url 'admin_panel:update_booking' booking.id %}" class="status-form">
+                    {% csrf_token %}
+                    <select name="new_status" class="status-select">
+                        <option value="pending" {% if booking.status == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="verify" {% if booking.status == 'verify' or booking.status == 'confirmed' %}selected{% endif %}>Verify</option>
+                        <option value="complete" {% if booking.status == 'complete' or booking.status == 'completed' %}selected{% endif %}>Complete</option>
+                    </select>
+                    <button type="submit" class="update-btn">Update</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="10" style="text-align:center; padding:40px; color:#4a5568;">No bookings found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+{% endblock %}

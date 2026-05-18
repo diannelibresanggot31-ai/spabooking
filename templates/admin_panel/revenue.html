@@ -1,0 +1,70 @@
+{% extends "admin_panel/base.html" %}
+
+{% block page_title %}Revenue / Sales Report{% endblock %}
+
+{% block content %}
+<style>
+    .revenue-card {
+        background: white;
+        color: #111;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #e1e4e8;
+    }
+    th {
+        background: #0a0e27;
+        color: white;
+    }
+</style>
+
+<div class="revenue-card">
+    <h3>Daily Revenue (Last 7 Days)</h3>
+    <table>
+        <thead><tr><th>Date</th><th>Revenue</th></tr></thead>
+        <tbody>
+            {% for item in daily_data %}
+            <tr><td>{{ item.date }}</td><td>₱{{ item.revenue|floatformat:2 }}</td></tr>
+            {% empty %}
+            <tr><td colspan="2">No daily data available</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="revenue-card">
+    <h3>Monthly Revenue (Last 12 Months)</h3>
+    <table>
+        <thead><tr><th>Month</th><th>Revenue</th></tr></thead>
+        <tbody>
+            {% for item in monthly_data %}
+            <tr><td>{{ item.month }}</td><td>₱{{ item.revenue|floatformat:2 }}</td></tr>
+            {% empty %}
+            <tr><td colspan="2">No monthly data available</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="revenue-card">
+    <h3>Yearly Revenue</h3>
+    <table>
+        <thead><tr><th>Year</th><th>Revenue</th></tr></thead>
+        <tbody>
+            {% for item in yearly_data %}
+            <tr><td>{{ item.year }}</td><td>₱{{ item.revenue|floatformat:2 }}</td></tr>
+            {% empty %}
+            <tr><td colspan="2">No yearly data available</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

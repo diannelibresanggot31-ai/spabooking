@@ -1,0 +1,49 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block content %}
+<h1>Staff Payment Overview</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Booking</th>
+      <th>Customer</th>
+      <th>Scheduled</th>
+      <th>Payment Method</th>
+      <th>Payment Status</th>
+      <th>Amount</th>
+      <th>Needs Payment</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for b in bookings %}
+    <tr>
+      <td>{{ b.booking_number }}</td>
+      <td>{{ b.customer.get_full_name|default:b.customer.username }}</td>
+      <td>{{ b.booking_date }} {{ b.booking_time }}</td>
+      <td>{{ b.get_payment_method_display }}</td>
+      <td>
+        {% if b.payment %}
+          {% if b.payment.status == 'verified' %}
+            Paid (Verified)
+          {% else %}
+            Pending verification
+          {% endif %}
+        {% else %}
+          Unpaid
+        {% endif %}
+      </td>
+      <td>{% if b.payment %}{{ b.payment.amount }}{% else %}{{ b.total_amount }}{% endif %}</td>
+      <td>
+        {% if b.payment %}
+          {% if b.payment.status == 'verified' %}No{% else %}Yes{% endif %}
+        {% else %}
+          {% if b.payment_method == 'cash' %}Yes{% else %}Yes{% endif %}
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">No bookings found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

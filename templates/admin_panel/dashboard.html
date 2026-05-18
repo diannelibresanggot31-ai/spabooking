@@ -1,0 +1,320 @@
+{% extends "admin_panel/base.html" %}
+
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<style>
+/* ── DASHBOARD STYLES — same gold/dark theme ── */
+:root {
+    --gold: #c9a84c;
+    --gold-light: #e0c46a;
+    --gold-soft: rgba(201,168,76,0.12);
+    --dark: #0d1117;
+    --dark-2: #111827;
+    --dark-3: #1a2235;
+    --text: #e2dcc8;
+    --text-mid: rgba(255,255,255,0.5);
+    --text-dim: rgba(255,255,255,0.28);
+    --border: rgba(255,255,255,0.07);
+    --border-gold: rgba(201,168,76,0.18);
+}
+
+.db-hero {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 24px; flex-wrap: wrap; margin-bottom: 28px;
+}
+.db-intro { max-width: 620px; }
+.db-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 999px;
+    background: var(--gold-soft); color: var(--gold);
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 14px; font-weight: 600;
+}
+.db-intro h1 { font-family: 'Playfair Display', serif; font-size: 30px; color: #fff; line-height: 1.15; margin-bottom: 8px; }
+.db-intro p { color: var(--text-mid); font-size: 14px; line-height: 1.7; }
+
+.db-meta { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; width: min(100%,360px); }
+.db-meta-card {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border-gold);
+    border-radius: 16px; padding: 18px 20px;
+}
+.db-meta-card span { display: block; font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+.db-meta-card strong { font-size: 24px; font-weight: 700; color: var(--gold); }
+
+/* ── STATS ── */
+.db-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 26px; }
+.db-stat {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px 22px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.db-stat:hover { transform: translateY(-2px); border-color: var(--border-gold); }
+.db-stat-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.db-stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.2px; }
+.db-stat-icon { font-size: 18px; }
+.db-stat-value { font-size: 28px; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 5px; }
+.db-stat-sub { font-size: 12px; color: var(--text-dim); }
+
+/* ── QUICK ACTIONS ── */
+.db-section-label { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.5px; margin-bottom: 14px; }
+.db-actions { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; margin-bottom: 26px; }
+.db-action {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 8px; text-align: center;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 16px; padding: 18px 10px;
+    text-decoration: none; color: var(--text);
+    transition: all 0.2s;
+}
+.db-action:hover { background: var(--gold-soft); border-color: var(--border-gold); color: var(--gold); transform: translateY(-2px); }
+.db-action-icon { width: 42px; height: 42px; border-radius: 13px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 19px; }
+.db-action-label { font-size: 11px; font-weight: 600; }
+
+/* ── TWO COL ── */
+.db-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+.db-card {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 18px; padding: 22px; overflow: hidden;
+}
+.db-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.db-card-head h2 { font-size: 15px; font-weight: 700; color: var(--text); margin: 0; }
+.db-link { font-size: 12px; color: var(--gold); text-decoration: none; font-weight: 600; }
+.db-link:hover { color: var(--gold-light); }
+
+/* ── TABLE ── */
+.db-table { width: 100%; border-collapse: collapse; font-size: 13px; color: var(--text); }
+.db-table th { padding: 8px 12px; font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); text-align: left; }
+.db-table td { padding: 11px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+.db-table tr:last-child td { border-bottom: none; }
+.db-table tr:hover td { background: rgba(201,168,76,0.04); }
+
+/* ── MSG ITEM ── */
+.db-msg { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.db-msg:last-child { border-bottom: none; }
+.db-msg-av { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #8b5e2d, var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #0d1117; flex-shrink: 0; }
+.db-msg-info { flex: 1; }
+.db-msg-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.db-msg-text { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+.db-msg-time { font-size: 10px; color: var(--text-dim); }
+.db-reply-btn { font-size: 11px; font-weight: 700; color: var(--gold); text-decoration: none; padding: 5px 12px; border: 1px solid var(--border-gold); border-radius: 20px; transition: all 0.2s; white-space: nowrap; }
+.db-reply-btn:hover { background: var(--gold-soft); color: var(--gold-light); }
+
+/* ── STATUS PILLS ── */
+.sp { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.sp-pending  { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.sp-confirmed { background: rgba(74,222,128,0.12); color: #4ade80; }
+.sp-completed { background: rgba(96,165,250,0.12); color: #60a5fa; }
+.sp-cancelled { background: rgba(248,113,113,0.12); color: #f87171; }
+.sp-present { background: rgba(74,222,128,0.12); color: #4ade80; }
+.sp-absent  { background: rgba(248,113,113,0.12); color: #f87171; }
+.sp-late    { background: rgba(251,191,36,0.12); color: #fbbf24; }
+
+/* ── ATTENDANCE ── */
+.db-att-btn { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.db-att-btn:hover { background: rgba(74,222,128,0.22); }
+
+/* ── MODULES ── */
+.db-modules { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+.db-module {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 16px; padding: 22px;
+    display: flex; flex-direction: column; gap: 12px; min-height: 160px;
+}
+.db-module-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.db-module-desc { font-size: 13px; color: var(--text-mid); line-height: 1.65; flex: 1; }
+.db-module-btn { font-size: 12px; font-weight: 700; color: var(--gold); text-decoration: none; border: 1px solid var(--border-gold); padding: 7px 14px; border-radius: 20px; display: inline-block; width: fit-content; transition: all 0.2s; }
+.db-module-btn:hover { background: var(--gold-soft); }
+
+.db-full { grid-column: 1 / -1; }
+.db-empty { color: var(--text-dim); font-size: 13px; padding: 20px 0; text-align: center; }
+
+@media (max-width: 1100px) {
+    .db-stats { grid-template-columns: repeat(2,1fr); }
+    .db-actions { grid-template-columns: repeat(3,1fr); }
+    .db-grid { grid-template-columns: 1fr; }
+    .db-modules { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+
+<!-- HERO -->
+<div class="db-hero">
+    <div class="db-intro">
+        <div class="db-eyebrow">📊 Admin Overview</div>
+        <h1>Dashboard Overview</h1>
+        <p>Monitor bookings, staff, payments, and customer requests in one place.</p>
+    </div>
+    <div class="db-meta">
+        <div class="db-meta-card"><span>Total Customers</span><strong>{{ total_customers|default:"0" }}</strong></div>
+        <div class="db-meta-card"><span>Verified Revenue</span><strong>₱{{ total_revenue|default:"0"|floatformat:0 }}</strong></div>
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="db-stats">
+    <div class="db-stat">
+        <div class="db-stat-top"><div class="db-stat-label">Total Bookings</div><span class="db-stat-icon">📅</span></div>
+        <div class="db-stat-value">{{ total_bookings|default:"0" }}</div>
+        <div class="db-stat-sub">All recorded bookings</div>
+    </div>
+    <div class="db-stat">
+        <div class="db-stat-top"><div class="db-stat-label">Today's Revenue</div><span class="db-stat-icon">💰</span></div>
+        <div class="db-stat-value">₱{{ today_revenue|default:"0"|floatformat:0 }}</div>
+        <div class="db-stat-sub">Verified payments today</div>
+    </div>
+    <div class="db-stat">
+        <div class="db-stat-top"><div class="db-stat-label">Pending Payments</div><span class="db-stat-icon">💳</span></div>
+        <div class="db-stat-value">{{ pending_payments|default:"0" }}</div>
+        <div class="db-stat-sub">Awaiting verification</div>
+    </div>
+    <div class="db-stat">
+        <div class="db-stat-top"><div class="db-stat-label">Active Today</div><span class="db-stat-icon">👔</span></div>
+        <div class="db-stat-value">{{ active_staff|default:"0" }}</div>
+        <div class="db-stat-sub">Staff checked in</div>
+    </div>
+</div>
+
+<!-- QUICK ACTIONS -->
+<div class="db-section-label">Quick Actions</div>
+<div class="db-actions">
+    <a href="{% url 'admin_panel:services' %}" class="db-action"><div class="db-action-icon">💆</div><div class="db-action-label">Add Service</div></a>
+    <a href="{% url 'admin_panel:packages' %}" class="db-action"><div class="db-action-icon">📦</div><div class="db-action-label">Add Package</div></a>
+    <a href="{% url 'admin_panel:rooms' %}" class="db-action"><div class="db-action-icon">🚪</div><div class="db-action-label">Add Room</div></a>
+    <a href="{% url 'admin_panel:bookings' %}" class="db-action"><div class="db-action-icon">📅</div><div class="db-action-label">New Booking</div></a>
+    <a href="{% url 'admin_panel:edit_staff' %}" class="db-action"><div class="db-action-icon">👥</div><div class="db-action-label">Add Staff</div></a>
+</div>
+
+<!-- STAFF CHAT + CUSTOMER INQUIRIES -->
+<div class="db-grid" style="margin-bottom:24px;">
+    <div class="db-card">
+        <div class="db-card-head">
+            <h2>💬 Staff Chat</h2>
+            <a href="{% url 'admin_panel:chat_with_staff' %}" class="db-link">View All →</a>
+        </div>
+        {% if recent_staff_messages %}
+            {% for msg in recent_staff_messages %}
+            <div class="db-msg">
+                <div class="db-msg-av">{{ msg.sender.username|first|upper }}</div>
+                <div class="db-msg-info">
+                    <div class="db-msg-name">{{ msg.sender.username }}</div>
+                    <div class="db-msg-text">{{ msg.message|truncatechars:50 }}</div>
+                    <div class="db-msg-time">{{ msg.timestamp|date:"M d, H:i" }}</div>
+                </div>
+                <a href="{% url 'admin_panel:chat_with_staff' %}?staff={{ msg.sender.id }}" class="db-reply-btn">Reply</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="db-empty">💬 No recent staff messages</div>
+        {% endif %}
+    </div>
+    <div class="db-card">
+        <div class="db-card-head">
+            <h2>📨 Customer Inquiries</h2>
+            <a href="{% url 'admin_panel:customer_inquiries' %}" class="db-link">View All →</a>
+        </div>
+        {% if recent_customer_messages %}
+            {% for msg in recent_customer_messages %}
+            <div class="db-msg">
+                <div class="db-msg-av">{{ msg.sender.username|first|upper }}</div>
+                <div class="db-msg-info">
+                    <div class="db-msg-name">{{ msg.sender.username }}</div>
+                    <div class="db-msg-text">{{ msg.message|truncatechars:50 }}</div>
+                    <div class="db-msg-time">{{ msg.timestamp|date:"M d, H:i" }}</div>
+                </div>
+                <a href="{% url 'admin_panel:customer_inquiries' %}?customer={{ msg.sender.id }}" class="db-reply-btn">Reply</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="db-empty">📭 No customer inquiries</div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- STAFF ATTENDANCE -->
+<div class="db-card db-full" style="margin-bottom:24px;">
+    <div class="db-card-head">
+        <h2>⏰ Today's Staff Attendance</h2>
+        <a href="{% url 'admin_panel:staff_attendance' %}" class="db-link">Manage →</a>
+    </div>
+    {% if today_attendance_list %}
+    <table class="db-table">
+        <thead><tr><th>Staff</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+            {% for item in today_attendance_list %}
+            <tr>
+                <td>{{ item.staff.username }}</td>
+                <td>{{ item.check_in|time:"g:i A"|default:"—" }}</td>
+                <td>{{ item.check_out|time:"g:i A"|default:"—" }}</td>
+                <td><span class="sp sp-{{ item.status }}">{{ item.status|upper }}</span></td>
+                <td>
+                    {% if not item.check_in %}
+                    <form method="post" action="{% url 'admin_panel:staff_attendance' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="staff_id" value="{{ item.staff.id }}">
+                        <button type="submit" name="action" value="check_in" class="db-att-btn">Check In</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="db-empty">⏰ No attendance records for today</div>
+    {% endif %}
+</div>
+
+<!-- RECENT BOOKINGS -->
+<div class="db-card db-full" style="margin-bottom:24px;">
+    <div class="db-card-head">
+        <h2>📋 Recent Bookings</h2>
+        <a href="{% url 'admin_panel:bookings' %}" class="db-link">View All →</a>
+    </div>
+    {% if recent_bookings %}
+    <table class="db-table">
+        <thead><tr><th>Customer</th><th>Service / Package</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+            {% for booking in recent_bookings %}
+            <tr>
+                <td>{{ booking.customer.username }}</td>
+                <td>{% if booking.service %}{{ booking.service.name }}{% elif booking.package %}{{ booking.package.name }}{% else %}—{% endif %}</td>
+                <td>{{ booking.booking_date }}</td>
+                <td>
+                    <span class="sp {% if booking.status == 'pending' %}sp-pending{% elif booking.status == 'confirmed' %}sp-confirmed{% elif booking.status == 'completed' %}sp-completed{% else %}sp-cancelled{% endif %}">
+                        {{ booking.status|title }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="db-empty">📭 No recent bookings</div>
+    {% endif %}
+</div>
+
+<!-- MODULES -->
+<div class="db-section-label">Administration Modules</div>
+<div class="db-modules">
+    <div class="db-module">
+        <div class="db-module-title">👤 Accounts</div>
+        <div class="db-module-desc">Manage user profiles, permissions, and staff access control.</div>
+        <a href="{% url 'admin_panel:user_info' %}" class="db-module-btn">Enter Module</a>
+    </div>
+    <div class="db-module">
+        <div class="db-module-title">✨ Marketing</div>
+        <div class="db-module-desc">Room management, promotion codes, and email templates.</div>
+        <a href="{% url 'admin_panel:services' %}" class="db-module-btn">Enter Module</a>
+    </div>
+    <div class="db-module">
+        <div class="db-module-title">⚙️ System</div>
+        <div class="db-module-desc">Configure API, database backups, and security settings.</div>
+        <a href="{% url 'admin_panel:revenue' %}" class="db-module-btn">Enter Module</a>
+    </div>
+    <div class="db-module">
+        <div class="db-module-title">📋 Bookings</div>
+        <div class="db-module-desc">Control bookings, appointment flow, and room assignments.</div>
+        <a href="{% url 'admin_panel:bookings' %}" class="db-module-btn">Enter Module</a>
+    </div>
+</div>
+{% endblock %}

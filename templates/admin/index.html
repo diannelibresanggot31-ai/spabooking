@@ -1,0 +1,240 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+/* ── INDEX PAGE OVERRIDES ── */
+body { background: #0d1117 !important; }
+#content-main { padding: 32px 36px 48px !important; max-width: 1400px; }
+
+/* ── HERO ── */
+.idx-hero {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 24px; flex-wrap: wrap; margin-bottom: 28px;
+}
+.idx-intro { max-width: 640px; }
+.idx-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 999px;
+    background: rgba(201,168,76,0.12); color: #c9a84c;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 16px; font-weight: 600;
+}
+.idx-intro h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: #fff; line-height: 1.15; margin-bottom: 10px; }
+.idx-intro p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.7; }
+.idx-meta { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; width: min(100%,380px); }
+.idx-meta-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 18px; padding: 18px 20px; color: #e2dcc8;
+}
+.idx-meta-card span { display: block; font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+.idx-meta-card strong { font-size: 26px; font-weight: 700; color: #c9a84c; }
+
+/* ── STAT CARDS ── */
+.idx-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 26px; }
+.idx-stat {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; padding: 22px;
+    transition: transform 0.2s, border-color 0.2s; cursor: default;
+}
+.idx-stat:hover { transform: translateY(-3px); border-color: rgba(201,168,76,0.3); }
+.idx-stat-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.idx-stat-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
+.idx-stat-badge { font-size: 10px; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
+.idx-stat-badge.up { background: rgba(74,222,128,0.12); color: #4ade80; }
+.idx-stat-badge.warn { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.idx-stat-value { font-size: 30px; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 6px; }
+.idx-stat-sub { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+/* ── QUICK ACTIONS ── */
+.idx-section-title { font-size: 16px; font-weight: 700; color: #e2dcc8; margin-bottom: 16px; }
+.idx-actions { display: grid; grid-template-columns: repeat(6,1fr); gap: 14px; margin-bottom: 28px; }
+.idx-action {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; text-align: center;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; padding: 20px 12px;
+    text-decoration: none; color: #e2dcc8;
+    transition: all 0.2s;
+}
+.idx-action:hover { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.3); color: #c9a84c; transform: translateY(-2px); }
+.idx-action-icon { width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.idx-action-label { font-size: 12px; font-weight: 600; }
+
+/* ── TWO COL GRID ── */
+.idx-grid { display: grid; grid-template-columns: 1.7fr 1.3fr; gap: 18px; margin-bottom: 26px; }
+.idx-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; padding: 22px; overflow: hidden;
+}
+.idx-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.idx-card-head h2 { font-size: 15px; font-weight: 700; color: #e2dcc8; margin: 0; }
+.idx-view-all { font-size: 12px; color: #c9a84c; text-decoration: none; font-weight: 600; }
+.idx-view-all:hover { color: #e0c46a; }
+
+/* ── TABLE ── */
+.idx-table { width: 100%; border-collapse: collapse; font-size: 13px; color: #e2dcc8; }
+.idx-table th { padding: 10px 12px; font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left; }
+.idx-table td { padding: 12px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e2dcc8; vertical-align: middle; }
+.idx-table tr:last-child td { border-bottom: none; }
+.idx-table tr:hover td { background: rgba(201,168,76,0.04); }
+
+/* ── STATUS PILLS ── */
+.sp { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.sp-pending  { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.sp-confirmed { background: rgba(74,222,128,0.12); color: #4ade80; }
+.sp-completed { background: rgba(96,165,250,0.12); color: #60a5fa; }
+.sp-cancelled { background: rgba(248,113,113,0.12); color: #f87171; }
+
+/* ── VERIFY BTN ── */
+.idx-verify-btn { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.idx-verify-btn:hover { background: rgba(74,222,128,0.22); }
+
+/* ── MODULES GRID ── */
+.idx-modules { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.idx-module-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; padding: 24px;
+    display: flex; flex-direction: column; gap: 14px;
+}
+.idx-module-icon { font-size: 22px; width: 44px; height: 44px; border-radius: 13px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; }
+.idx-module-title { font-size: 16px; font-weight: 700; color: #e2dcc8; }
+.idx-module-links { display: flex; flex-direction: column; gap: 6px; }
+.idx-module-link { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; padding: 4px 0; transition: color 0.2s; }
+.idx-module-link:hover { color: #c9a84c; }
+.idx-module-enter { font-size: 12px; font-weight: 700; color: #c9a84c; text-decoration: none; border: 1px solid rgba(201,168,76,0.25); padding: 8px 16px; border-radius: 20px; display: inline-block; width: fit-content; transition: all 0.2s; margin-top: 4px; }
+.idx-module-enter:hover { background: rgba(201,168,76,0.12); }
+
+.idx-empty { color: rgba(255,255,255,0.3); font-size: 13px; padding: 20px 0; text-align: center; }
+
+@media (max-width: 1100px) {
+    .idx-stats { grid-template-columns: repeat(2,1fr); }
+    .idx-actions { grid-template-columns: repeat(3,1fr); }
+    .idx-grid { grid-template-columns: 1fr; }
+    .idx-modules { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<div class="idx-hero">
+    <div class="idx-intro">
+        <div class="idx-eyebrow">⚙️ Administration Console</div>
+        <h1>Administration Dashboard</h1>
+        <p>Overview of your spa operations, revenue metrics, and pending administrative tasks.</p>
+    </div>
+    <div class="idx-meta">
+        <div class="idx-meta-card">
+            <span>Total Customers</span>
+            <strong>{{ total_customers|default:"0" }}</strong>
+        </div>
+        <div class="idx-meta-card">
+            <span>Verified Revenue</span>
+            <strong>₱{{ total_revenue|default:"0"|floatformat:0 }}</strong>
+        </div>
+    </div>
+</div>
+
+<!-- STAT CARDS -->
+<div class="idx-stats">
+    <div class="idx-stat" onclick="location.href='/admin/bookings/booking/'" style="cursor:pointer;">
+        <div class="idx-stat-top">
+            <div class="idx-stat-label">Total Bookings</div>
+            <span class="idx-stat-badge up">📅 view</span>
+        </div>
+        <div class="idx-stat-value">{{ total_bookings|default:"0" }}</div>
+        <div class="idx-stat-sub">All recorded bookings</div>
+    </div>
+    <div class="idx-stat" onclick="location.href='/admin/payments/payment/'" style="cursor:pointer;">
+        <div class="idx-stat-top">
+            <div class="idx-stat-label">Today's Revenue</div>
+            <span class="idx-stat-badge up">₱ live</span>
+        </div>
+        <div class="idx-stat-value">₱{{ today_revenue|default:"0"|floatformat:0 }}</div>
+        <div class="idx-stat-sub">Verified payments today</div>
+    </div>
+    <div class="idx-stat" onclick="location.href='/admin/bookings/booking/?status__exact=pending'" style="cursor:pointer;">
+        <div class="idx-stat-top">
+            <div class="idx-stat-label">Pending Payments</div>
+            <span class="idx-stat-badge warn">⏳ action</span>
+        </div>
+        <div class="idx-stat-value">{{ pending_payments|default:"0" }}</div>
+        <div class="idx-stat-sub">Awaiting verification</div>
+    </div>
+    <div class="idx-stat">
+        <div class="idx-stat-top">
+            <div class="idx-stat-label">Pending Bookings</div>
+            <span class="idx-stat-badge warn">📋 review</span>
+        </div>
+        <div class="idx-stat-value">{{ pending_bookings|default:"0" }}</div>
+        <div class="idx-stat-sub">Bookings needing confirmation</div>
+    </div>
+</div>
+
+<!-- QUICK ACTIONS -->
+<div class="idx-section-title">Quick Actions</div>
+<div class="idx-actions">
+    <a href="/admin/services/service/add/" class="idx-action"><div class="idx-action-icon">💆</div><div class="idx-action-label">Add Service</div></a>
+    <a href="/admin/services/package/add/" class="idx-action"><div class="idx-action-icon">📦</div><div class="idx-action-label">Add Package</div></a>
+    <a href="/admin/services/room/add/" class="idx-action"><div class="idx-action-icon">🚪</div><div class="idx-action-label">Add Room</div></a>
+    <a href="/admin/bookings/booking/add/" class="idx-action"><div class="idx-action-icon">📅</div><div class="idx-action-label">New Booking</div></a>
+    <a href="/admin/accounts/user/add/" class="idx-action"><div class="idx-action-icon">👥</div><div class="idx-action-label">Add Staff</div></a>
+    <a href="/admin/services/sliderimage/add/" class="idx-action"><div class="idx-action-icon">🖼️</div><div class="idx-action-label">Add Banner</div></a>
+</div>
+
+<!-- PENDING PAYMENTS + MODULES -->
+<div class="idx-grid">
+    <!-- Pending Payments (GCash) -->
+    <div class="idx-card">
+        <div class="idx-card-head">
+            <h2>💳 Pending Payments (GCash)</h2>
+            <a class="idx-view-all" href="/admin/payments/payment/?status__exact=pending">View all →</a>
+        </div>
+        <table class="idx-table">
+            <thead><tr><th>ID</th><th>Customer</th><th>GCash Ref</th><th>Amount</th><th>Proof</th><th>Action</th></tr></thead>
+            <tbody>
+                {% for payment in pending_payments_list %}
+                <tr>
+                    <td>#{{ payment.booking.id }}</td>
+                    <td>{{ payment.booking.customer.username }}</td>
+                    <td style="color:rgba(255,255,255,0.5);">{{ payment.gcash_reference|default:"—" }}</td>
+                    <td style="color:#c9a84c;font-weight:700;">₱{{ payment.amount }}</td>
+                    <td>{% if payment.proof_image %}<a href="{{ payment.proof_image.url }}" target="_blank" style="color:#c9a84c;">📸 View</a>{% else %}<span style="color:rgba(255,255,255,0.3);">None</span>{% endif %}</td>
+                    <td>
+                        <form method="post" action="/admin/payments/payment/{{ payment.id }}/verify/" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="idx-verify-btn">✓ Verify</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="idx-empty">No pending payments</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Administration Modules -->
+    <div class="idx-card">
+        <div class="idx-card-head">
+            <h2>🔧 Admin Modules</h2>
+        </div>
+        {% for app in app_list %}
+        <div style="margin-bottom:14px; padding:14px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
+            <div style="font-size:11px;font-weight:700;color:#c9a84c;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;">{{ app.name }}</div>
+            {% for model in app.models %}
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <a href="{{ model.admin_url }}" style="font-size:13px;color:rgba(255,255,255,0.65);">{{ model.name }}</a>
+                <div style="display:flex;gap:10px;">
+                    <a href="{{ model.admin_url }}" style="font-size:12px;color:#c9a84c;font-weight:600;">View</a>
+                    {% if model.add_url %}<a href="{{ model.add_url }}" style="font-size:12px;color:#4ade80;font-weight:600;">+ Add</a>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

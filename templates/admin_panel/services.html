@@ -1,0 +1,89 @@
+{% extends "admin_panel/base.html" %}
+
+{% block page_title %}Services - View Only{% endblock %}
+
+{% block content %}
+<style>
+    .info-card {
+        background: white;
+        color: #111;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    .admin-hint {
+        background: rgba(201,168,76,0.12);
+        border-left: 4px solid #c9a84c;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .go-to-admin-btn {
+        background: #c9a84c;
+        color: #0f1624;
+        padding: 8px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e1e4e8;
+    }
+    th {
+        background: #0a0e27;
+        color: white;
+    }
+    .service-image {
+        max-width: 50px;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="admin-hint">
+    <p><strong>📌 Note:</strong> To add, edit, or delete services, please use Django Admin.</p>
+    <a href="/admin/services/service/" class="go-to-admin-btn">🔧 Manage Services in Django Admin →</a>
+</div>
+
+<div class="info-card">
+    <h3>💅 Available Services</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>
+                    {% if service.image %}
+                    <img src="{{ service.image.url }}" class="service-image">
+                    {% else %}
+                    🖼️
+                    {% endif %}
+                </td>
+                <td><strong>{{ service.name }}</strong></td>
+                <td>{{ service.category|title }}</td>
+                <td class="price" style="color: #28a745; font-weight: bold;">₱{{ service.price }}</td>
+                <td>{{ service.duration_minutes }} min</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" style="text-align:center">No services yet</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

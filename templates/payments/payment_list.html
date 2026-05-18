@@ -1,0 +1,31 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block content %}
+<h1>Payments</h1>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Booking</th>
+      <th>Amount</th>
+      <th>Method</th>
+      <th>Status</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in payments %}
+    <tr>
+      <td>{{ p.id }}</td>
+      <td>{{ p.booking }}</td>
+      <td>{{ p.amount }}</td>
+      <td>{{ p.get_payment_method_display }}</td>
+      <td>{{ p.get_status_display }}</td>
+      <td>{{ p.created_at }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">No payments found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
