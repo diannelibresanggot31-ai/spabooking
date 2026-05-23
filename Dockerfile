@@ -4,8 +4,9 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Install setuptools FIRST and PIN it
-RUN pip install --no-cache-dir setuptools==65.5.0
+# Install setuptools and pin it
+RUN pip install --no-cache-dir setuptools==65.5.0 && \
+    pip install --no-cache-dir --upgrade pip
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
