@@ -1,0 +1,30 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+env/
+venv/
+.Python
+
+# Django
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+*.log
+
+# Environment variables
+.env
+local_settings.py
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+Thumbs.db
+.DS_Store

@@ -7,12 +7,12 @@
     .attendance-table {
         width: 100%;
         background: white;
-        color: #111;
+        color: #C8522A;
         border-radius: 15px;
         overflow: hidden;
     }
     .attendance-table th {
-        background: #0a0e27;
+        background: #C8522A;
         color: white;
         padding: 12px;
         text-align: left;
@@ -72,11 +72,12 @@
     }
     .modal-content {
         background-color: white;
-        margin: 15% auto;
-        padding: 20px;
+        margin: 10% auto;
+        padding: 30px;
         border-radius: 10px;
-        width: 80%;
+        width: 90%;
         max-width: 500px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .close {
         color: #aaa;
@@ -88,9 +89,21 @@
     .close:hover {
         color: black;
     }
+    /* Make the main page heading white for visibility */
+    .attendance-title {
+        color: #ffffff !important;
+        font-family: inherit;
+        font-weight: inherit;
+        background: transparent;
+    }
+    #absentModal .modal-content label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
 </style>
 
-<h2>Staff Attendance Management</h2>
+<h2 class="attendance-title">Staff Attendance Management</h2>
 <p>Today's Date: {{ now|date:"l, F d, Y" }}</p>
 
 <table class="attendance-table">
@@ -103,6 +116,7 @@
             <th>Check Out</th>
             <th>Status</th>
             <th>Reason</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -143,9 +157,24 @@
                     —
                 {% endif %}
             </td>
+            <td>
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="staff_id" value="{{ item.staff.id }}">
+                    {% if item.attendance.check_in and not item.attendance.check_out %}
+                        <button type="submit" name="action" value="check_in" class="btn btn-in" title="Mark as Present">✓ Present</button>
+                        <button type="submit" name="action" value="check_in_late" class="btn" style="background: #ffc107; color: white;" title="Mark as Late">⏰ Late</button>
+                        <button type="submit" name="action" value="check_out" class="btn btn-out" title="Mark Time Out">⏹ Time Out</button>
+                    {% elif not item.attendance.check_in %}
+                        <button type="submit" name="action" value="check_in" class="btn btn-in">✓ Time In</button>
+                        <button type="submit" name="action" value="check_in_late" class="btn" style="background: #ffc107; color: white;">⏰ Mark Late</button>
+                        <button type="button" class="btn btn-absent" data-staff-id="{{ item.staff.id }}" data-staff-name="{{ item.staff.username|escapejs }}" onclick="showAbsentModal(this)">✗ Absent</button>
+                    {% endif %}
+                </form>
+            </td>
         </tr>
         {% empty %}
-        <tr><td colspan="7" style="text-align:center">No staff members found</td></tr>
+        <tr><td colspan="8" style="text-align:center">No staff members found</td></tr>
         {% endfor %}
     </tbody>
 </table>
@@ -156,6 +185,26 @@
         <span class="close" onclick="closePhotoModal()">&times;</span>
         <h3 id="photoTitle">Photo</h3>
         <img id="photoImg" src="" alt="Photo" style="width:100%; max-height:400px; object-fit:contain;">
+    </div>
+</div>
+
+<!-- Mark Absent Modal -->
+<div id="absentModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAbsentModal()">&times;</span>
+        <h3>Mark Staff as Absent</h3>
+        <form method="post" id="absentForm">
+            {% csrf_token %}
+            <input type="hidden" name="staff_id" id="absentStaffId">
+            <input type="hidden" name="action" value="mark_absent">
+            <p id="absentStaffName" style="font-weight: bold; margin-bottom: 15px;"></p>
+            <label for="absentReason">Reason for Absence:</label>
+            <textarea id="absentReason" name="reason" rows="4" placeholder="Enter reason for absence..." required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+            <div style="margin-top: 15px;">
+                <button type="submit" class="btn btn-absent">Confirm Absent</button>
+                <button type="button" class="btn" style="background: #6c757d; color: white;" onclick="closeAbsentModal()">Cancel</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -170,10 +219,29 @@ function closePhotoModal() {
     document.getElementById('photoModal').style.display = 'none';
 }
 
-// Close photo modal when clicking outside
+function showAbsentModal(button) {
+    const staffId = button.dataset.staffId;
+    const staffName = button.dataset.staffName;
+    document.getElementById('absentStaffId').value = staffId;
+    document.getElementById('absentStaffName').textContent = 'Staff: ' + staffName;
+    document.getElementById('absentReason').value = '';
+    document.getElementById('absentModal').style.display = 'block';
+    document.getElementById('absentReason').focus();
+}
+
+function closeAbsentModal() {
+    document.getElementById('absentModal').style.display = 'none';
+}
+
+// Close modals when clicking outside
 window.onclick = function(event) {
-    if (event.target == document.getElementById('photoModal')) {
+    let photoModal = document.getElementById('photoModal');
+    let absentModal = document.getElementById('absentModal');
+    if (event.target == photoModal) {
         closePhotoModal();
+    }
+    if (event.target == absentModal) {
+        closeAbsentModal();
     }
 }
 </script>

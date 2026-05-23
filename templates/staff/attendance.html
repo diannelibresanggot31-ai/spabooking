@@ -6,51 +6,79 @@
     <title>Staff Attendance - Luxury Spa</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'DM Sans', sans-serif; min-height: 100vh; background: radial-gradient(circle at top, rgba(201,168,76,0.12), transparent 32%), linear-gradient(180deg, #0f1624 0%, #0b1220 100%); color: #000000; }
-        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: rgba(14, 19, 33, 0.94); border-radius: 24px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35); }
+        body { font-family: 'DM Sans', sans-serif; min-height: 100vh; background: radial-gradient(circle at top, rgba(200,82,42,0.07), transparent 32%), linear-gradient(180deg, #F5EDE4 0%, #EDE3D8 100%); color: #2C2015; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: #FAFAF7; border-radius: 24px; border: 1px solid rgba(200,82,42,0.15); box-shadow: 0 28px 80px rgba(44,32,21,0.12); }
         .page-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 2rem; }
-        .page-header h2 { color: #000000; font-size: 1.9rem; }
+        .page-header h2 { color: #2C2015 !important; font-size: 1.9rem; font-family: inherit; font-weight: inherit; }
         .button { display: inline-flex; align-items: center; justify-content: center; padding: 10px 18px; border-radius: 999px; text-decoration: none; font-weight: 600; border: 1px solid transparent; transition: all 0.2s ease; }
-        .button-secondary { background: #f4f5ff; color: #322d68; border-color: #d6d8ff; }
-        .button-secondary:hover { background: #e6e8ff; }
-        .panel { background: #fafbff; border: 1px solid #e5e7ff; border-radius: 18px; margin-bottom: 1.5rem; overflow: hidden; }
-        .panel-highlight { background: #edf7ff; border-color: #cfe8ff; }
-        .panel-title { font-size: 1rem; font-weight: 700; color: #000000; padding: 1.2rem 1.5rem 0.75rem; }
+        .button-secondary { background: rgba(200,82,42,0.08); color: #8B2A10; border-color: rgba(200,82,42,0.25); }
+        .button-secondary:hover { background: rgba(200,82,42,0.15); }
+        .panel { background: #FFFFFF; border: 1px solid rgba(200,82,42,0.12); border-radius: 18px; margin-bottom: 1.5rem; overflow: hidden; }
+        .panel-highlight { background: rgba(200,82,42,0.05); border-color: rgba(200,82,42,0.18); }
+        .panel-title { font-size: 1rem; font-weight: 700; color: #8B2A10; padding: 1.2rem 1.5rem 0.75rem; }
         .panel-content { padding: 0 1.5rem 1.5rem; display: grid; gap: 1rem; }
         .panel-content p { line-height: 1.6; }
         .row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-        .row div p:first-child { color: #000000; font-size: 0.92rem; margin-bottom: 0.35rem; }
+        .row div p:first-child { color: #7A5040; font-size: 0.92rem; margin-bottom: 0.35rem; }
         .row div p:last-child { font-size: 1.1rem; font-weight: 600; }
         .form-inline { display: grid; gap: 1rem; margin-top: 1rem; }
         .form-group { display: grid; gap: 0.75rem; }
-        label { font-weight: 600; color: #000000; }
-        input[type="file"] { padding: 0.9rem 1rem; border: 1px solid #000000; border-radius: 14px; background: #fff; }
+        label { font-weight: 600; color: #2C2015; }
+        input[type="file"] { padding: 0.9rem 1rem; border: 1px solid rgba(200,82,42,0.25); border-radius: 14px; background: #fff; }
         .btn { padding: 14px 26px; border: none; border-radius: 999px; font-size: 1rem; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 25px rgba(109, 102, 255, 0.18); }
-        .btn-primary { background: #4f46e5; color: white; }
-        .btn-danger { background: #ef4444; color: white; }
-        .subtitle { color: #6f6c8b; font-size: 0.95rem; }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 25px rgba(200,82,42,0.2); }
+        .btn-primary { background: #C8522A; color: #FAFAF7; }
+        .btn-danger { background: #b91c1c; color: #FAFAF7; }
+        .subtitle { color: #7A5040; font-size: 0.95rem; }
         table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-        th, td { padding: 0.95rem 1rem; text-align: left; border-bottom: 1px solid #e8eaf6; }
-        th { color: #000000; font-weight: 700; }
-        td { color: #5f5d79; }
-        tbody tr:hover { background: #000000; }
+        th, td { padding: 0.95rem 1rem; text-align: left; border-bottom: 1px solid rgba(200,82,42,0.1); }
+        th { color: #2C2015; font-weight: 700; }
+        td { color: #5a4035; }
+        tbody tr:hover { background: rgba(200,82,42,0.05); }
         .image-preview img { width: 100%; border-radius: 16px; object-fit: cover; }
         .messages { margin-bottom: 16px; }
         .message { padding: 14px 16px; border-radius: 16px; margin-bottom: 10px; font-size: 0.95rem; }
-        .message.success { background: #000000; color: #14532d; }
-        .message.error { background: #000000; color: #991b1b; }
-        .message.warning { background: #000000; color: #92400e; }
+        .message.success { background: rgba(34,139,34,0.1); color: #14532d; }
+        .message.error { background: rgba(180,30,30,0.1); color: #991b1b; }
+        .message.warning { background: rgba(180,120,0,0.1); color: #92400e; }
+        .pending-badge {
+            background: #fff3cd;
+            color: #856404;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 600;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-present { background: #d4edda; color: #155724; }
+        .status-late { background: #fff3cd; color: #856404; }
+        .status-absent { background: #f8d7da; color: #721c24; }
+        textarea { 
+            width: 100%; 
+            padding: 10px 12px; 
+            border: 1px solid rgba(200,82,42,0.2); 
+            border-radius: 10px; 
+            background: #FAFAF7;
+            font-family: 'DM Sans', sans-serif;
+            resize: vertical;
+        }
         @media (max-width: 768px) { .container { margin: 1rem; padding: 1.2rem; } .row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="page-header">
-            <a href="{% url 'staff:staff_dashboard' %}" class="button button-secondary">← Back to Dashboard</a>
+            <a href="{% url 'staff:dashboard' %}" class="button button-secondary">← Back to Dashboard</a>
             <h2>Staff Attendance</h2>
         </div>
-
+ 
         {% if messages %}
             <div class="messages">
                 {% for message in messages %}
@@ -58,9 +86,9 @@
                 {% endfor %}
             </div>
         {% endif %}
-
+ 
         <div class="panel panel-highlight">
-            <div class="panel-title">Today’s attendance</div>
+            <div class="panel-title">Today's attendance</div>
             <div class="panel-content">
                 <div class="row">
                     <div>
@@ -69,23 +97,57 @@
                     </div>
                     <div>
                         <p><strong>Status</strong></p>
-                        <p>{{ display_status }}</p>
+                        <p>
+                            {% if attendance.status == 'pending' %}
+                                <span class="pending-badge">⏳ PENDING (Waiting for admin approval)</span>
+                            {% elif attendance.status == 'present' %}
+                                <span class="status-badge status-present">✅ APPROVED - PRESENT</span>
+                            {% elif attendance.status == 'late' %}
+                                <span class="status-badge status-late">⚠️ APPROVED - LATE</span>
+                            {% elif attendance.status == 'absent' %}
+                                <span class="status-badge status-absent">❌ APPROVED - ABSENT</span>
+                            {% else %}
+                                {{ display_status }}
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
-
+ 
                 <div class="row">
                     <div>
-                        <p><strong>Check In</strong></p>
+                        <p><strong>Time In</strong></p>
                         <p>{% if attendance.check_in %}{{ attendance.check_in|time:"g:i A" }}{% else %}—{% endif %}</p>
                     </div>
                     <div>
-                        <p><strong>Check Out</strong></p>
+                        <p><strong>Time Out</strong></p>
                         <p>{% if attendance.check_out %}{{ attendance.check_out|time:"g:i A" }}{% else %}—{% endif %}</p>
                     </div>
                 </div>
+                <div class="row">
+                    <div>
+                        <p><strong>Photo</strong></p>
+                        <p>
+                            {% if attendance.photo %}
+                                <img src="{{ attendance.photo.url }}" alt="Attendance Photo" style="width:100%; max-width:140px; border-radius:16px; object-fit:cover;" />
+                            {% else %}
+                                —
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div></div>
+                </div>
+                {% if attendance.reason %}
+                <div class="row">
+                    <div>
+                        <p><strong>Reason</strong></p>
+                        <p>{{ attendance.reason }}</p>
+                    </div>
+                    <div></div>
+                </div>
+                {% endif %}
             </div>
         </div>
-
+ 
         <div class="panel">
             <div class="panel-title">Work schedule</div>
             <div class="panel-content">
@@ -96,114 +158,107 @@
                 <p><strong>Working days</strong></p>
                 <p>{{ working_days }} ({{ closed_day }} off)</p>
                 <p><strong>Late after</strong></p>
-                <p>{{ working_hours.late_threshold }}</p>
+                <p>Morning: {{ working_hours.morning_late_threshold }} | Afternoon: {{ working_hours.afternoon_late_threshold }}</p>
             </div>
         </div>
-
-        {% if attendance.photo %}
-            <div class="panel">
-                <div class="panel-title">Proof of check-in</div>
-                <div class="panel-content image-preview">
-                    <img src="{{ attendance.photo.url }}" alt="Attendance Photo">
-                </div>
-            </div>
-        {% endif %}
-
+ 
         {% if show_checkin_form %}
             <div class="panel">
-                <div class="panel-title">Check-in</div>
+                <div class="panel-title">Time In</div>
                 <div class="panel-content">
                     <form method="post" enctype="multipart/form-data" class="form-inline">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="photo">Upload Photo</label>
                             <input type="file" id="photo" name="photo" accept="image/*" required>
-                            <small class="subtitle">Please upload a clear photo of yourself for check-in verification</small>
+                            <small class="subtitle">Please upload a clear photo of yourself for Time In verification</small>
                         </div>
                         <input type="hidden" name="action" value="check_in">
-                        <button type="submit" class="btn btn-primary">Check In</button>
+                        <button type="submit" class="btn btn-primary">Time In</button>
                     </form>
                 </div>
             </div>
         {% endif %}
-
+ 
         {% if attendance.check_in and not attendance.check_out %}
             <div class="panel">
-                <div class="panel-title">Check-out</div>
+                <div class="panel-title">Time Out</div>
                 <div class="panel-content">
                     <form method="post" class="form-inline">
                         {% csrf_token %}
-                        <p class="subtitle">You checked in at <strong>{{ attendance.check_in|time:'g:i A' }}</strong></p>
+                        <p class="subtitle">You timed in at <strong>{{ attendance.check_in|time:'g:i A' }}</strong></p>
                         <input type="hidden" name="action" value="check_out">
-                        <button type="submit" class="btn btn-primary">Check Out</button>
+                        <button type="submit" class="btn btn-primary">Time Out</button>
                     </form>
                 </div>
             </div>
         {% endif %}
-
+ 
         <div class="panel">
             <div class="panel-title">Mark as Absent</div>
             <div class="panel-content">
                 {% if attendance.status == 'absent' and attendance.reason %}
-                    <p><strong>Status:</strong> Marked as Absent</p>
+                    <p><strong>Status:</strong> Marked as Absent (Pending Admin Approval)</p>
                     <p><strong>Reason:</strong> {{ attendance.reason }}</p>
                 {% else %}
                     <form method="post" class="form-inline">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="reason">Reason for Absence</label>
-                            <textarea id="reason" name="reason" rows="4" placeholder="Please provide a reason for your absence..." required></textarea>
+                            <textarea id="reason" name="reason" rows="4" placeholder="Please provide a reason for your absence... This will be reviewed by admin." required></textarea>
                         </div>
                         <input type="hidden" name="action" value="mark_absent">
-                        <button type="submit" class="btn btn-danger">Mark as Absent</button>
+                        <button type="submit" class="btn btn-danger">Submit Absence Request</button>
                     </form>
                 {% endif %}
             </div>
         </div>
-
+ 
         <div class="panel">
             <div class="panel-title">Attendance History</div>
             <div class="panel-content">
                 {% if attendance_history %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Check In</th>
-                                <th>Check Out</th>
-                                <th>Reason</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in attendance_history %}
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td>{{ item.date|date:'M d, Y' }}</td>
-                                    <td>{{ item.status|capfirst }}</td>
-                                    <td>{% if item.check_in %}{{ item.check_in|time:'g:i A' }}{% else %}—{% endif %}</td>
-                                    <td>{% if item.check_out %}{{ item.check_out|time:'g:i A' }}{% else %}—{% endif %}</td>
-                                    <td>{% if item.reason %}{{ item.reason }}{% else %}—{% endif %}</td>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Time In</th>
+                                    <th>Time Out</th>
+                                    <th>Reason</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {% for item in attendance_history %}
+                                    <tr>
+                                        <td>{{ item.date|date:'M d, Y' }}</td>
+                                        <td>
+                                            {% if item.status == 'pending' %}
+                                                <span class="status-badge status-pending">⏳ PENDING</span>
+                                            {% elif item.status == 'present' %}
+                                                <span class="status-badge status-present">✅ PRESENT</span>
+                                            {% elif item.status == 'late' %}
+                                                <span class="status-badge status-late">⚠️ LATE</span>
+                                            {% elif item.status == 'absent' %}
+                                                <span class="status-badge status-absent">❌ ABSENT</span>
+                                            {% else %}
+                                                {{ item.status|capfirst }}
+                                            {% endif %}
+                                        </td>
+                                        <td>{% if item.check_in %}{{ item.check_in|time:'g:i A' }}{% else %}—{% endif %}</td>
+                                        <td>{% if item.check_out %}{{ item.check_out|time:'g:i A' }}{% else %}—{% endif %}</td>
+                                        <td>{% if item.reason %}{{ item.reason|truncatechars:30 }}{% else %}—{% endif %}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 {% else %}
                     <p>No attendance history available yet.</p>
                 {% endif %}
             </div>
         </div>
-
-        <style>
-            textarea { 
-                width: 100%; 
-                padding: 10px 12px; 
-                border: 1px solid #e6eefb; 
-                border-radius: 10px; 
-                background: #ffffff;
-                font-family: 'DM Sans', sans-serif;
-                resize: vertical;
-            }
-        </style>
     </div>
 </body>
 </html>

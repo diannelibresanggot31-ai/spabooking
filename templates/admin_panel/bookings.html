@@ -1,12 +1,12 @@
 {% extends "admin_panel/base.html" %}
-
+ 
 {% block page_title %}Manage Bookings{% endblock %}
-
+ 
 {% block content %}
 <style>
     .filters {
-        background: white;
-        color: #111;
+        background: #FAFAF7;
+        color: #2C2015;
         border-radius: 15px;
         padding: 20px;
         margin-bottom: 25px;
@@ -22,13 +22,17 @@
     }
     .booking-table {
         width: 100%;
-        background: white;
-        color: #111;
+        background: #FAFAF7;
+        color: #2C2015;
         border-radius: 15px;
-        overflow: hidden;
+        overflow-x: auto;
+    }
+    .booking-table table {
+        width: 100%;
+        border-collapse: collapse;
     }
     .booking-table th {
-        background: #0a0e27;
+        background: #C8522A;
         color: white;
         padding: 12px;
         text-align: left;
@@ -42,36 +46,39 @@
         border-radius: 20px;
         font-size: 11px;
         font-weight: 600;
+        display: inline-block;
     }
     .badge-pending { background: #fff3cd; color: #856404; }
     .badge-verify { background: #d4edda; color: #155724; }
     .badge-complete { background: #cce5ff; color: #004085; }
     .badge-cancelled { background: #f8d7da; color: #721c24; }
+    
     .status-form {
-        display: inline;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
     .status-select {
         padding: 6px 10px;
         border-radius: 20px;
-        border: 1px solid #ddd;
-        font-size: 13px;
+        border: 1px solid rgba(200,82,42,0.3);
+        font-size: 12px;
+        background: #FAFAF7;
+        color: #2C2015;
+        cursor: pointer;
     }
     .update-btn {
-        margin-left: 8px;
-        padding: 8px 14px;
-        min-width: 90px;
-        border-radius: 10px;
+        padding: 5px 12px;
+        border-radius: 20px;
         border: none;
-        background: #1f6feb;
+        background: #C8522A;
         color: white;
-        font-size: 13px;
+        font-size: 11px;
         cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        transition: background 0.2s;
     }
     .update-btn:hover {
-        background: #155bb5;
+        background: #8B2A10;
     }
     .page-header {
         margin-bottom: 22px;
@@ -79,26 +86,77 @@
     .page-header h2 {
         margin: 0 0 8px;
         font-size: 24px;
-        color: #111827;
+        color: #2C2015;
     }
     .page-header p {
         margin: 0;
-        color: #4b5563;
+        color: rgba(44,32,21,0.65);
         line-height: 1.6;
     }
     .filter-label {
         font-size: 14px;
-        color: #374151;
+        color: #2C2015;
         font-weight: 600;
+    }
+    .payment-info {
+        font-size: 11px;
+        color: #666;
+        margin-top: 4px;
+    }
+    .gcash-ref {
+        font-size: 10px;
+        color: #C8522A;
+        font-family: monospace;
+    }
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+    }
+    .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #dc3545;
+    }
+    .info-message {
+        background: #cce5ff;
+        color: #004085;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #007bff;
+    }
+    @media (max-width: 1200px) {
+        .booking-table {
+            overflow-x: scroll;
+        }
+        .booking-table table {
+            min-width: 1000px;
+        }
     }
 </style>
 
 <div class="page-header">
     <div>
         <h2>Booking Management</h2>
-        <p>Use this page to review customer bookings and update statuses. Select a status filter to display only Pending, Verify, Complete, or Cancelled bookings.</p>
+        <p>Use this page to review customer bookings and update statuses.</p>
     </div>
 </div>
+
+<!-- ONLY ONE MESSAGES BLOCK - Displayed here -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="{% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% elif message.tags == 'info' %}info-message{% else %}info-message{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
 <div class="filters">
     <span class="filter-label">Filter by status:</span>
@@ -106,72 +164,124 @@
         <select name="status" class="filter-select" onchange="this.form.submit()">
             <option value="">All Status</option>
             <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-            <option value="verify" {% if status_filter == 'verify' %}selected{% endif %}>Verify</option>
-            <option value="complete" {% if status_filter == 'complete' %}selected{% endif %}>Complete</option>
+            <option value="verify" {% if status_filter == 'verify' %}selected{% endif %}>Verified</option>
+            <option value="complete" {% if status_filter == 'complete' %}selected{% endif %}>Complete Session</option>
             <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
         </select>
     </form>
 </div>
 
-<table class="booking-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Booking #</th>
-            <th>Customer</th>
-            <th>Service / Package</th>
-            <th>Room</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Update Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for booking in bookings %}
-        <tr>
-            <td>{{ booking.id }}</td>
-            <td>{{ booking.booking_number|default:booking.id }}</td>
-            <td>{{ booking.customer.username }}</td>
-            <td>{% if booking.service %}{{ booking.service.name }}{% elif booking.package %}{{ booking.package.name }}{% else %}—{% endif %}</td>
-            <td>{% if booking.room %}Room {{ booking.room.room_number }}{% else %}—{% endif %}</td>
-            <td>{{ booking.booking_date }}</td>
-            <td>{{ booking.booking_time|time:"g:i A" }}</td>
-            <td>₱{{ booking.total_amount }}</td>
-            {% comment %} normalize status display and class for legacy values {% endcomment %}
-            {% if booking.status == 'confirmed' %}
-                {% with status_class='verify' status_label='Verify' %}
-                    <td><span class="status-badge badge-{{ status_class }}">{{ status_label }}</span></td>
-                {% endwith %}
-            {% elif booking.status == 'completed' %}
-                {% with status_class='complete' status_label='Complete' %}
-                    <td><span class="status-badge badge-{{ status_class }}">{{ status_label }}</span></td>
-                {% endwith %}
-            {% else %}
-                <td><span class="status-badge badge-{{ booking.status }}">{{ booking.status|title }}</span></td>
-            {% endif %}
-            <td>
-                <form method="post" action="{% url 'admin_panel:update_booking' booking.id %}" class="status-form">
-                    {% csrf_token %}
-                    <select name="new_status" class="status-select">
-                        <option value="pending" {% if booking.status == 'pending' %}selected{% endif %}>Pending</option>
-                        <option value="verify" {% if booking.status == 'verify' or booking.status == 'confirmed' %}selected{% endif %}>Verify</option>
-                        <option value="complete" {% if booking.status == 'complete' or booking.status == 'completed' %}selected{% endif %}>Complete</option>
-                    </select>
-                    <button type="submit" class="update-btn">Update</button>
-                </form>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="10" style="text-align:center; padding:40px; color:#4a5568;">No bookings found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="booking-table">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Booking #</th>
+                <th>Customer</th>
+                <th>Service</th>
+                <th>Room</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Amount</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in bookings %}
+            {% with booking=item.booking payment=item.payment %}
+            <tr>
+                <td>{{ booking.id }}</td>
+                <td>{{ booking.booking_number|default:booking.id }}</td>
+                <td>{{ booking.customer.username }}</td>
+                <td>
+                    {% if booking.service %}{{ booking.service.name }}
+                    {% elif booking.package %}{{ booking.package.name }}
+                    {% else %}—{% endif %}
+                    {% if payment and payment.gcash_reference %}
+                    <div class="gcash-ref">Ref: {{ payment.gcash_reference|truncatechars:10 }}</div>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if booking.room %}
+                        Room {{ booking.room.room_number }}
+                        <div class="payment-info">{{ booking.room.get_room_type_display }}</div>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>{{ booking.booking_date }}</td>
+                <td>{{ booking.booking_time|time:"g:i A" }}</td>
+                <td>₱{{ booking.total_amount }}</td>
+                <td>
+                    {% if booking.payment_method == 'gcash' %}
+                        💳 GCash
+                        {% if payment %}
+                            {% if payment.status == 'verified' %}
+                                <div class="payment-info" style="color:green;">✓ Verified</div>
+                            {% else %}
+                                <div class="payment-info" style="color:orange;">⏳ Pending</div>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        💵 Cash
+                        {% if booking.status == 'complete' %}
+                            <div class="payment-info" style="color:green;">✓ Paid</div>
+                        {% else %}
+                            <div class="payment-info">Pay on arrival</div>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if booking.status == 'pending' %}
+                        <span class="status-badge badge-pending">⏳ PENDING</span>
+                    {% elif booking.status == 'verify' %}
+                        <span class="status-badge badge-verify">✅ VERIFIED</span>
+                    {% elif booking.status == 'complete' %}
+                        <span class="status-badge badge-complete">🎉 COMPLETE SESSION</span>
+                    {% elif booking.status == 'cancelled' %}
+                        <span class="status-badge badge-cancelled">❌ CANCELLED</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'admin_panel:update_booking' booking.id %}" 
+                          onsubmit="return confirm('⚠️ Warning: This action cannot be undone!\n\nAre you sure you want to change the status?');">
+                        {% csrf_token %}
+                        <select name="new_status" class="status-select">
+                            <option value="pending" {% if booking.status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="verify" {% if booking.status == 'verify' %}selected{% endif %}>Verify Payment</option>
+                            <option value="complete" {% if booking.status == 'complete' %}selected{% endif %}>Complete Session</option>
+                            <option value="cancelled" {% if booking.status == 'cancelled' %}selected{% endif %}>Cancel</option>
+                        </select>
+                        <button type="submit" class="update-btn">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endwith %}
+            {% empty %}
+            <tr>
+                <td colspan="11" style="text-align:center; padding:40px;">
+                    No bookings found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-
-
-
+<script>
+    // Optional: Remove any duplicate messages just in case
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.success-message, .error-message, .info-message');
+        if (messages.length > 1) {
+            // Keep the first one, remove duplicates
+            for (let i = 1; i < messages.length; i++) {
+                if (messages[i].innerHTML === messages[0].innerHTML) {
+                    messages[i].remove();
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}

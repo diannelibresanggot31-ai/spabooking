@@ -6,7 +6,8 @@
 <style>
     .chat-container {
         display: flex;
-        height: 600px;
+        height: calc(100vh - 200px);
+        min-height: 500px;
         background: white;
         border-radius: 15px;
         overflow: hidden;
@@ -19,39 +20,74 @@
         padding: 20px;
         overflow-y: auto;
     }
+    .customer-list h4 {
+        margin-bottom: 15px;
+        color: #2C2015;
+        font-size: 16px;
+    }
     .customer-item {
         display: flex;
         align-items: center;
-        padding: 10px;
+        padding: 12px;
         margin-bottom: 10px;
         border-radius: 10px;
         cursor: pointer;
         transition: background-color 0.2s;
+        background: white;
+        border: 1px solid #e9ecef;
+        position: relative;
     }
     .customer-item:hover {
         background: #e9ecef;
+        transform: translateX(2px);
     }
     .customer-item.active {
-        background: #007bff;
+        background: #C8522A;
         color: white;
+        border-color: #C8522A;
+    }
+    .customer-item.active .customer-email {
+        color: rgba(255,255,255,0.8);
     }
     .customer-avatar {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
-        margin-right: 10px;
+        margin-right: 12px;
         object-fit: cover;
     }
     .avatar-placeholder {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
-        background: #6c757d;
+        background: #C8522A;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        margin-right: 10px;
+        margin-right: 12px;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .customer-info {
+        flex: 1;
+    }
+    .customer-name {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+    .customer-email {
+        font-size: 11px;
+        color: #6c757d;
+    }
+    .unread-badge-small {
+        background: #dc3545;
+        color: white;
+        border-radius: 30px;
+        padding: 2px 8px;
+        font-size: 10px;
+        margin-left: 8px;
     }
     .chat-area {
         flex: 1;
@@ -60,9 +96,34 @@
     }
     .chat-header {
         padding: 20px;
-        background: #007bff;
+        background: #C8522A;
         color: white;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .chat-header h4 {
+        margin: 0;
+        font-size: 18px;
+    }
+    .chat-header p {
+        margin: 5px 0 0;
+        font-size: 12px;
+        opacity: 0.9;
+    }
+    .clear-history-btn {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background 0.2s;
+    }
+    .clear-history-btn:hover {
+        background: rgba(255,255,255,0.3);
     }
     .chat-messages {
         flex: 1;
@@ -71,8 +132,9 @@
         background: #f8f9fa;
     }
     .message {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         display: flex;
+        position: relative;
     }
     .message.sent {
         justify-content: flex-end;
@@ -82,26 +144,61 @@
     }
     .message-content {
         max-width: 70%;
-        padding: 10px 15px;
+        padding: 12px 18px;
         border-radius: 20px;
         position: relative;
+        word-wrap: break-word;
     }
     .message.sent .message-content {
-        background: #007bff;
+        background: #C8522A;
         color: white;
+        border-bottom-right-radius: 5px;
     }
     .message.received .message-content {
         background: white;
         color: #333;
         border: 1px solid #e9ecef;
+        border-bottom-left-radius: 5px;
     }
     .message-time {
-        font-size: 11px;
-        color: #666;
+        font-size: 10px;
         margin-top: 5px;
+        opacity: 0.7;
     }
     .message.sent .message-time {
         text-align: right;
+    }
+    .message-actions {
+        position: absolute;
+        top: -15px;
+        right: 0;
+        display: none;
+        gap: 5px;
+        background: white;
+        padding: 2px 8px;
+        border-radius: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 10;
+    }
+    .message.received .message-actions {
+        right: auto;
+        left: 0;
+    }
+    .message:hover .message-actions {
+        display: flex;
+    }
+    .delete-message-btn {
+        background: none;
+        border: none;
+        color: #dc3545;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 2px 5px;
+        border-radius: 5px;
+    }
+    .delete-message-btn:hover {
+        background: #dc3545;
+        color: white;
     }
     .chat-input {
         padding: 20px;
@@ -114,83 +211,121 @@
     }
     .message-input {
         flex: 1;
-        padding: 10px 15px;
+        padding: 12px 18px;
         border: 1px solid #e9ecef;
         border-radius: 25px;
         outline: none;
+        font-size: 14px;
+    }
+    .message-input:focus {
+        border-color: #C8522A;
     }
     .send-btn {
-        padding: 10px 20px;
-        background: #007bff;
+        padding: 12px 24px;
+        background: #C8522A;
         color: white;
         border: none;
         border-radius: 25px;
         cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s;
     }
     .send-btn:hover {
-        background: #0056b3;
+        background: #a5421f;
     }
     .no-selection {
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100%;
-        color: #666;
-        font-size: 18px;
+        color: #6c757d;
+        text-align: center;
+    }
+    @media (max-width: 768px) {
+        .customer-list {
+            width: 200px;
+        }
+        .message-content {
+            max-width: 85%;
+        }
     }
 </style>
 
-<h2>Customer Inquiries</h2>
+<div style="margin-bottom: 20px;">
+    <h2 style="margin: 0;">🙋 Customer Inquiries</h2>
+    <p style="color: #6c757d; margin-top: 5px;">Reply to customer messages</p>
+</div>
 
 <div class="chat-container">
     <div class="customer-list">
-        <h4>Customers</h4>
+        <h4>👤 Customers</h4>
         {% for customer in customers %}
         <div class="customer-item {% if selected_customer and selected_customer.id == customer.id %}active{% endif %}"
-             onclick="selectCustomer({{ customer.id }}, '{{ customer.username }}')">
+             onclick="selectCustomer({{ customer.id }})">
             {% if customer.profile_picture %}
                 <img src="{{ customer.profile_picture.url }}" alt="Avatar" class="customer-avatar">
             {% else %}
                 <div class="avatar-placeholder">{{ customer.username|first|upper }}</div>
             {% endif %}
-            <div>
-                <div><strong>{{ customer.username }}</strong></div>
-                <div style="font-size: 12px; color: #666;">{{ customer.email }}</div>
+            <div class="customer-info">
+                <div class="customer-name">{{ customer.username }}</div>
+                <div class="customer-email">{{ customer.email }}</div>
             </div>
+            {% if customer.unread_count > 0 %}
+            <div class="unread-badge-small">{{ customer.unread_count }}</div>
+            {% endif %}
         </div>
+        {% empty %}
+        <p style="text-align: center; color: #6c757d;">No customers found.</p>
         {% endfor %}
     </div>
     
     <div class="chat-area">
         {% if selected_customer %}
         <div class="chat-header">
-            <h4>Chat with {{ selected_customer.username }}</h4>
+            <div>
+                <h4>Chat with {{ selected_customer.username }}</h4>
+                <p>{{ selected_customer.email }}</p>
+            </div>
+            <div>
+                <button class="clear-history-btn" onclick="clearHistory({{ selected_customer.id }}, '{{ selected_customer.username }}')">
+                    🗑️ Clear History
+                </button>
+            </div>
         </div>
         
         <div class="chat-messages" id="chatMessages">
             {% for message in chat_messages %}
-            <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}">
+            <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}" id="msg-{{ message.id }}">
                 <div class="message-content">
                     {{ message.message }}
                     <div class="message-time">{{ message.timestamp|date:"M d, H:i" }}</div>
+                    <div class="message-actions">
+                        <button class="delete-message-btn" onclick="deleteMessage({{ message.id }})" title="Delete this message">🗑️</button>
+                    </div>
                 </div>
+            </div>
+            {% empty %}
+            <div style="text-align: center; color: #6c757d; padding: 40px;">
+                No messages yet. Start the conversation!
             </div>
             {% endfor %}
         </div>
         
         <div class="chat-input">
-            <form class="chat-form" id="chatForm" method="post" action="{% url 'admin_panel:send_chat_message' %}">
+            <form class="chat-form" method="post" action="{% url 'admin_panel:send_chat_message' %}">
                 {% csrf_token %}
-                <input type="hidden" name="receiver_id" id="receiverId" value="{{ selected_customer.id }}">
-                <input type="text" name="message" id="messageInput" class="message-input" placeholder="Type your message..." required>
-                <button type="submit" class="send-btn">Send</button>
+                <input type="hidden" name="receiver_id" value="{{ selected_customer.id }}">
+                <input type="text" name="message" class="message-input" 
+                       placeholder="Type your reply..." required autocomplete="off">
+                <button type="submit" class="send-btn">Send Reply 📤</button>
             </form>
         </div>
         {% else %}
         <div class="no-selection">
             <div>
-                <i class="fas fa-comments" style="font-size: 48px; color: #ccc; margin-bottom: 20px;"></i>
-                <p>Select a customer to view their inquiry</p>
+                <i>💬</i>
+                <p>Select a customer from the list<br>to view and reply to messages</p>
             </div>
         </div>
         {% endif %}
@@ -198,19 +333,81 @@
 </div>
 
 <script>
-function selectCustomer(customerId, customerName) {
-    window.location.href = '?customer=' + customerId;
-}
-
-document.getElementById('chatForm')?.addEventListener('submit', function(e) {
-    setTimeout(() => {
-        document.getElementById('messageInput').value = '';
-    }, 100);
-});
-
-const chatMessages = document.getElementById('chatMessages');
-if (chatMessages) {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+    function selectCustomer(customerId) {
+        window.location.href = '?customer=' + customerId;
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    function deleteMessage(messageId) {
+        if (confirm('Delete this message? It will be removed from your view only.')) {
+            fetch(`/admin-panel/delete-message/${messageId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const msgElement = document.getElementById(`msg-${messageId}`);
+                    if (msgElement) {
+                        msgElement.style.display = 'none';
+                    }
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Network error. Please try again.');
+            });
+        }
+    }
+    
+    function clearHistory(userId, userName) {
+        if (confirm(`Clear ALL messages with ${userName} from your chat history?\n\nThis will only remove messages from YOUR view. The other person will still see their messages.\n\nThis action cannot be undone.`)) {
+            fetch(`/admin-panel/clear-chat/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Network error. Please try again.');
+            });
+        }
+    }
+    
+    // Auto scroll to bottom of chat
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 </script>
 {% endblock %}

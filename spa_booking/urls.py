@@ -11,6 +11,7 @@ from payments.models import Payment
 from bookings.models import Booking
 from services.models import Room
 from staff.models import StaffAttendance, ChatMessage
+from core import views as core_views  # ADD THIS LINE - Keep everything else
 
 
 # ── Custom Admin Site ──────────────────────────────────────────────────────────
@@ -51,7 +52,7 @@ for model, model_admin in admin.site._registry.items():
 
 urlpatterns = [
     path('admin/', custom_admin_site.urls),   # ← use custom admin
-    path('', include('core.urls')),
+    path('', include('core.urls')),  # Keep this - includes home, login, etc.
     path('bookings/', include('bookings.urls')),
     path('payments/', include('payments.urls')),
     path('staff/', include('staff.urls')),

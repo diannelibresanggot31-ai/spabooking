@@ -9,29 +9,29 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #c9a84c;
-            --primary-light: #e0c46a;
-            --primary-soft: rgba(201,168,76,0.12);
-            --dark: #0f1624;
-            --dark-2: #141d2e;
-            --dark-3: #1a2540;
-            --dark-4: #202c47;
-            --accent: #f0d080;
+            --primary: #C8522A;
+            --primary-light: #d9693f;
+            --primary-soft: rgba(200,82,42,0.10);
+            --dark: #F5EDE4;
+            --dark-2: #FAFAF7;
+            --dark-3: #EDE3D8;
+            --dark-4: #e4d6c7;
+            --accent: #8B2A10;
             --white: #ffffff;
-            --gray-1: #111827;
-            --gray-2: #1a2336;
-            --gray-3: #243050;
-            --text-dark: #f0ead8;
-            --text-mid: #a8b8d0;
-            --text-light: #6a7d9a;
-            --success: #4ade80;
-            --warning: #fbbf24;
-            --info: #60a5fa;
-            --danger: #f87171;
+            --gray-1: #f0e8de;
+            --gray-2: #e8ddd3;
+            --gray-3: #d8cdc2;
+            --text-dark: #2C2015;
+            --text-mid: #5a4035;
+            --text-light: #8B6050;
+            --success: #2d8a4e;
+            --warning: #b07d1a;
+            --info: #1a5fa8;
+            --danger: #c0392b;
             --sidebar-w: 220px;
-            --shadow-sm: 0 2px 12px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 24px rgba(0,0,0,0.4);
-            --shadow-lg: 0 8px 48px rgba(0,0,0,0.5);
+            --shadow-sm: 0 2px 12px rgba(44,32,21,0.10);
+            --shadow-md: 0 4px 24px rgba(44,32,21,0.15);
+            --shadow-lg: 0 8px 48px rgba(44,32,21,0.20);
             --radius: 14px;
             --radius-sm: 10px;
         }
@@ -46,7 +46,6 @@
             display: flex;
         }
  
-        /* ── SIDEBAR ── */
         .sidebar {
             width: var(--sidebar-w);
             background: var(--dark-2);
@@ -58,13 +57,13 @@
             flex-direction: column;
             z-index: 200;
             transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-            border-right: 1px solid rgba(201,168,76,0.1);
+            border-right: 1px solid rgba(200,82,42,0.15);
         }
         .sidebar.open { transform: translateX(0); }
  
         .sidebar-logo {
             padding: 28px 22px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid rgba(44,32,21,0.08);
         }
         .sidebar-logo .brand {
             font-family: 'Playfair Display', serif;
@@ -89,7 +88,7 @@
             font-size: 13.5px; font-weight: 500; cursor: pointer;
             transition: all 0.18s; margin-bottom: 2px;
         }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text-dark); }
+        .nav-item:hover { background: rgba(44,32,21,0.06); color: var(--text-dark); }
         .nav-item.active {
             background: var(--primary-soft);
             color: var(--primary);
@@ -104,18 +103,28 @@
  
         .sidebar-footer {
             padding: 14px 10px;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(44,32,21,0.08);
         }
         .user-pill {
             display: flex; align-items: center; gap: 10px;
             padding: 10px 12px; border-radius: var(--radius-sm);
-            background: rgba(255,255,255,0.04);
+            background: rgba(44,32,21,0.05);
         }
         .avatar {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: linear-gradient(135deg, #8b5e2d, var(--primary));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 13px; font-weight: 700; color: var(--dark); flex-shrink: 0;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C8522A, #8B2A10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #FAFAF7;
+            flex-shrink: 0;
+        }
+        .avatar img {
+            width: 100%; height: 100%; object-fit: cover;
+            border-radius: 50%;
         }
         .user-info .name { font-size: 13px; font-weight: 600; color: var(--text-dark); }
         .user-info .role { font-size: 10px; color: var(--text-light); }
@@ -126,25 +135,22 @@
         }
         .logout-btn:hover { color: var(--danger); }
  
-        /* ── OVERLAY ── */
         .overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.65); z-index: 150;
         }
         .overlay.show { display: block; }
  
-        /* ── MAIN ── */
         .main {
             margin-left: 0; flex: 1;
             display: flex; flex-direction: column; min-height: 100vh;
         }
  
-        /* ── TOPBAR ── */
         .topbar {
             background: var(--dark-2);
             padding: 14px 28px;
             display: flex; align-items: center; gap: 14px;
-            border-bottom: 1px solid rgba(201,168,76,0.1);
+            border-bottom: 1px solid rgba(200,82,42,0.15);
             position: sticky; top: 0; z-index: 100;
         }
         .topbar-title {
@@ -154,10 +160,10 @@
         .search-bar { flex: 1; max-width: 380px; margin-left: auto; position: relative; }
         .search-bar input {
             width: 100%; padding: 9px 16px 9px 38px;
-            border: 1px solid rgba(201,168,76,0.18);
+            border: 1px solid rgba(200,82,42,0.2);
             border-radius: 50px; font-size: 13px;
             font-family: 'DM Sans', sans-serif;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255,255,255,0.7);
             outline: none; color: var(--text-dark);
             transition: border-color 0.2s;
         }
@@ -170,12 +176,12 @@
         .topbar-actions { display: flex; gap: 10px; align-items: center; position: relative; }
         .topbar-btn {
             width: 36px; height: 36px; border-radius: 50%;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(201,168,76,0.15);
+            background: rgba(200,82,42,0.08);
+            border: 1px solid rgba(200,82,42,0.18);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-size: 15px; transition: background 0.2s; position: relative; color: var(--text-mid);
         }
-        .topbar-btn:hover { background: rgba(201,168,76,0.12); color: var(--primary); }
+        .topbar-btn:hover { background: rgba(200,82,42,0.15); color: var(--primary); }
         .badge-notif {
             position: absolute; top: 4px; right: 4px;
             min-width: 14px; height: 14px; border-radius: 7px;
@@ -185,8 +191,8 @@
         }
         .notification-panel {
             position: absolute; top: 44px; right: 0;
-            width: 260px; background: var(--dark-3);
-            border: 1px solid rgba(201,168,76,0.15);
+            width: 260px; background: #FAFAF7;
+            border: 1px solid rgba(200,82,42,0.2);
             border-radius: 14px; box-shadow: var(--shadow-lg);
             padding: 16px; display: none; z-index: 150;
         }
@@ -200,16 +206,15 @@
             font-size: 13px; font-weight: 700;
         }
  
-        /* ── HAMBURGER ── */
         .hamburger {
             display: flex; flex-direction: column; justify-content: center;
             align-items: center; gap: 5px;
-            width: 36px; height: 36px; background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(201,168,76,0.15);
+            width: 36px; height: 36px; background: rgba(200,82,42,0.08);
+            border: 1px solid rgba(200,82,42,0.18);
             border-radius: 8px; cursor: pointer; padding: 7px;
             transition: background 0.2s; flex-shrink: 0;
         }
-        .hamburger:hover { background: rgba(201,168,76,0.12); }
+        .hamburger:hover { background: rgba(200,82,42,0.15); }
         .hamburger span {
             display: block; width: 18px; height: 2px;
             background: var(--primary); border-radius: 2px;
@@ -218,21 +223,19 @@
         .hamburger.open span:nth-child(2) { opacity: 0; }
         .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
  
-        /* ── PAGE BODY ── */
         .page-body { padding: 28px 32px; flex: 1; }
  
-        /* ── WELCOME BANNER ── */
         .welcome-banner {
-            background: linear-gradient(135deg, var(--dark-3) 0%, #1e2d50 50%, #1a2840 100%);
+            background: linear-gradient(135deg, #EDE3D8 0%, #e0d0c0 50%, #d8c8b5 100%);
             border-radius: var(--radius); padding: 28px 32px; color: var(--text-dark);
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 24px; position: relative; overflow: hidden;
-            border: 1px solid rgba(201,168,76,0.12);
+            border: 1px solid rgba(200,82,42,0.12);
         }
         .welcome-banner::before {
             content: ''; position: absolute; top: -60px; right: -60px;
             width: 240px; height: 240px;
-            background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(200,82,42,0.08) 0%, transparent 70%);
             border-radius: 50%;
         }
         .welcome-text h1 {
@@ -250,7 +253,6 @@
         }
         .welcome-cta:hover { background: var(--primary-light); transform: translateY(-1px); }
  
-        /* ── STATS ROW ── */
         .stats-row {
             display: grid; grid-template-columns: repeat(3, 1fr);
             gap: 14px; margin-bottom: 24px;
@@ -260,33 +262,31 @@
             padding: 18px 20px; box-shadow: var(--shadow-sm);
             display: flex; align-items: center; gap: 14px;
             transition: box-shadow 0.2s, transform 0.2s;
-            border: 1px solid rgba(201,168,76,0.08);
+            border: 1px solid rgba(200,82,42,0.08);
         }
-        .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: rgba(201,168,76,0.2); }
+        .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: rgba(200,82,42,0.2); }
         .stat-icon {
             width: 46px; height: 46px; border-radius: 13px;
             display: flex; align-items: center; justify-content: center;
             font-size: 21px; flex-shrink: 0;
         }
-        .stat-icon.purple { background: rgba(201,168,76,0.12); }
+        .stat-icon.purple { background: rgba(200,82,42,0.12); }
         .stat-icon.green  { background: rgba(74,222,128,0.1); }
         .stat-icon.blue   { background: rgba(96,165,250,0.1); }
         .stat-info .value { font-size: 24px; font-weight: 700; color: var(--accent); line-height: 1; }
         .stat-info .label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
  
-        /* ── CONTENT GRID ── */
         .content-grid { display: grid; grid-template-columns: 1fr 330px; gap: 18px; }
  
-        /* ── PANEL ── */
         .panel {
             background: var(--dark-2); border-radius: var(--radius);
             box-shadow: var(--shadow-sm); overflow: hidden;
-            border: 1px solid rgba(201,168,76,0.08);
+            border: 1px solid rgba(200,82,42,0.08);
         }
         .panel-header {
             padding: 16px 20px 13px;
             display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid rgba(44,32,21,0.08);
         }
         .chat-popup {
             display: none; position: fixed;
@@ -312,8 +312,8 @@
         .chat-partner-btn {
             padding: 8px 14px;
             border-radius: 999px;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(44,32,21,0.1);
+            background: rgba(44,32,21,0.08);
             color: var(--text-dark);
             cursor: pointer;
             transition: background 0.2s, color 0.2s;
@@ -326,27 +326,22 @@
         .message-sent { margin-bottom: 10px; padding: 10px; border-radius: 12px; background: #e9f7ef; }
         .message-received { margin-bottom: 10px; padding: 10px; border-radius: 12px; background: #f1f3f5; }
  
-        /* ── SERVICE ROW ── */
         .service-row {
             display: flex; align-items: center; gap: 12px;
-            padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 11px 0; border-bottom: 1px solid rgba(44,32,21,0.06);
         }
         .service-row:last-child { border-bottom: none; }
         .service-thumb {
             width: 48px; height: 48px; border-radius: 11px;
-            background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+            background: linear-gradient(135deg, rgba(200,82,42,0.15), rgba(200,82,42,0.05));
             display: flex; align-items: center; justify-content: center;
             font-size: 20px; flex-shrink: 0;
-            border: 1px solid rgba(201,168,76,0.15);
+            border: 1px solid rgba(200,82,42,0.15);
             overflow: hidden;
         }
         .service-thumb img {
             width: 100%; height: 100%; object-fit: cover;
             display: block;
-        }
-        .avatar img {
-            width: 100%; height: 100%; object-fit: cover;
-            display: block; border-radius: 50%;
         }
         .service-info { flex: 1; }
         .service-info .sname { font-size: 13.5px; font-weight: 600; color: var(--text-dark); }
@@ -359,13 +354,17 @@
             transition: background 0.2s; margin-left: 6px;
         }
         .book-now-btn:hover { background: var(--primary-light); }
+        .book-now-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
         .heart-btn { background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px; transition: transform 0.2s; }
         .heart-btn:hover { transform: scale(1.25); }
  
-        /* ── BOOKING ITEM ── */
         .booking-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 12px 0; border-bottom: 1px solid rgba(44,32,21,0.06);
+            flex-wrap: wrap;
         }
         .booking-item:last-child { border-bottom: none; }
         .booking-num {
@@ -373,45 +372,60 @@
             background: var(--primary-soft); display: flex; align-items: center; justify-content: center;
             font-size: 10px; font-weight: 700; color: var(--primary); flex-shrink: 0;
         }
-        .booking-info { flex: 1; }
+        .booking-info { flex: 1; min-width: 180px; }
         .booking-info .bname { font-size: 13px; font-weight: 600; color: var(--text-dark); }
         .booking-info .bmeta { font-size: 11px; color: var(--text-light); margin-top: 2px; }
-        .status-pill { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
-        .status-pill.confirmed { background: rgba(74,222,128,0.12); color: #4ade80; }
-        .status-pill.pending   { background: rgba(251,191,36,0.12);  color: #fbbf24; }
-        .status-pill.completed { background: rgba(96,165,250,0.12);  color: #60a5fa; }
-        .status-pill.cancelled { background: rgba(248,113,113,0.12); color: #f87171; }
-        .cancel-booking-btn {
-            background: none; border: 1px solid var(--danger); color: var(--danger);
-            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
-            cursor: pointer; transition: all 0.2s; margin-left: 6px;
+        .room-info {
+            background: rgba(200,82,42,0.08);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            display: inline-block;
+            margin-top: 5px;
         }
-        .cancel-booking-btn:hover { background: var(--danger); color: white; }
+        .status-pill { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; display: inline-block; }
+        .status-pill.pending { background: rgba(251,191,36,0.12); color: #fbbf24; }
+        .status-pill.verify { background: rgba(34,139,34,0.12); color: #228B22; }
+        .status-pill.complete { background: rgba(96,165,250,0.12); color: #60a5fa; }
+        .status-pill.cancelled { background: rgba(248,113,113,0.12); color: #f87171; }
+        
+        .cancel-booking-btn {
+            background: none;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cancel-booking-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
  
-        /* ── CHIPS ── */
         .category-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 20px; }
         .chip {
             padding: 6px 14px; border-radius: 50px; font-size: 12px; font-weight: 600;
-            background: rgba(255,255,255,0.05); color: var(--text-mid);
+            background: rgba(44,32,21,0.06); color: var(--text-mid);
             cursor: pointer; transition: all 0.2s;
-            border: 1px solid rgba(201,168,76,0.12);
+            border: 1px solid rgba(200,82,42,0.12);
         }
         .chip:hover, .chip.active { background: var(--primary); color: var(--dark); border-color: var(--primary); }
  
-        /* ── FAV ITEM ── */
-        .fav-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .fav-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(44,32,21,0.06); }
         .fav-item:last-child { border-bottom: none; }
         .fav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
         .fav-name { font-size: 13px; font-weight: 600; color: var(--text-dark); flex: 1; }
         .fav-price { font-size: 13px; font-weight: 700; color: var(--primary); }
         .fav-heart { background: none; border: none; font-size: 15px; cursor: pointer; }
  
-        /* ── QUICK BOOK ── */
         .quick-book {
-            background: linear-gradient(135deg, #1a2840, #243050);
+            background: linear-gradient(135deg, #e8d8c8, #ddd0bf);
             border-radius: var(--radius); padding: 20px; color: var(--text-dark);
             margin-bottom: 14px;
-            border: 1px solid rgba(201,168,76,0.15);
+            border: 1px solid rgba(200,82,42,0.15);
         }
         .quick-book h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--accent); }
         .quick-book p { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
@@ -422,37 +436,35 @@
         }
         .quick-book-btn:hover { opacity: 0.88; }
  
-        /* ── CONTACT CARD ── */
         .contact-card {
             background: var(--dark-2); border-radius: var(--radius);
             box-shadow: var(--shadow-sm); padding: 16px 20px;
-            border: 1px solid rgba(201,168,76,0.08);
+            border: 1px solid rgba(200,82,42,0.08);
         }
         .contact-card h4 { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 12px; }
         .contact-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-mid); margin-bottom: 8px; }
         .contact-row span:first-child { font-size: 15px; }
  
-        /* ── CALENDAR ── */
         .schedule-section { margin-bottom: 20px; }
         .calendar-header {
-            background: var(--dark-3); color: var(--primary);
+            background: #EDE3D8; color: var(--primary);
             padding: 10px; text-align: center;
             border-radius: var(--radius-sm) var(--radius-sm) 0 0;
             font-weight: 600; display: flex;
             justify-content: space-between; align-items: center;
-            border: 1px solid rgba(201,168,76,0.15); border-bottom: none;
+            border: 1px solid rgba(200,82,42,0.15); border-bottom: none;
         }
         .month-nav { background: none; border: none; color: var(--primary); font-size: 18px; cursor: pointer; padding: 0 12px; }
         .calendar-weekdays {
             display: grid; grid-template-columns: repeat(7, 1fr);
-            background: var(--dark-3); text-align: center;
+            background: #EDE3D8; text-align: center;
             padding: 8px; font-weight: 600; font-size: 11px; color: var(--text-light);
-            border: 1px solid rgba(201,168,76,0.1); border-bottom: none;
+            border: 1px solid rgba(200,82,42,0.1); border-bottom: none;
         }
         .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--dark-2); }
         .calendar-day {
             min-height: 64px; padding: 5px;
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid rgba(44,32,21,0.05);
             cursor: pointer; transition: background 0.2s; font-size: 12px; color: var(--text-mid);
         }
         .calendar-day:hover { background: var(--primary-soft); }
@@ -468,19 +480,18 @@
             margin-top: 12px; padding: 10px;
             background: var(--primary-soft); border-radius: var(--radius-sm);
             font-size: 12px; color: var(--text-dark);
-            border: 1px solid rgba(201,168,76,0.2);
+            border: 1px solid rgba(200,82,42,0.2);
         }
  
-        /* ── MODAL ── */
         .modal {
             display: none; position: fixed; top: 0; left: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.7);
             z-index: 1000; justify-content: center; align-items: center;
         }
         .modal-content {
-            background: var(--dark-3); border-radius: var(--radius);
-            padding: 24px; max-width: 500px; width: 90%; max-height: 90%; overflow-y: auto;
-            border: 1px solid rgba(201,168,76,0.15);
+            background: #FAFAF7; border-radius: var(--radius);
+            padding: 24px; max-width: 550px; width: 90%; max-height: 90%; overflow-y: auto;
+            border: 1px solid rgba(200,82,42,0.15);
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-header h3 { font-size: 17px; color: var(--accent); font-family: 'Playfair Display', serif; }
@@ -489,45 +500,236 @@
         .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 12px; color: var(--text-mid); }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 9px 12px;
-            border: 1px solid rgba(201,168,76,0.2); border-radius: 8px;
+            border: 1px solid rgba(200,82,42,0.2); border-radius: 8px;
             font-family: 'DM Sans', sans-serif;
-            background: rgba(255,255,255,0.04); color: var(--text-dark); outline: none;
+            background: rgba(44,32,21,0.05); color: var(--text-dark); outline: none;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
         .payment-options { display: flex; gap: 10px; margin-bottom: 15px; }
         .payment-option {
             flex: 1; text-align: center; padding: 10px;
-            border: 2px solid rgba(255,255,255,0.1); border-radius: 8px;
+            border: 2px solid rgba(44,32,21,0.08); border-radius: 8px;
             cursor: pointer; transition: all 0.2s; color: var(--text-mid); font-size: 13px;
         }
         .payment-option.selected { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
         .gcash-fields { display: block; }
         .btn-submit {
+            position: relative;
+            z-index: 20;
+            pointer-events: all;
             background: var(--primary); color: var(--dark); border: none;
             padding: 13px; border-radius: 10px; width: 100%;
             font-weight: 700; cursor: pointer; font-size: 14px;
             transition: background 0.2s;
         }
         .btn-submit:hover { background: var(--primary-light); }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
         .error-message { color: var(--danger); font-size: 12px; margin-top: 5px; display: none; }
         .capacity-note { background: rgba(251,191,36,0.1); color: var(--warning); border: 1px solid rgba(251,191,36,0.25); padding: 8px; border-radius: 8px; font-size: 11px; margin-top: 10px; display: none; }
  
-        /* ── FAB ── */
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .room-option {
+            border: 2px solid rgba(200,82,42,0.2);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .room-option:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+        .room-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+        .room-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .room-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .room-type {
+            font-size: 12px;
+            color: var(--text-mid);
+        }
+ 
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .confirm-modal-content {
+            background: var(--dark-2);
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--primary);
+        }
+        .confirm-modal-content h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+        }
+        .confirm-modal-content p {
+            color: var(--text-mid);
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .warning-text {
+            color: var(--danger);
+            font-size: 13px;
+            background: rgba(192,57,43,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid var(--danger);
+            text-align: left;
+        }
+        .confirm-details {
+            text-align: left;
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(200,82,42,0.05);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .confirm-details div {
+            margin-bottom: 8px;
+        }
+        .confirm-details strong {
+            color: var(--primary);
+        }
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .confirm-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .confirm-yes {
+            background: var(--primary);
+            color: white;
+        }
+        .confirm-yes:hover {
+            background: var(--primary-light);
+        }
+        .confirm-no {
+            background: #e0e0e0;
+            color: var(--text-dark);
+        }
+        .confirm-no:hover {
+            background: #ccc;
+        }
+ 
+        /* Custom Notification */
+        .custom-notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        }
+        .notification-content {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            border-left: 4px solid;
+        }
+        .notification-content.success {
+            border-left-color: var(--success);
+        }
+        .notification-content.error {
+            border-left-color: var(--danger);
+        }
+        .notification-icon {
+            font-size: 20px;
+        }
+        .notification-message {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+ 
         .fab-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; }
         .fab-button {
             width: 50px; height: 50px; border-radius: 50%;
             background: var(--primary); border: none; color: var(--dark);
             font-size: 22px; cursor: pointer;
-            box-shadow: 0 4px 16px rgba(201,168,76,0.4); transition: transform 0.2s;
+            box-shadow: 0 4px 16px rgba(200,82,42,0.4); transition: transform 0.2s;
         }
         .fab-button:hover { transform: scale(1.08); background: var(--primary-light); }
-        .fab-menu { position: absolute; bottom: 60px; right: 0; display: none; flex-direction: column; gap: 8px; }
-        .fab-menu.show { display: flex; }
-        .fab-item { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 18px; box-shadow: var(--shadow-sm); }
-        .fab-item.msg { background: #0084ff; color: white; }
  
-        /* ── PACKAGES ── */
         #section-packages .panel { background: var(--dark-2); }
+ 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
  
         @media (max-width: 900px) {
             .sidebar { transform: translateX(-100%); }
@@ -602,8 +804,19 @@
                             {% for booking in bookings|slice:":4" %}
                             <div class="booking-item">
                                 <div class="booking-num">#{{ booking.id }}</div>
-                                <div class="booking-info"><div class="bname">{% if booking.service %}{{ booking.service.name }}{% else %}Spa Service{% endif %}</div><div class="bmeta">{{ booking.booking_date }} · ₱{{ booking.total_amount }}</div></div>
-                                <span class="status-pill {{ booking.status|lower }}">{{ booking.status|upper }}</span>
+                                <div class="booking-info">
+                                    <div class="bname">{% if booking.service %}{{ booking.service.name }}{% elif booking.package %}{{ booking.package.name }}{% else %}Spa Service{% endif %}</div>
+                                    <div class="bmeta">{{ booking.booking_date }} · ₱{{ booking.total_amount }}</div>
+                                    {% if booking.room %}
+                                    <div class="room-info">🏠 Room {{ booking.room.room_number }} ({{ booking.room.get_room_type_display }})</div>
+                                    {% endif %}
+                                </div>
+                                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                                    <span class="status-pill {{ booking.status|lower }}">{{ booking.status|upper }}</span>
+                                    {% if booking.status == 'pending' and booking.payment_method == 'cash' %}
+                                    <button class="cancel-booking-btn" onclick="cancelBooking({{ booking.id }})">Cancel</button>
+                                    {% endif %}
+                                </div>
                             </div>
                             {% empty %}<p style="color:var(--text-light);">No bookings yet.</p>{% endfor %}
                         </div>
@@ -654,63 +867,78 @@
                 </div>
             </div>
         </div>
-        <div id="section-services" style="display:none;"><div class="welcome-banner" style="margin-bottom:24px;"><div class="welcome-text"><h1>✨ All Services</h1><p>Browse and save your favorite treatments</p></div></div><div class="panel"><div class="panel-header"><div class="panel-title">Available Treatments</div></div><div class="category-chips"><span class="chip{% if not selected_category %} active{% endif %}" data-category="" onclick="filterByCategory(this, '')">All</span>{% for category in categories %}<span class="chip{% if selected_category == category.name %} active{% endif %}" data-category="{{ category.name }}" onclick="filterByCategory(this, '{{ category.name|escapejs }}')">{{ category.name }}</span>{% endfor %}</div><div class="panel-body" id="allServicesBody">{% for service in all_services %}<div class="service-row" data-category="{{ service.service_category.name|default:service.category|default:'' }}" data-name="{{ service.name|lower }}" data-id="{{ service.id }}"><div class="service-thumb">{% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.name }}">{% else %}💆{% endif %}</div><div class="service-info"><div class="sname">{{ service.name }}</div><div class="smeta">{{ service.duration_minutes }} min</div></div><div class="service-price">₱{{ service.price }}</div><button class="book-now-btn" onclick="openBookingModal({{ service.id }}, '{{ service.name|escapejs }}', {{ service.price }})">Book Now</button><button class="heart-btn" onclick="toggleLike({{ service.id }}, this)">{% if user in service.likes.all %}❤️{% else %}🤍{% endif %}</button></div>{% endfor %}</div></div></div>
-        <div id="section-bookings" style="display:none;">
-<div class="welcome-banner" style="margin-bottom:24px;"><div class="welcome-text"><h1>📋 My Bookings</h1><p>Track all your spa appointments</p></div></div>
-<div class="panel">
-    <div class="panel-header"><div class="panel-title">Booking History</div></div>
-    <div class="panel-body" id="bookingsListFull">
-        {% for bwp in bookings_with_payment %}
-        {% with booking=bwp.booking payment=bwp.payment %}
-        <div class="booking-item" style="flex-wrap:wrap;gap:10px;">
-            <div class="booking-num">#{{ booking.id }}</div>
-            <div class="booking-info" style="flex:1;min-width:160px;">
-                <div class="bname">{% if booking.service %}{{ booking.service.name }}{% else %}Spa Service{% endif %}</div>
-                <div class="bmeta">
-                    {{ booking.booking_date }} · {{ booking.booking_time|time:"g:i A" }} · ₱{{ booking.total_amount }}
-                </div>
-                <div class="bmeta" style="margin-top:3px;">
-                    {% if booking.payment_method == 'gcash' %}
-                        💳 GCash —
-                        {% if payment and payment.status == 'verified' %}
-                            <span style="color:var(--success);font-weight:700;">✅ PAID</span>
-                        {% else %}
-                            <span style="color:var(--warning);font-weight:700;">⏳ Verification Pending</span>
-                        {% endif %}
-                    {% else %}
-                        💵 Cash —
-                        {% if booking.status == 'completed' %}
-                            <span style="color:var(--success);font-weight:700;">✅ PAID</span>
-                        {% else %}
-                            <span style="color:var(--text-light);">Pay on Arrival</span>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <span class="status-pill {{ booking.status|lower }}">{{ booking.status|upper }}</span>
-                {% if booking.status == 'confirmed' or booking.status == 'completed' %}
-                    <button class="book-now-btn" style="background:rgba(201,168,76,0.15);color:var(--primary);border:1px solid rgba(201,168,76,0.3);font-size:11px;"
-                            onclick="viewReceipt({{ booking.id }})">🧾 Receipt</button>
-                {% endif %}
-                {% if booking.status == 'pending' and booking.payment_method == 'cash' %}
-                    <form method="post" action="/cancel-booking/{{ booking.id }}/" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="cancel-booking-btn"
-                                onclick="return confirm('Remove this pending booking?')">cancel</button>
-                    </form>
-                {% endif %}
+        
+        <div id="section-services" style="display:none;">
+            <div class="welcome-banner" style="margin-bottom:24px;"><div class="welcome-text"><h1>✨ All Services</h1><p>Browse and save your favorite treatments</p></div></div>
+            <div class="panel"><div class="panel-header"><div class="panel-title">Available Treatments</div></div>
+                <div class="category-chips"><span class="chip{% if not selected_category %} active{% endif %}" data-category="" onclick="filterByCategory(this, '')">All</span>{% for category in categories %}<span class="chip{% if selected_category == category.name %} active{% endif %}" data-category="{{ category.name }}" onclick="filterByCategory(this, '{{ category.name|escapejs }}')">{{ category.name }}</span>{% endfor %}</div>
+                <div class="panel-body" id="allServicesBody">{% for service in all_services %}<div class="service-row" data-category="{{ service.service_category.name|default:service.category|default:'' }}" data-name="{{ service.name|lower }}" data-id="{{ service.id }}"><div class="service-thumb">{% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.name }}">{% else %}💆{% endif %}</div><div class="service-info"><div class="sname">{{ service.name }}</div><div class="smeta">{{ service.duration_minutes }} min</div></div><div class="service-price">₱{{ service.price }}</div><button class="book-now-btn" onclick="openBookingModal({{ service.id }}, '{{ service.name|escapejs }}', {{ service.price }}, {{ service.duration_minutes }}, {{ service.requires_room|yesno:'true,false' }})">Book Now</button><button class="heart-btn" onclick="toggleLike({{ service.id }}, this)">{% if user in service.likes.all %}❤️{% else %}🤍{% endif %}</button></div>{% endfor %}</div>
             </div>
         </div>
-        {% endwith %}
-        {% empty %}
-        <p style="color:var(--text-light);padding:20px 0;text-align:center;">No bookings yet. Book your first spa treatment!</p>
-        {% endfor %}
-    </div>
-</div>
-</div>
-        <div id="section-favorites" style="display:none;"><div class="welcome-banner" style="margin-bottom:24px;"><div class="welcome-text"><h1>❤️ My Favorites</h1><p>Services you've saved for later</p></div></div><div class="panel"><div class="panel-header"><div class="panel-title">Saved Services</div></div><div class="panel-body" id="favoritesFullList">{% for service in liked_services %}<div class="service-row"><div class="service-thumb">{% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.name }}">{% else %}💆{% endif %}</div><div class="service-info"><div class="sname">{{ service.name }}</div><div class="smeta">{{ service.duration_minutes }} min</div></div><div class="service-price">₱{{ service.price }}</div><button class="book-now-btn" onclick="openBookingModal({{ service.id }}, '{{ service.name|escapejs }}', {{ service.price }})">Book Now</button><button class="heart-btn" onclick="toggleLike({{ service.id }}, this)">❤️</button></div>{% empty %}<p style="color:var(--text-light);">No favorites yet.</p>{% endfor %}</div></div></div>
+        
+        <div id="section-bookings" style="display:none;">
+            <div class="welcome-banner" style="margin-bottom:24px;"><div class="welcome-text"><h1>📋 My Bookings</h1><p>Track all your spa appointments</p></div></div>
+            <div class="panel">
+                <div class="panel-header"><div class="panel-title">Booking History</div></div>
+                <div class="panel-body" id="bookingsListFull">
+                    {% for bwp in bookings_with_payment %}
+                    {% with booking=bwp.booking payment=bwp.payment %}
+                    <div class="booking-item" style="flex-wrap:wrap;gap:10px;">
+                        <div class="booking-num">#{{ booking.id }}</div>
+                        <div class="booking-info" style="flex:1;min-width:200px;">
+                            <div class="bname">{% if booking.service %}{{ booking.service.name }}{% elif booking.package %}{{ booking.package.name }}{% else %}Spa Service{% endif %}</div>
+                            <div class="bmeta">{{ booking.booking_date }} · {{ booking.booking_time|time:"g:i A" }} · ₱{{ booking.total_amount }}</div>
+                            {% if booking.room %}
+                            <div class="room-info">🏠 Room {{ booking.room.room_number }} ({{ booking.room.get_room_type_display }})</div>
+                            {% endif %}
+                            <div class="bmeta" style="margin-top:3px;">
+                                {% if booking.payment_method == 'gcash' %}
+                                    💳 GCash — 
+                                    {% if payment and payment.status == 'verified' %}
+                                        <span style="color:var(--success);font-weight:700;">✅ PAID</span>
+                                    {% else %}
+                                        <span style="color:var(--warning);font-weight:700;">⏳ Pending Verification</span>
+                                    {% endif %}
+                                {% else %}
+                                    💵 Cash — 
+                                    {% if booking.status == 'complete' %}
+                                        <span style="color:var(--success);font-weight:700;">✅ PAID</span>
+                                    {% else %}
+                                        <span style="color:var(--text-light);">Pay on Arrival</span>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+                            <span class="status-pill {{ booking.status|lower }}">
+                                {% if booking.status == 'complete' %}
+                                    COMPLETE SESSION
+                                {% else %}
+                                    {{ booking.status|upper }}
+                                {% endif %}
+                            </span>
+                            <div style="display:flex;gap:5px;">
+                                {% if booking.status == 'verify' or booking.status == 'complete' %}
+                                <button class="book-now-btn" style="background:rgba(200,82,42,0.15);color:var(--primary);border:1px solid rgba(200,82,42,0.3);font-size:11px;" onclick="viewReceipt({{ booking.id }})">🧾 View Receipt</button>
+                                {% endif %}
+                                {% if booking.status == 'pending' and booking.payment_method == 'cash' %}
+                                <button class="cancel-booking-btn" onclick="cancelBooking({{ booking.id }})">Cancel Booking</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endwith %}
+                    {% empty %}
+                    <p style="color:var(--text-light);padding:20px 0;text-align:center;">No bookings yet. Book your first spa treatment!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div id="section-favorites" style="display:none;"><div class="welcome-banner" style="margin-bottom:24px;"><div class="welcome-text"><h1>❤️ My Favorites</h1><p>Services you've saved for later</p></div></div><div class="panel"><div class="panel-header"><div class="panel-title">Saved Services</div></div><div class="panel-body" id="favoritesFullList">{% for service in liked_services %}<div class="service-row"><div class="service-thumb">{% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.name }}">{% else %}💆{% endif %}</div><div class="service-info"><div class="sname">{{ service.name }}</div><div class="smeta">{{ service.duration_minutes }} min</div></div><div class="service-price">₱{{ service.price }}</div><button class="book-now-btn" onclick="openBookingModal({{ service.id }}, '{{ service.name|escapejs }}', {{ service.price }}, {{ service.duration_minutes }}, {{ service.requires_room|yesno:'true,false' }})">Book Now</button><button class="heart-btn" onclick="toggleLike({{ service.id }}, this)">❤️</button></div>{% empty %}<p style="color:var(--text-light);">No favorites yet.</p>{% endfor %}</div></div></div>
+        
         <div id="section-schedule" style="display:none;"><div class="welcome-banner" style="margin-bottom:24px;"><div class="welcome-text"><h1>📅 My Schedule</h1><p>View all your upcoming appointments</p></div></div><div class="panel"><div class="panel-header"><div class="panel-title">Calendar View</div></div><div class="panel-body"><div class="schedule-section"><div class="calendar-header" id="calendarMonthHeader"></div><div class="calendar-weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="calendar-days" id="calendarDays"></div><div id="selectedDateInfo" class="selected-date-info" style="display:none;"></div></div></div></div></div>
+        
         <div id="section-packages" style="display:none;">
             <div class="welcome-banner" style="margin-bottom:24px;"><div class="welcome-text"><h1>🎁 Packages</h1><p>Special bundled deals for the best value</p></div></div>
             <div class="panel">
@@ -727,7 +955,7 @@
                             </div>
                         </div>
                         <div class="service-price">₱{{ package.price }}</div>
-                        <button class="book-now-btn" onclick="openBookingModal('pkg_{{ package.id }}', '{{ package.name|escapejs }}', {{ package.price }})">Book Now</button>
+                        <button class="book-now-btn" onclick="openBookingModal('pkg_{{ package.id }}', '{{ package.name|escapejs }}', {{ package.price }}, {{ package.total_duration_minutes }}, {{ package.requires_room|yesno:'true,false' }})">Book Now</button>
                     </div>
                     {% empty %}
                     <p style="color:var(--text-light);font-size:13px;">No packages available yet. Check back soon!</p>
@@ -737,14 +965,90 @@
         </div>
     </div>
 </div>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>📅 Book Your Appointment</h3><span class="close-modal" onclick="closeBookingModal()">&times;</span></div>
+<form id="bookingForm" method="post" action="/create-booking/" enctype="multipart/form-data">{% csrf_token %}
+    <input type="hidden" name="service" id="modalServiceId">
+    <input type="hidden" name="room" id="modalRoomId">
+    <div class="form-group"><label>Service</label><input type="text" id="modalServiceName" readonly style="background:#F5EDE4; color:#2C2015;"></div>
+    <div class="form-group"><label>Duration</label><input type="text" id="modalDuration" readonly style="background:#F5EDE4; color:#C8522A; font-weight:600;"></div>
+    <div class="form-group"><label>Price</label><input type="text" id="modalServicePrice" readonly style="background:#F5EDE4; color:#2C2015;"></div>
+    <div id="roomNoteGroup" class="form-group" style="display:none;">
+        <div style="padding:12px;border:1px solid rgba(200,82,42,0.25);border-radius:10px;background:rgba(200,82,42,0.08);color:#2C2015;">
+            🏠 This service requires a room. Please select a room below.
+        </div>
+    </div>
+    <div class="form-group"><label>Select Date</label><input type="date" name="booking_date" id="bookingDate" required></div>
+    <div class="form-group"><label>Select Time</label>
+        <select name="booking_time" id="bookingTime" required style="color:#2C2015;width:100%;padding:10px;border:1px solid rgba(200,82,42,0.3);border-radius:10px;background:#fff;font-size:14px;">
+            <option value="">Select a time</option>
+        </select>
+        <div id="timeHint" style="font-size:0.8rem;color:#C8522A;margin-top:8px;padding:8px;background:rgba(200,82,42,0.08);border-radius:8px;">⏰ <strong>Hours:</strong> 8 AM - 5 PM (Break 12 PM - 1 PM)<br>📅 <strong>Days:</strong> Mon - Sat (Closed Sunday)</div>
+    </div>
+    
+    <div id="roomSelectionGroup" class="form-group" style="display:none;">
+        <label>🏠 Select a Room</label>
+        <div id="roomsList" class="rooms-grid">
+            <p>Please select date and time first</p>
+        </div>
+        <div id="roomNote" style="font-size:12px; margin-top:8px;"></div>
+    </div>
+    
+    <div class="form-group"><label>Payment Method</label>
+        <div class="payment-options">
+            <div class="payment-option" id="optionGCash" onclick="selectPayment('gcash')">💳 GCash</div>
+            <div class="payment-option" id="optionCash" onclick="selectPayment('cash')">💵 Cash</div>
+        </div>
+        <input type="hidden" name="payment_method" id="paymentMethod" value="cash">
+    </div>
+    <div id="gcashFields" style="display:none;">
+        <div class="form-group"><label>GCash Reference Number</label><input type="text" name="gcash_reference" id="gcashRef" placeholder="Enter GCash reference number"></div>
+        <div class="form-group"><label>Upload Payment Screenshot</label><input type="file" name="payment_proof" id="paymentProof" accept="image/*"><p style="font-size:0.7rem; color:#dc3545; margin-top:5px;">⚠ Required for GCash payments</p><p style="font-size:0.8rem; color:#111; margin-top:10px; background:rgba(249,241,165,0.35); padding:10px; border-radius:8px;">Send payment to GCash number <strong>09477183613</strong>, then enter the reference number and upload the screenshot.</p></div>
+    </div>
+    <div class="form-group"><label>Special Requests (Optional)</label><textarea name="special_requests" rows="2"></textarea></div>
+    <div id="capacityNote" class="capacity-note"></div>
+    <div id="formError" class="error-message"></div>
+    <button type="submit" class="btn-submit">Confirm Booking →</button>
+</form>
+</div></div>
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <h3>⚠️ Confirm Your Booking</h3>
+        <p>Please review your booking details:</p>
+        <div id="confirmDetails" class="confirm-details"></div>
+        <div class="warning-text" id="warningText">
+            ⚠️ Cash payments cannot be cancelled after confirmation. Please ensure your schedule is fixed.
+        </div>
+        <p style="font-size: 12px; margin-top: 10px;">Are you sure you want to proceed?</p>
+        <div class="confirm-buttons">
+            <button class="confirm-btn confirm-no" onclick="closeConfirmModal()">No, Go Back</button>
+            <button class="confirm-btn confirm-yes" onclick="proceedWithBooking()">Yes, Confirm Booking</button>
+        </div>
+    </div>
+</div>
+
+<!-- Receipt Modal -->
+<div id="receiptModal" class="modal">
+    <div class="modal-content" style="max-width: 550px;">
+        <div class="modal-header">
+            <h3>🧾 Booking Receipt</h3>
+            <span class="close-modal" onclick="closeReceipt()">&times;</span>
+        </div>
+        <div id="receiptContent"></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button onclick="printReceipt()" style="flex:1; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">🖨️ Print / Save PDF</button>
+            <button onclick="closeReceipt()" style="flex:1; padding: 10px; background: #666; color: white; border: none; border-radius: 8px; cursor: pointer;">Close</button>
+        </div>
+    </div>
+</div>
  
-<div id="bookingModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>📅 Book Your Appointment</h3><span class="close-modal" onclick="closeBookingModal()">&times;</span></div><form id="bookingForm" method="post" action="/create-booking/" enctype="multipart/form-data">{% csrf_token %}<input type="hidden" name="service_id" id="modalServiceId"><div class="form-group"><label>Service</label><input type="text" id="modalServiceName" readonly style="background:#f5f5f5; color:#000000;"></div><div class="form-group"><label>Price</label><input type="text" id="modalServicePrice" readonly style="background:#f5f5f5; color:#000000;"></div><div class="form-group"><label>Select Date</label><input type="date" name="booking_date" id="bookingDate" required></div><div class="form-group"><label>Select Time</label><select name="booking_time" id="bookingTime" required style="color:#000000;"><option value="">Select a time</option></select><div style="font-size:0.8rem;color:#ffd700;margin-top:8px;padding:8px;background:rgba(255,215,0,0.1);border-radius:4px;">⏰ <strong>Hours:</strong> 8 AM - 5 PM (Break 12 PM - 1 PM)<br>📅 <strong>Days:</strong> Mon - Sat (Closed Sunday)</div></div><div class="form-group"><label>Payment Method</label><div class="payment-options"><div class="payment-option" id="optionGCash" onclick="selectPayment('gcash')">💳 GCash</div><div class="payment-option" id="optionCash" onclick="selectPayment('cash')">💵 Cash</div></div><input type="hidden" name="payment_method" id="paymentMethod" value="gcash"></div><div id="gcashFields"><div class="form-group"><label>GCash Reference Number</label><input type="text" name="gcash_reference" id="gcashRef" placeholder="Enter GCash reference number"></div><div class="form-group"><label>Upload Payment Screenshot</label><input type="file" name="payment_proof" id="paymentProof" accept="image/*"><p style="font-size:0.7rem; color:#dc3545; margin-top:5px;">⚠ Required for GCash payments</p><p style="font-size:0.8rem; color:#111; margin-top:10px; background:rgba(249,241,165,0.35); padding:10px; border-radius:8px;">Send payment to GCash number <strong>09477183613</strong>, then enter the reference number and upload the screenshot.</p></div></div><div class="form-group"><label>Special Requests (Optional)</label><textarea name="special_requests" rows="2"></textarea></div><div id="capacityNote" class="capacity-note">⚠️ Maximum 2 customers per hour for this service. Please check availability.</div><div id="formError" class="error-message"></div><button type="submit" class="btn-submit">Confirm Booking →</button></form></div></div>
+<div class="fab-container"><a href="{% url 'messenger' %}" class="fab-button" aria-label="Open messages">💬</a></div>
  
-<div class="fab-container"><button class="fab-button" onclick="showCustomerMessages()" aria-label="Open messages">💬</button></div>
- 
-<script> /* eslint-disable */
-    let existingBookings = [];
- 
+<script>
+    // CSRF Token
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -759,13 +1063,45 @@
         }
         return cookieValue;
     }
- 
-    // Time slots array
-    const timeSlots = [
-        "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-        "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
-    ];
- 
+    
+    // Global variables
+    let existingBookings = [];
+    let currentDuration = 60;
+    let currentRequiresRoom = false;
+    let currentServiceId = null;
+    let selectedRoomId = null;
+    let bookedSlotsForDate = [];
+    let roomAvailability = {};
+    let allRooms = [];
+    let totalRooms = 4;
+    
+    // Confirmation modal variables
+    let pendingFormData = null;
+    let pendingSubmitBtn = null;
+    let pendingOriginalText = '';
+    
+    // Professional notification function
+    function showNotification(type, message) {
+        const existingNotif = document.querySelector('.custom-notification');
+        if (existingNotif) existingNotif.remove();
+        
+        const notification = document.createElement('div');
+        notification.className = 'custom-notification';
+        notification.innerHTML = `
+            <div class="notification-content ${type}">
+                <span class="notification-icon">${type === 'success' ? '✅' : '❌'}</span>
+                <span class="notification-message">${message}</span>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+    
+    // Format time
     function formatTime(time) {
         let [h, m] = time.split(':');
         let hour = parseInt(h);
@@ -773,249 +1109,127 @@
         let hour12 = hour % 12 || 12;
         return `${hour12}:${m} ${ampm}`;
     }
- 
-    function populateTimeDropdown() {
+    
+    // Generate time slots
+    function generateTimeSlots(durationMinutes) {
+        const startMinutes = 8 * 60;
+        const endMinutes = 17 * 60;
+        const breakStart = 12 * 60;
+        const breakEnd = 13 * 60;
+        const step = durationMinutes || 60;
+        const slots = [];
+        for (let t = startMinutes; t + step <= endMinutes; t += step) {
+            if (t < breakEnd && t + step > breakStart) continue;
+            const h = Math.floor(t / 60);
+            const m = t % 60;
+            slots.push(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
+        }
+        return slots;
+    }
+    
+    // Populate time dropdown
+    function populateTimeDropdown(durationMinutes) {
         const timeSelect = document.getElementById('bookingTime');
         if (!timeSelect) return;
-        let html = '<option value="">Select a time</option>';
-        for (let i = 0; i < timeSlots.length; i++) {
-            html += `<option value="${timeSlots[i]}">${formatTime(timeSlots[i])}</option>`;
+        const slots = generateTimeSlots(durationMinutes || currentDuration);
+        let html = '<option value="">-- Select a time --</option>';
+        for (let i = 0; i < slots.length; i++) {
+            var slot = slots[i];
+            var isFullyBooked = false;
+            var label = formatTime(slot);
+            
+            if (currentRequiresRoom) {
+                var available = roomAvailability[slot] ? roomAvailability[slot] : allRooms;
+                var availCount = available.length;
+                var totalCount = totalRooms || allRooms.length || 4;
+                if (availCount === 0) {
+                    isFullyBooked = true;
+                    label += ' — All ' + totalCount + ' rooms fully booked';
+                } else {
+                    label += ' (' + availCount + '/' + totalCount + ' rooms available)';
+                }
+            } else {
+                if (bookedSlotsForDate.indexOf(slot) !== -1) {
+                    isFullyBooked = true;
+                    label += ' — Fully Booked';
+                }
+            }
+            
+            if (isFullyBooked) {
+                html += '<option value="' + slot + '" disabled style="color:#bbb;background:#f5f5f5;">' + label + '</option>';
+            } else {
+                html += '<option value="' + slot + '">' + label + '</option>';
+            }
         }
         timeSelect.innerHTML = html;
     }
- 
-    // Check room capacity (max 2 per hour)
-    function checkRoomCapacity(date, time) {
-        let count = 0;
-        for (let i = 0; i < existingBookings.length; i++) {
-            if (existingBookings[i].date === date && existingBookings[i].time === time) {
-                count++;
-            }
-        }
-        return count;
+    
+    // Fetch available slots for a date
+    function fetchSlotsForDate(dateStr) {
+        if (!dateStr) return;
+        var url = '/available-slots/?date=' + dateStr + '&duration=' + currentDuration + '&requires_room=' + currentRequiresRoom;
+        fetch(url)
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                bookedSlotsForDate = data.booked || [];
+                roomAvailability = data.room_availability || {};
+                allRooms = data.all_rooms || [];
+                totalRooms = data.total_rooms || allRooms.length || 4;
+                populateTimeDropdown(currentDuration);
+            })
+            .catch(function(error) {
+                console.error('Error fetching slots:', error);
+            });
     }
- 
-    function updateCapacityNote(date, time) {
-        const capacityNote = document.getElementById('capacityNote');
-        if (!capacityNote) return;
-        
-        if (date && time) {
-            const count = checkRoomCapacity(date, time);
-            if (count >= 2) {
-                capacityNote.style.display = 'block';
-                capacityNote.innerHTML = '⚠️ Maximum 2 customers per hour for this service. This time slot is fully booked. Please select another time.';
-            } else if (count === 1) {
-                capacityNote.style.display = 'block';
-                capacityNote.innerHTML = '⚠️ Only 1 slot remaining for this hour (max 2 customers).';
-            } else {
-                capacityNote.style.display = 'none';
-            }
-        } else {
-            capacityNote.style.display = 'none';
-        }
-    }
- 
-    function showSection(name) {
-        var sections = ['dashboard','services','bookings','favorites','schedule','packages'];
-        var titles = {
-            dashboard: 'Dashboard',
-            services: '✨ Services',
-            bookings: '📋 My Bookings',
-            favorites: '❤️ Favorites',
-            schedule: '📅 My Schedule',
-            packages: '🎁 Packages'
-        };
-        for (var i = 0; i < sections.length; i++) {
-            var el = document.getElementById('section-' + sections[i]);
-            if (el) {
-                el.style.display = (sections[i] === name) ? '' : 'none';
-            }
-        }
-        document.getElementById('pageTitle').innerText = titles[name] || 'Dashboard';
-        var navItems = document.querySelectorAll('.nav-item[data-section]');
-        for (var j = 0; j < navItems.length; j++) {
-            navItems[j].classList.remove('active');
-            if (navItems[j].dataset.section === name) {
-                navItems[j].classList.add('active');
-            }
-        }
-        if (name === 'schedule') {
-            generateCalendar();
-        }
-        closeSidebar();
-    }
- 
-    function toggleNotificationPanel() {
-        var panel = document.getElementById('notificationPanel');
-        if (!panel) return;
-        panel.classList.toggle('show');
-        updateNotificationPanel();
-    }
- 
-    function closeNotificationPanel() {
-        var panel = document.getElementById('notificationPanel');
-        if (panel) panel.classList.remove('show');
-    }
- 
-    function updateNotificationPanel() {
-        var panelText = document.getElementById('notificationPanelText');
-        if (!panelText) return;
-        var unreadCount = parseInt('{{ unread_messages_count|default:"0" }}', 10) || 0;
-        if (unreadCount > 0) {
-            panelText.innerText = 'You have ' + unreadCount + ' unread message' + (unreadCount === 1 ? '' : 's') + ' from your team. Tap to open messages.';
-        } else {
-            panelText.innerText = 'No new notifications at the moment.';
+    
+    // Fetch available rooms
+    async function fetchAvailableRooms(date, time) {
+        if (!date || !time) return;
+        const roomsContainer = document.getElementById('roomsList');
+        if (roomsContainer) roomsContainer.innerHTML = '<p>Loading available rooms...</p>';
+        try {
+            const response = await fetch(`/available-rooms/?date=${date}&time=${time}`);
+            const data = await response.json();
+            displayRooms(data.available_rooms || []);
+        } catch (error) {
+            console.error('Error fetching rooms:', error);
+            if (roomsContainer) roomsContainer.innerHTML = '<p style="color:var(--danger);">Error loading rooms</p>';
         }
     }
- 
-    function showCustomerMessages() {
-        showSection('dashboard');
-        closeNotificationPanel();
-        var panel = document.getElementById('customerChatPanel');
-        if (panel) {
-            panel.classList.add('open');
+    
+    // Display rooms
+    function displayRooms(rooms) {
+        const roomsContainer = document.getElementById('roomsList');
+        if (!roomsContainer) return;
+        if (!rooms || rooms.length === 0) {
+            roomsContainer.innerHTML = '<p style="color:var(--danger);">⚠️ No rooms available at this time</p>';
+            return;
         }
-    }
- 
-    function hideChatPopup() {
-        var panel = document.getElementById('customerChatPanel');
-        if (panel) {
-            panel.classList.remove('open');
-        }
-    }
- 
-    function toggleSidebar() {
-        var sidebar = document.getElementById('sidebar');
-        var overlay = document.getElementById('overlay');
-        var btn = document.getElementById('hamburgerBtn');
-        if (sidebar.classList.contains('open')) {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('show');
-            if (btn) btn.classList.remove('open');
-        } else {
-            sidebar.classList.add('open');
-            overlay.classList.add('show');
-            if (btn) btn.classList.add('open');
-        }
-    }
-    function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); var btn=document.getElementById('hamburgerBtn'); if(btn) btn.classList.add('open'); }
-    function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); var btn=document.getElementById('hamburgerBtn'); if(btn) btn.classList.remove('open'); }
-    function showLocation() { alert("📍 JAM Massage & Spa\n⏰ Mon–Sun: 9AM – 9PM\n📞 0948 525 4950 / 0909 954 9734"); }
-    function toggleFabMenu() {
-        var fabMenu = document.getElementById('fabMenu');
-        if (fabMenu) fabMenu.classList.toggle('show');
-        closeNotificationPanel();
-    }
- 
-    function toggleLike(serviceId, button) {
-        fetch('/like/' + serviceId + '/', {
-            method: 'POST',
-            headers: { 'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json' }
-        })
-        .then(function(response) { return response.json(); })
-        .then(function(data) {
-            button.innerHTML = data.liked ? '❤️' : '🤍';
-            setTimeout(function() { location.reload(); }, 500);
+        let html = '';
+        rooms.forEach(room => {
+            const isSelected = selectedRoomId === room.id;
+            html += `
+                <div class="room-option ${isSelected ? 'selected' : ''}" onclick="selectRoom(${room.id}, '${room.room_number}', '${room.room_type_display}')">
+                    <div class="room-number">Room ${room.room_number}</div>
+                    <div class="room-type">${room.room_type_display}</div>
+                    <div style="font-size:10px; color:var(--success); margin-top:5px;">✅ Available</div>
+                </div>
+            `;
         });
+        roomsContainer.innerHTML = html;
     }
- 
-    function filterByCategory(chip, category) {
-        var chips = chip.closest('.category-chips').querySelectorAll('.chip');
-        for (var i = 0; i < chips.length; i++) {
-            chips[i].classList.remove('active');
-        }
-        chip.classList.add('active');
-        var rows = document.querySelectorAll('#dashServicesBody .service-row, #allServicesBody .service-row');
-        for (var j = 0; j < rows.length; j++) {
-            var match = (!category || rows[j].getAttribute('data-category') === category);
-            rows[j].style.display = match ? '' : 'none';
-        }
+    
+    // Select room
+    function selectRoom(roomId, roomNumber, roomType) {
+        selectedRoomId = roomId;
+        document.getElementById('modalRoomId').value = roomId;
+        document.querySelectorAll('.room-option').forEach(option => option.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+        const roomNote = document.getElementById('roomNote');
+        if (roomNote) roomNote.innerHTML = `✅ Room ${roomNumber} (${roomType}) selected`;
     }
- 
-    function filterServices() {
-        var q = document.getElementById('searchInput').value.toLowerCase();
-        var rows = document.querySelectorAll('.service-row');
-        for (var i = 0; i < rows.length; i++) {
-            var name = rows[i].getAttribute('data-name');
-            rows[i].style.display = (name && name.indexOf(q) !== -1) ? '' : 'none';
-        }
-    }
- 
-    var bookingsData = [
-        {% for booking in bookings %}
-        {
-            id: {{ booking.id }},
-            date: "{{ booking.booking_date|date:'Y-m-d' }}",
-            time: "{{ booking.booking_time|time:'H:i' }}",
-            service: "{% if booking.service %}{{ booking.service.name }}{% else %}Spa Service{% endif %}",
-            status: "{{ booking.status }}"
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    ];
- 
-    // Copy for capacity checking
-    existingBookings = bookingsData.filter(function(b) { return b.status !== 'cancelled'; });
- 
-    var currentDate = new Date();
- 
-    function generateCalendar() {
-        var year = currentDate.getFullYear();
-        var month = currentDate.getMonth();
-        var firstDay = new Date(year, month, 1);
-        var lastDay = new Date(year, month + 1, 0);
-        var startDayOfWeek = firstDay.getDay();
-        var daysInMonth = lastDay.getDate();
-        var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        var header = document.getElementById('calendarMonthHeader');
-        if (header) {
-            header.innerHTML = '<button class="month-nav" onclick="changeMonth(-1)">◀</button> ' + monthNames[month] + ' ' + year + ' <button class="month-nav" onclick="changeMonth(1)">▶</button>';
-        }
-        var html = '';
-        var dayCount = 1;
-        for (var i = 0; i < 6; i++) {
-            for (var j = 0; j < 7; j++) {
-                if (i === 0 && j < startDayOfWeek) {
-                    html += '<div class="calendar-day empty"></div>';
-                } else if (dayCount > daysInMonth) {
-                    html += '<div class="calendar-day empty"></div>';
-                } else {
-                    var dateStr = year + '-' + String(month+1).padStart(2,'0') + '-' + String(dayCount).padStart(2,'0');
-                    var dayBookings = bookingsData.filter(function(b) { return b.date === dateStr; });
-                    var bookingsHTML = '';
-                    for (var k = 0; k < dayBookings.length; k++) {
-                        bookingsHTML += '<div class="booking-marker" title="' + dayBookings[k].service + ' - ' + formatTime(dayBookings[k].time) + '">📅 ' + dayBookings[k].service.substring(0,12) + '</div>';
-                    }
-                    html += '<div class="calendar-day" onclick="showBookingsForDate(\'' + dateStr + '\')"><div class="day-number">' + dayCount + '</div>' + bookingsHTML + '</div>';
-                    dayCount++;
-                }
-            }
-        }
-        var calendarDays = document.getElementById('calendarDays');
-        if (calendarDays) calendarDays.innerHTML = html;
-    }
- 
-    function showBookingsForDate(date) {
-        var dayBookings = bookingsData.filter(function(b) { return b.date === date; });
-        var infoDiv = document.getElementById('selectedDateInfo');
-        if (infoDiv) {
-            if (dayBookings.length === 0) {
-                infoDiv.innerHTML = '<strong>📅 ' + date + '</strong><br>No bookings on this date.';
-            } else {
-                var html = '<strong>📅 ' + date + '</strong><br><br>';
-                for (var i = 0; i < dayBookings.length; i++) {
-                    html += '<div style="margin-bottom:8px; padding:5px; background:var(--primary-soft); border-radius:5px;"><strong>' + dayBookings[i].service + '</strong><br>⏰ ' + formatTime(dayBookings[i].time) + '<br>📌 ' + dayBookings[i].status.toUpperCase() + '</div>';
-                }
-                infoDiv.innerHTML = html;
-            }
-            infoDiv.style.display = 'block';
-        }
-    }
- 
-    function changeMonth(delta) {
-        currentDate.setMonth(currentDate.getMonth() + delta);
-        generateCalendar();
-    }
- 
+    
+    // Select payment method
     function selectPayment(method) {
         document.getElementById('paymentMethod').value = method;
         var gcashOpt = document.getElementById('optionGCash');
@@ -1031,12 +1245,32 @@
             gcashFields.style.display = 'none';
         }
     }
- 
-    function openBookingModal(serviceId, serviceName, price) {
+    
+    // Open booking modal
+    function openBookingModal(serviceId, serviceName, price, durationMinutes, requiresRoom) {
         closeSidebar();
+        currentDuration = durationMinutes || 60;
+        currentRequiresRoom = requiresRoom || false;
+        currentServiceId = serviceId;
+        selectedRoomId = null;
+        
         document.getElementById('modalServiceId').value = serviceId;
         document.getElementById('modalServiceName').value = serviceName;
         document.getElementById('modalServicePrice').value = '₱' + price;
+        document.getElementById('modalDuration').value = currentDuration + ' minutes';
+        document.getElementById('modalRoomId').value = '';
+        
+        var roomNote = document.getElementById('roomNoteGroup');
+        if (roomNote) roomNote.style.display = currentRequiresRoom ? 'block' : 'none';
+        
+        const roomSelectionGroup = document.getElementById('roomSelectionGroup');
+        if (roomSelectionGroup) roomSelectionGroup.style.display = currentRequiresRoom ? 'block' : 'none';
+        
+        const roomsList = document.getElementById('roomsList');
+        if (roomsList) roomsList.innerHTML = '<p>Please select date and time first</p>';
+        
+        var hint = document.getElementById('timeHint');
+        if (hint) hint.innerHTML = '⏰ <strong>Hours:</strong> 8 AM - 5 PM (Break 12 PM - 1 PM)<br>📅 <strong>Days:</strong> Mon - Sat (Closed Sunday)<br>⏱️ <strong>Slots:</strong> Every ' + currentDuration + ' minutes';
         
         var tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -1045,316 +1279,491 @@
         dateInput.min = minDate;
         dateInput.value = '';
         
-        populateTimeDropdown();
-        selectPayment('gcash');
+        bookedSlotsForDate = [];
+        roomAvailability = {};
+        populateTimeDropdown(currentDuration);
+        selectPayment('cash');
         
-        // Hide capacity note initially
-        var capacityNote = document.getElementById('capacityNote');
-        if (capacityNote) capacityNote.style.display = 'none';
-        
-        // Add event listeners for capacity check and Sunday validation
         dateInput.onchange = function() {
-            var selectedDate = new Date(this.value);
+            var selectedDate = new Date(this.value + 'T00:00:00');
             if (selectedDate.getDay() === 0) {
-                alert('Sorry, we are closed on Sundays. Please select a date from Monday to Saturday.');
+                showNotification('error', 'Sorry, we are closed on Sundays.');
                 this.value = '';
                 return;
             }
-            var timeSelect = document.getElementById('bookingTime');
-            if (timeSelect.value) {
-                updateCapacityNote(dateInput.value, timeSelect.value);
-            }
+            fetchSlotsForDate(this.value);
         };
         
         var timeSelect = document.getElementById('bookingTime');
         timeSelect.onchange = function() {
-            if (dateInput.value) {
-                updateCapacityNote(dateInput.value, timeSelect.value);
-            }
+            const date = document.getElementById('bookingDate').value;
+            const time = this.value;
+            if (date && time && currentRequiresRoom) fetchAvailableRooms(date, time);
         };
         
         document.getElementById('bookingModal').style.display = 'flex';
     }
- 
+    
     function closeBookingModal() { 
         document.getElementById('bookingModal').style.display = 'none'; 
         document.getElementById('formError').style.display = 'none';
+        selectedRoomId = null;
     }
- 
-    function cancelBooking(bookingId) {
-        if (confirm('Are you sure you want to cancel this booking?')) {
-            fetch('/cancel-booking/' + bookingId + '/', {
+    
+    function closeConfirmModal() {
+        document.getElementById('confirmModal').style.display = 'none';
+        if (pendingSubmitBtn) {
+            pendingSubmitBtn.disabled = false;
+            pendingSubmitBtn.innerHTML = pendingOriginalText;
+        }
+        pendingFormData = null;
+        pendingSubmitBtn = null;
+    }
+    
+    // Show confirmation modal
+    function showConfirmModal(formData, submitBtn, originalText) {
+        const serviceName = document.getElementById('modalServiceName').value;
+        const date = document.getElementById('bookingDate').value;
+        const time = document.getElementById('bookingTime').value;
+        const price = document.getElementById('modalServicePrice').value;
+        const roomId = document.getElementById('modalRoomId').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        
+        let roomText = '';
+        if (currentRequiresRoom && roomId) {
+            const selectedRoomElem = document.querySelector('.room-option.selected');
+            if (selectedRoomElem) {
+                const roomNumber = selectedRoomElem.querySelector('.room-number')?.innerText || roomId;
+                roomText = `<div><strong>Room:</strong> ${roomNumber}</div>`;
+            }
+        }
+        
+        document.getElementById('confirmDetails').innerHTML = `
+            <div><strong>Service:</strong> ${serviceName}</div>
+            <div><strong>Date:</strong> ${date}</div>
+            <div><strong>Time:</strong> ${formatTime(time)}</div>
+            ${roomText}
+            <div><strong>Payment Method:</strong> ${paymentMethod === 'cash' ? '💵 Cash' : '💳 GCash'}</div>
+            <div><strong>Total Amount:</strong> ${price}</div>
+        `;
+        
+        const warningText = document.getElementById('warningText');
+        if (paymentMethod === 'cash') {
+            warningText.innerHTML = '⚠️ <strong>Cash Payment Warning:</strong> Once confirmed, this booking CANNOT be cancelled. Please ensure your schedule is fixed.';
+        } else {
+            warningText.innerHTML = '⚠️ <strong>GCash Payment:</strong> Your booking will be pending until payment is verified. You will receive a receipt after verification.';
+        }
+        
+        pendingFormData = formData;
+        pendingSubmitBtn = submitBtn;
+        pendingOriginalText = originalText;
+        document.getElementById('confirmModal').style.display = 'flex';
+    }
+    
+    // Proceed with booking
+    async function proceedWithBooking() {
+        if (!pendingFormData) return;
+        document.getElementById('confirmModal').style.display = 'none';
+        
+        if (pendingSubmitBtn) {
+            pendingSubmitBtn.disabled = true;
+            pendingSubmitBtn.innerHTML = '<span class="loading-spinner"></span> Processing...';
+        }
+        
+        try {
+            const response = await fetch('/create-booking/', {
                 method: 'POST',
-                headers: { 'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json' }
-            })
-            .then(function(response) { return response.json(); })
-            .then(function(data) {
-                if (data.success) {
-                    alert('Booking cancelled successfully!');
-                    location.reload();
-                } else {
-                    alert('Error: ' + data.error);
-                }
+                body: pendingFormData,
+                headers: { 'X-CSRFToken': getCookie('csrftoken') }
             });
+            const data = await response.json();
+            
+            if (data.success) {
+                showNotification('success', 'Your booking has been confirmed!');
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                showNotification('error', data.error || 'Failed to create booking.');
+                if (pendingSubmitBtn) {
+                    pendingSubmitBtn.disabled = false;
+                    pendingSubmitBtn.innerHTML = pendingOriginalText;
+                }
+            }
+        } catch (error) {
+            showNotification('error', 'Network error. Please try again.');
+            if (pendingSubmitBtn) {
+                pendingSubmitBtn.disabled = false;
+                pendingSubmitBtn.innerHTML = pendingOriginalText;
+            }
+        }
+        pendingFormData = null;
+        pendingSubmitBtn = null;
+    }
+    
+    // Cancel booking
+    async function cancelBooking(bookingId) {
+        if (!confirm('⚠️ Cancel Booking\n\nAre you sure you want to cancel this booking?\n\nThis action cannot be undone.')) return;
+        
+        try {
+            const response = await fetch(`/cancel-booking/${bookingId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') }
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                showNotification('success', 'Booking cancelled successfully!');
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                showNotification('error', data.error);
+            }
+        } catch (error) {
+            showNotification('error', 'Network error. Please try again.');
         }
     }
- 
-    // Form submission with validation
+    
+    // View receipt - FIXED VERSION
+    async function viewReceipt(bookingId) {
+        try {
+            const response = await fetch(`/booking-receipt/${bookingId}/`);
+            const data = await response.json();
+            
+            if (data.error) {
+                showNotification('error', data.error);
+                return;
+            }
+            
+            // Format status display
+            let statusDisplay = '';
+            if (data.booking_status === 'Verify') {
+                statusDisplay = '✅ Verified - Ready for Service';
+            } else if (data.booking_status === 'Complete Session') {
+                statusDisplay = '🎉 Session Completed';
+            } else if (data.booking_status === 'Pending') {
+                statusDisplay = '⏳ Pending Verification';
+            } else {
+                statusDisplay = data.booking_status;
+            }
+            
+            // Format payment status
+            let paymentStatusDisplay = '';
+            let paymentStatusColor = '';
+            if (data.payment_method === 'GCash') {
+                if (data.payment_status === 'Verified ✓') {
+                    paymentStatusDisplay = '✅ Verified';
+                    paymentStatusColor = 'var(--success)';
+                } else {
+                    paymentStatusDisplay = '⏳ Pending Verification';
+                    paymentStatusColor = 'var(--warning)';
+                }
+            } else {
+                if (data.booking_status === 'Complete Session') {
+                    paymentStatusDisplay = '✅ Paid';
+                    paymentStatusColor = 'var(--success)';
+                } else {
+                    paymentStatusDisplay = 'Pay on Arrival';
+                    paymentStatusColor = 'var(--text-light)';
+                }
+            }
+            
+            const receiptHTML = `
+                <div style="text-align:center; margin-bottom:20px; padding-bottom:15px; border-bottom:2px solid var(--primary);">
+                    <div style="font-size:32px; margin-bottom:5px;">🪷</div>
+                    <div style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:var(--accent);">JAM Massage & Spa</div>
+                    <div style="font-size:11px; color:var(--text-light);">Wellness & Relaxation</div>
+                </div>
+                
+                <div style="margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Booking #:</span>
+                        <span>${data.booking_number}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Date:</span>
+                        <span>${data.booking_date}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Time:</span>
+                        <span>${data.booking_time}</span>
+                    </div>
+                </div>
+                
+                <div style="background:rgba(200,82,42,0.08); padding:12px; border-radius:10px; margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Service:</span>
+                        <span>${data.service_name}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Duration:</span>
+                        <span>${data.duration} minutes</span>
+                    </div>
+                    ${data.room_number !== 'Not assigned' ? `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Room:</span>
+                        <span>${data.room_number} (${data.room_type})</span>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                <div style="background:rgba(200,82,42,0.08); padding:12px; border-radius:10px; margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Payment Method:</span>
+                        <span>${data.payment_method}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Payment Status:</span>
+                        <span style="color:${paymentStatusColor}; font-weight:600;">${paymentStatusDisplay}</span>
+                    </div>
+                    ${data.gcash_reference ? `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">GCash Ref #:</span>
+                        <span>${data.gcash_reference}</span>
+                    </div>
+                    ` : ''}
+                    <div style="display:flex; justify-content:space-between; margin-top:10px; padding-top:10px; border-top:1px dashed rgba(0,0,0,0.1);">
+                        <span style="font-weight:700;">Total Amount:</span>
+                        <span style="font-size:18px; font-weight:800; color:var(--primary);">₱${data.total_amount}</span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Booking Status:</span>
+                        <span style="color:var(--success); font-weight:600;">${statusDisplay}</span>
+                    </div>
+                    ${data.special_requests !== 'None' ? `
+                    <div style="margin-top:10px; padding:8px; background:#f9f9f9; border-radius:8px;">
+                        <span style="font-weight:600;">Special Requests:</span>
+                        <p style="margin-top:5px; font-size:12px;">${data.special_requests}</p>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                <div style="text-align:center; margin-top:20px; padding-top:15px; border-top:1px solid #ddd; font-size:10px; color:var(--text-light);">
+                    <div>📞 0948 525 4950 / 0909 954 9734</div>
+                    <div>💜 Come and Feel Natural Healing and Wellness</div>
+                    <div style="margin-top:5px;">Booked on: ${data.created_at}</div>
+                </div>
+            `;
+            
+            document.getElementById('receiptContent').innerHTML = receiptHTML;
+            document.getElementById('receiptModal').style.display = 'flex';
+        } catch (error) {
+            console.error('Error loading receipt:', error);
+            showNotification('error', 'Could not load receipt. Please try again.');
+        }
+    }
+    
+    function printReceipt() {
+        const receiptContent = document.getElementById('receiptContent').innerHTML;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html><html><head><title>JAM Massage & Spa - Receipt</title>
+            <style>body{font-family:'DM Sans',sans-serif;padding:40px;} .receipt{max-width:500px;margin:0 auto;} @media print{.no-print{display:none;}}</style>
+            </head><body><div class="receipt">${receiptContent}</div>
+            <div class="no-print" style="text-align:center;margin-top:20px;">
+            <button onclick="window.print()">Print</button><button onclick="window.close()">Close</button></div>
+            <script>window.onload=function(){setTimeout(function(){window.print();},500);}<\/script></body></html>
+        `);
+        printWindow.document.close();
+    }
+    
+    function closeReceipt() { document.getElementById('receiptModal').style.display = 'none'; }
+    
+    // Show section
+    function showSection(name) {
+        var sections = ['dashboard','services','bookings','favorites','schedule','packages'];
+        var titles = {dashboard:'Dashboard',services:'Services',bookings:'My Bookings',favorites:'Favorites',schedule:'My Schedule',packages:'Packages'};
+        sections.forEach(s => {
+            var el = document.getElementById('section-' + s);
+            if (el) el.style.display = s === name ? 'block' : 'none';
+        });
+        document.getElementById('pageTitle').innerText = titles[name] || 'Dashboard';
+        var navItems = document.querySelectorAll('.nav-item[data-section]');
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.dataset.section === name) item.classList.add('active');
+        });
+        if (name === 'schedule') generateCalendar();
+        closeSidebar();
+    }
+    
+    function toggleNotificationPanel() {
+        var panel = document.getElementById('notificationPanel');
+        if (panel) panel.classList.toggle('show');
+    }
+    
+    function closeNotificationPanel() {
+        var panel = document.getElementById('notificationPanel');
+        if (panel) panel.classList.remove('show');
+    }
+    
+    function updateNotificationPanel() {
+        var panelText = document.getElementById('notificationPanelText');
+        if (!panelText) return;
+        var unreadCount = parseInt('{{ unread_messages_count|default:"0" }}', 10) || 0;
+        panelText.innerText = unreadCount > 0 ? `You have ${unreadCount} unread message${unreadCount === 1 ? '' : 's'} from your team.` : 'No new notifications.';
+    }
+    
+    function showCustomerMessages() {
+        showSection('dashboard');
+        closeNotificationPanel();
+        var panel = document.getElementById('customerChatPanel');
+        if (panel) panel.classList.add('open');
+    }
+    
+    function hideChatPopup() {
+        var panel = document.getElementById('customerChatPanel');
+        if (panel) panel.classList.remove('open');
+    }
+    
+    function toggleSidebar() {
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('overlay');
+        var btn = document.getElementById('hamburgerBtn');
+        if (sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            if (btn) btn.classList.remove('open');
+        } else {
+            sidebar.classList.add('open');
+            overlay.classList.add('show');
+            if (btn) btn.classList.add('open');
+        }
+    }
+    
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('overlay').classList.remove('show');
+        var btn = document.getElementById('hamburgerBtn');
+        if (btn) btn.classList.remove('open');
+    }
+    
+    function showLocation() { alert("📍 JAM Massage & Spa\n⏰ Mon–Sun: 9AM – 9PM\n📞 0948 525 4950 / 0909 954 9734"); }
+    
+    async function toggleLike(serviceId, button) {
+        try {
+            const response = await fetch(`/like/${serviceId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            button.innerHTML = data.liked ? '❤️' : '🤍';
+        } catch (error) { console.error('Error:', error); }
+    }
+    
+    function filterByCategory(chip, category) {
+        var chips = chip.closest('.category-chips').querySelectorAll('.chip');
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        var rows = document.querySelectorAll('#dashServicesBody .service-row, #allServicesBody .service-row');
+        rows.forEach(row => {
+            var match = (!category || row.getAttribute('data-category') === category);
+            row.style.display = match ? '' : 'none';
+        });
+    }
+    
+    function filterServices() {
+        var q = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.service-row').forEach(row => {
+            var name = row.getAttribute('data-name');
+            row.style.display = (name && name.indexOf(q) !== -1) ? '' : 'none';
+        });
+    }
+    
+    var bookingsData = [{% for booking in bookings %}{id:{{ booking.id }}, date:"{{ booking.booking_date|date:'Y-m-d' }}", time:"{{ booking.booking_time|time:'H:i' }}", service:"{{ booking.service.name|default:'Service' }}", status:"{{ booking.status }}"}{% if not forloop.last %},{% endif %}{% endfor %}];
+    existingBookings = bookingsData.filter(b => b.status !== 'cancelled');
+    var currentDate = new Date();
+    
+    function generateCalendar() {
+        var year = currentDate.getFullYear(), month = currentDate.getMonth();
+        var firstDay = new Date(year, month, 1), lastDay = new Date(year, month + 1, 0);
+        var startDay = firstDay.getDay(), daysInMonth = lastDay.getDate();
+        var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        var header = document.getElementById('calendarMonthHeader');
+        if (header) header.innerHTML = `<button class="month-nav" onclick="changeMonth(-1)">◀</button> ${monthNames[month]} ${year} <button class="month-nav" onclick="changeMonth(1)">▶</button>`;
+        var html = '<div class="calendar-weekdays">SunMonTueWedThuFriSat</div><div class="calendar-days">';
+        var dayCount = 1;
+        for (var i = 0; i < 6; i++) {
+            for (var j = 0; j < 7; j++) {
+                if (i === 0 && j < startDay) html += '<div class="calendar-day empty"></div>';
+                else if (dayCount > daysInMonth) html += '<div class="calendar-day empty"></div>';
+                else {
+                    var dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(dayCount).padStart(2,'0')}`;
+                    var dayBookings = bookingsData.filter(b => b.date === dateStr);
+                    var bookingsHTML = '';
+                    dayBookings.forEach(b => { bookingsHTML += `<div class="booking-marker" title="${b.service} - ${formatTime(b.time)}">📅 ${b.service.substring(0,12)}</div>`; });
+                    html += `<div class="calendar-day" onclick="showBookingsForDate('${dateStr}')"><div class="day-number">${dayCount}</div>${bookingsHTML}</div>`;
+                    dayCount++;
+                }
+            }
+        }
+        html += '</div>';
+        var calendarDays = document.getElementById('calendarDays');
+        if (calendarDays) calendarDays.innerHTML = html;
+    }
+    
+    function showBookingsForDate(date) {
+        var dayBookings = bookingsData.filter(b => b.date === date);
+        var infoDiv = document.getElementById('selectedDateInfo');
+        if (infoDiv) {
+            if (dayBookings.length === 0) infoDiv.innerHTML = `<strong>📅 ${date}</strong><br>No bookings on this date.`;
+            else {
+                var html = `<strong>📅 ${date}</strong><br><br>`;
+                dayBookings.forEach(b => { html += `<div style="margin-bottom:8px;padding:5px;background:var(--primary-soft);border-radius:5px;"><strong>${b.service}</strong><br>⏰ ${formatTime(b.time)}<br>📌 ${b.status.toUpperCase()}</div>`; });
+                infoDiv.innerHTML = html;
+            }
+            infoDiv.style.display = 'block';
+        }
+    }
+    
+    function changeMonth(delta) { currentDate.setMonth(currentDate.getMonth() + delta); generateCalendar(); }
+    
+    // Form submission
     document.getElementById('bookingForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        
         var paymentMethod = document.getElementById('paymentMethod').value;
-        var gcashRef = document.getElementById('gcashRef').value;
-        var paymentProof = document.getElementById('paymentProof').files[0];
         var date = document.getElementById('bookingDate').value;
         var time = document.getElementById('bookingTime').value;
         var errorDiv = document.getElementById('formError');
-        
-        // Check capacity before submitting
-        var capacityCount = checkRoomCapacity(date, time);
-        if (capacityCount >= 2) {
-            errorDiv.innerHTML = 'This time slot is fully booked (maximum 2 customers per hour). Please select another time.';
-            errorDiv.style.display = 'block';
-            return;
-        }
-        
-        if (paymentMethod === 'gcash') {
-            if (!gcashRef) {
-                errorDiv.innerHTML = 'Please enter GCash reference number.';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            if (!paymentProof) {
-                errorDiv.innerHTML = 'Please upload your GCash payment screenshot.';
-                errorDiv.style.display = 'block';
-                return;
-            }
-        }
+        var serviceId = document.getElementById('modalServiceId').value;
+        var roomId = document.getElementById('modalRoomId').value;
         
         errorDiv.style.display = 'none';
-        this.submit();
+        if (!date) { errorDiv.innerHTML = 'Please select a date.'; errorDiv.style.display = 'block'; return; }
+        if (!time) { errorDiv.innerHTML = 'Please select a time.'; errorDiv.style.display = 'block'; return; }
+        if (!serviceId) { errorDiv.innerHTML = 'Please select a service.'; errorDiv.style.display = 'block'; return; }
+        if (currentRequiresRoom && !roomId) { errorDiv.innerHTML = 'Please select a room.'; errorDiv.style.display = 'block'; return; }
+        
+        if (paymentMethod === 'gcash') {
+            var gcashRef = document.getElementById('gcashRef')?.value || '';
+            var paymentProof = document.getElementById('paymentProof')?.files[0];
+            if (!gcashRef.trim()) { errorDiv.innerHTML = 'Please enter GCash reference number.'; errorDiv.style.display = 'block'; return; }
+            if (!paymentProof) { errorDiv.innerHTML = 'Please upload payment screenshot.'; errorDiv.style.display = 'block'; return; }
+        }
+        
+        var submitBtn = this.querySelector('.btn-submit');
+        var originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="loading-spinner"></span> Processing...';
+        
+        var formData = new FormData(this);
+        showConfirmModal(formData, submitBtn, originalText);
     });
- 
+    
     document.addEventListener('DOMContentLoaded', function() {
         generateCalendar();
-        selectPayment('gcash');
-        populateTimeDropdown();
+        selectPayment('cash');
+        populateTimeDropdown(60);
         updateNotificationPanel();
- 
+        
         window.onclick = function(event) {
-            var modal = document.getElementById('bookingModal');
+            if (event.target === document.getElementById('bookingModal')) closeBookingModal();
+            if (event.target === document.getElementById('receiptModal')) closeReceipt();
+            if (event.target === document.getElementById('confirmModal')) closeConfirmModal();
             var panel = document.getElementById('notificationPanel');
-            var fabMenu = document.getElementById('fabMenu');
-            if (event.target === modal) closeBookingModal();
-            if (panel && !panel.contains(event.target) && event.target.id !== 'notifBtn') {
-                closeNotificationPanel();
-            }
-            if (fabMenu && !fabMenu.contains(event.target) && event.target.className.indexOf('fab-button') === -1) {
-                fabMenu.classList.remove('show');
-            }
+            if (panel && !panel.contains(event.target) && event.target.id !== 'notifBtn') closeNotificationPanel();
         };
     });
-</script>
-
-<!-- ── BOOKING RECEIPT MODAL ── -->
-<div id="receiptModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:2000;justify-content:center;align-items:center;">
-    <div id="receiptCard" style="background:var(--dark-2,#141d2e);border-radius:18px;padding:0;max-width:420px;width:92%;border:1px solid rgba(201,168,76,0.25);overflow:hidden;position:relative;max-height:90vh;overflow-y:auto;">
-        <!-- Receipt Header -->
-        <div style="background:linear-gradient(135deg,#0d1117,#1a2840);padding:24px 24px 18px;text-align:center;border-bottom:1px solid rgba(201,168,76,0.15);">
-            <div style="font-size:28px;margin-bottom:6px;">🪷</div>
-            <div style="font-family:'Playfair Display',serif;font-size:18px;color:#c9a84c;font-weight:700;">JAM Massage & Spa</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;">Booking Receipt</div>
-        </div>
-        <!-- Receipt Body -->
-        <div style="padding:22px 24px;">
-            <!-- Booking ID + Status -->
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
-                <div style="font-size:13px;color:rgba(255,255,255,0.45);">Booking Reference</div>
-                <div id="r-booking-id" style="font-size:15px;font-weight:700;color:#c9a84c;"></div>
-            </div>
-            <!-- Service -->
-            <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:14px 16px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.07);">
-                <div style="font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Service</div>
-                <div id="r-service" style="font-size:15px;font-weight:600;color:#e2dcc8;"></div>
-                <div id="r-duration" style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:3px;"></div>
-            </div>
-            <!-- Date/Time -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-                <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px 14px;border:1px solid rgba(255,255,255,0.07);">
-                    <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Date</div>
-                    <div id="r-date" style="font-size:13px;font-weight:600;color:#e2dcc8;"></div>
-                </div>
-                <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:12px 14px;border:1px solid rgba(255,255,255,0.07);">
-                    <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Time</div>
-                    <div id="r-time" style="font-size:13px;font-weight:600;color:#e2dcc8;"></div>
-                </div>
-            </div>
-            <!-- Payment -->
-            <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:14px 16px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.07);">
-                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-                    <span style="font-size:12px;color:rgba(255,255,255,0.45);">Payment Method</span>
-                    <span id="r-payment-method" style="font-size:12px;font-weight:600;color:#e2dcc8;"></span>
-                </div>
-                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-                    <span style="font-size:12px;color:rgba(255,255,255,0.45);">Payment Status</span>
-                    <span id="r-payment-status" style="font-size:12px;font-weight:700;"></span>
-                </div>
-                <div id="r-gcash-ref-wrap" style="display:flex;justify-content:space-between;margin-bottom:8px;display:none;">
-                    <span style="font-size:12px;color:rgba(255,255,255,0.45);">GCash Reference</span>
-                    <span id="r-gcash-ref" style="font-size:12px;font-weight:600;color:#e2dcc8;"></span>
-                </div>
-                <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
-                    <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.65);">Total Amount</span>
-                    <span id="r-amount" style="font-size:20px;font-weight:800;color:#c9a84c;"></span>
-                </div>
-            </div>
-            <!-- Booking Status -->
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="font-size:12px;color:rgba(255,255,255,0.45);">Booking Status</span>
-                <span id="r-booking-status" style="font-size:12px;font-weight:700;"></span>
-            </div>
-            <!-- Special Requests -->
-            <div id="r-special-wrap" style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.35);">
-                <strong style="color:rgba(255,255,255,0.5);">Special Requests:</strong>
-                <span id="r-special"></span>
-            </div>
-            <!-- Message based on payment -->
-            <div id="r-message" style="margin-top:16px;padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.6;"></div>
-            <!-- Footer -->
-            <div style="text-align:center;margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07);">
-                <div style="font-size:10px;color:rgba(255,255,255,0.25);">📞 0948 525 4950 / 0909 954 9734</div>
-                <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:3px;">💜 Come and Feel Natural Healing and Wellness</div>
-                <div id="r-created" style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:3px;"></div>
-            </div>
-        </div>
-        <button onclick="closeReceipt()" style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.5);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;">✕</button>
-    </div>
-</div>
-
-<script>
-// ── RECEIPT MODAL ──
-function viewReceipt(bookingId) {
-    fetch('/booking-receipt/' + bookingId + '/', {
-        headers: {'X-CSRFToken': getCookie('csrftoken')}
-    })
-    .then(r => r.json())
-    .then(d => {
-        document.getElementById('r-booking-id').textContent = '#' + d.booking_id;
-        document.getElementById('r-service').textContent    = d.service_name;
-        document.getElementById('r-duration').textContent   = d.duration + ' minutes';
-        document.getElementById('r-date').textContent       = d.booking_date;
-        document.getElementById('r-time').textContent       = d.booking_time;
-        document.getElementById('r-amount').textContent     = '₱' + d.total_amount;
-        document.getElementById('r-special').textContent    = d.special_requests;
-        document.getElementById('r-created').textContent    = 'Booked: ' + d.created_at;
-
-        // Payment method
-        var pm = d.payment_method === 'gcash' ? '💳 GCash' : '💵 Cash';
-        document.getElementById('r-payment-method').textContent = pm;
-
-        // GCash ref
-        var refWrap = document.getElementById('r-gcash-ref-wrap');
-        if (d.payment_method === 'gcash' && d.gcash_reference) {
-            refWrap.style.display = 'flex';
-            document.getElementById('r-gcash-ref').textContent = d.gcash_reference;
-        } else {
-            refWrap.style.display = 'none';
-        }
-
-        // Payment status
-        var psEl = document.getElementById('r-payment-status');
-        var msgEl = document.getElementById('r-message');
-        if (d.payment_method === 'gcash') {
-            if (d.payment_status === 'verified') {
-                psEl.textContent = '✅ PAID';
-                psEl.style.color = '#4ade80';
-                msgEl.style.background = 'rgba(74,222,128,0.1)';
-                msgEl.style.border = '1px solid rgba(74,222,128,0.2)';
-                msgEl.style.color = '#4ade80';
-                msgEl.innerHTML = '✅ <strong>Payment Confirmed.</strong> Your GCash payment has been verified by our team. Your appointment is confirmed. See you at the spa!';
-            } else {
-                psEl.textContent = '⏳ Pending Verification';
-                psEl.style.color = '#fbbf24';
-                msgEl.style.background = 'rgba(251,191,36,0.08)';
-                msgEl.style.border = '1px solid rgba(251,191,36,0.2)';
-                msgEl.style.color = '#fbbf24';
-                msgEl.innerHTML = '⏳ <strong>Awaiting Verification.</strong> Your GCash payment screenshot has been received. Our team will verify it shortly and confirm your booking.';
-            }
-        } else {
-            psEl.textContent = 'Pay on Arrival';
-            psEl.style.color = 'rgba(255,255,255,0.45)';
-            if (d.booking_status === 'completed') {
-                psEl.textContent = '✅ PAID';
-                psEl.style.color = '#4ade80';
-                msgEl.style.background = 'rgba(74,222,128,0.1)';
-                msgEl.style.border = '1px solid rgba(74,222,128,0.2)';
-                msgEl.style.color = '#4ade80';
-                msgEl.innerHTML = '✅ <strong>Payment Complete.</strong> Thank you for visiting JAM Massage & Spa!';
-            } else {
-                msgEl.style.background = 'rgba(255,255,255,0.04)';
-                msgEl.style.border = '1px solid rgba(255,255,255,0.08)';
-                msgEl.style.color = 'rgba(255,255,255,0.5)';
-                msgEl.innerHTML = '💵 <strong>Cash Payment.</strong> Please bring exact cash on your appointment date. Payment is collected upon arrival at the spa.';
-            }
-        }
-
-        // Booking status
-        var bsEl = document.getElementById('r-booking-status');
-        var bsMap = {pending:'⏳ Pending', confirmed:'✅ Confirmed', completed:'🎉 Completed', cancelled:'❌ Cancelled'};
-        var bsColors = {pending:'#fbbf24', confirmed:'#4ade80', completed:'#60a5fa', cancelled:'#f87171'};
-        bsEl.textContent = bsMap[d.booking_status] || d.booking_status;
-        bsEl.style.color = bsColors[d.booking_status] || '#e2dcc8';
-
-        document.getElementById('receiptModal').style.display = 'flex';
-    })
-    .catch(() => alert('Could not load receipt. Please try again.'));
-}
-function closeReceipt() {
-    document.getElementById('receiptModal').style.display = 'none';
-}
-document.getElementById('receiptModal').addEventListener('click', function(e) {
-    if (e.target === this) closeReceipt();
-});
-
-// ── SLOT BLOCKING: fetch available slots when date changes ──
-var bookedSlots = [];
-function loadAvailableSlots(dateStr) {
-    if (!dateStr) return;
-    fetch('/available-slots/?date=' + dateStr)
-    .then(r => r.json())
-    .then(data => {
-        bookedSlots = data.booked || [];
-        var select = document.getElementById('bookingTime');
-        if (!select) return;
-        var options = select.querySelectorAll('option');
-        options.forEach(function(opt) {
-            if (!opt.value) return;
-            var slot = opt.value.substring(0,5);
-            if (bookedSlots.indexOf(slot) !== -1) {
-                opt.disabled = true;
-                opt.textContent = formatTime(slot) + ' — Already Booked';
-                opt.style.color = '#f87171';
-            } else {
-                opt.disabled = false;
-                opt.textContent = formatTime(slot);
-                opt.style.color = '';
-            }
-        });
-    });
-}
-
-// Hook into date input
-document.addEventListener('DOMContentLoaded', function() {
-    var dateInput = document.getElementById('bookingDate');
-    if (dateInput) {
-        dateInput.addEventListener('change', function() {
-            loadAvailableSlots(this.value);
-            // Reset time selection
-            var ts = document.getElementById('bookingTime');
-            if (ts) ts.value = '';
-        });
-    }
-});
 </script>
 </body>
 </html>

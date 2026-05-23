@@ -1,156 +1,242 @@
 {% extends "admin/base.html" %}
-
+{% load i18n static %}
+ 
+{% block dark-mode-vars %}{% endblock %}
+ 
 {% block extrastyle %}
+{{ block.super }}
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<style>
-/* ── GLOBAL RESET FOR DJANGO ADMIN ── */
-body { background: #0d1117 !important; font-family: 'Inter', sans-serif !important; color: #e2dcc8 !important; }
-
+ 
+{# Override Django 4.2+ / 6.x built-in CSS variables for light warm theme #}
+<style id="jam-theme-vars">
+html, body, #container {
+    --primary:                  #C8522A !important;
+    --secondary:                #8B2A10 !important;
+    --accent:                   #D4A882 !important;
+    --primary-fg:               #FAFAF7 !important;
+ 
+    --body-fg:                  #2C2015 !important;
+    --body-bg:                  #F5EDE4 !important;
+    --body-loud-color:          #2C2015 !important;
+    --body-quiet-color:         #7A5040 !important;
+ 
+    --header-color:             #FAFAF7 !important;
+    --header-branding-color:    #F5EDE4 !important;
+    --header-bg:                #8B2A10 !important;
+    --header-link-color:        #F5EDE4 !important;
+ 
+    --breadcrumbs-fg:           #2C2015 !important;
+    --breadcrumbs-link-fg:      #C8522A !important;
+    --breadcrumbs-bg:           #EDE3D8 !important;
+ 
+    --link-fg:                  #C8522A !important;
+    --link-hover-color:         #8B2A10 !important;
+    --link-selected-fg:         #8B2A10 !important;
+ 
+    --hairline-color:           rgba(200,82,42,0.2) !important;
+    --border-color:             rgba(200,82,42,0.25) !important;
+ 
+    --module-bg:                #FAFAF7 !important;
+    --module-selected-bg:       rgba(200,82,42,0.08) !important;
+    --darkened-bg:              #EDE3D8 !important;
+    --selected-bg:              rgba(200,82,42,0.1) !important;
+    --selected-row:             rgba(200,82,42,0.06) !important;
+ 
+    --button-bg:                #C8522A !important;
+    --button-fg:                #FAFAF7 !important;
+    --button-hover-bg:          #d9693f !important;
+    --default-button-bg:        #8B2A10 !important;
+    --default-button-hover-bg:  #C8522A !important;
+    --close-button-bg:          rgba(200,82,42,0.1) !important;
+    --close-button-hover-bg:    rgba(200,82,42,0.2) !important;
+    --delete-button-bg:         #b91c1c !important;
+    --delete-button-hover-bg:   #991b1b !important;
+ 
+    --object-tools-fg:          #C8522A !important;
+    --object-tools-bg:          rgba(200,82,42,0.08) !important;
+    --object-tools-hover-bg:    rgba(200,82,42,0.18) !important;
+ 
+    --nav-sidebar-width:        250px !important;
+    --color-scheme:             light !important;
+}
+ 
+/* Force light color scheme — prevents Django 6 dark mode auto-detection */
+:root { color-scheme: light !important; }
+html  { color-scheme: light !important; background: #F5EDE4 !important; }
+body  { color-scheme: light !important; background: #F5EDE4 !important; color: #2C2015 !important; }
+ 
 /* ── HEADER ── */
 #header {
-    background: #0d1117 !important;
-    border-bottom: 1px solid rgba(201,168,76,0.18) !important;
-    padding: 0 28px !important;
-    height: 60px !important;
-    display: flex !important;
-    align-items: center !important;
+    background: #8B2A10 !important;
+    border-bottom: 1px solid rgba(200,82,42,0.3) !important;
+    padding: 0 28px !important; height: 60px !important;
+    display: flex !important; align-items: center !important;
 }
 #branding h1 { font-family: 'Playfair Display', serif !important; font-size: 18px !important; }
-#branding h1 a { color: #c9a84c !important; text-decoration: none !important; }
-#branding h1 a:hover { color: #e0c46a !important; }
-
-/* ── USER TOOLS ── */
+#branding h1 a { color: #F5EDE4 !important; text-decoration: none !important; }
+#branding h1 a:hover { color: #D4A882 !important; }
 #user-tools { font-size: 13px !important; }
-#user-tools a { color: rgba(255,255,255,0.55) !important; text-decoration: none !important; transition: color 0.2s !important; }
-#user-tools a:hover { color: #c9a84c !important; }
-
+#user-tools a { color: rgba(245,237,228,0.8) !important; text-decoration: none !important; }
+#user-tools a:hover { color: #F5EDE4 !important; }
+ 
 /* ── DASHBOARD BUTTON ── */
 .dashboard-nav-link {
-    background: #c9a84c !important;
-    color: #0d1117 !important;
-    padding: 7px 16px !important;
-    border-radius: 50px !important;
-    font-weight: 700 !important;
-    font-size: 12px !important;
-    margin-right: 14px !important;
-    text-decoration: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 5px !important;
-    transition: background 0.2s !important;
+    background: #C8522A !important; color: #FAFAF7 !important;
+    padding: 7px 16px !important; border-radius: 50px !important;
+    font-weight: 700 !important; font-size: 12px !important;
+    margin-right: 14px !important; text-decoration: none !important;
+    display: inline-flex !important; align-items: center !important;
+    gap: 5px !important; transition: background 0.2s !important;
 }
-.dashboard-nav-link:hover { background: #e0c46a !important; color: #0d1117 !important; }
-
+.dashboard-nav-link:hover { background: #d9693f !important; color: #FAFAF7 !important; }
+ 
 /* ── NAV SIDEBAR ── */
-#nav-sidebar { background: #111827 !important; border-right: 1px solid rgba(201,168,76,0.1) !important; }
+#nav-sidebar { background: #FAFAF7 !important; border-right: 1px solid rgba(200,82,42,0.15) !important; }
 #nav-sidebar .module caption {
-    background: rgba(201,168,76,0.12) !important;
-    color: #c9a84c !important;
-    font-size: 10px !important; letter-spacing: 1.5px !important; text-transform: uppercase !important;
-    font-weight: 700 !important; border-bottom: 1px solid rgba(201,168,76,0.1) !important;
+    background: rgba(200,82,42,0.08) !important; color: #8B2A10 !important;
+    font-size: 10px !important; letter-spacing: 1.5px !important;
+    text-transform: uppercase !important; font-weight: 700 !important;
+    border-bottom: 1px solid rgba(200,82,42,0.12) !important;
 }
-#nav-sidebar a { color: rgba(255,255,255,0.6) !important; font-size: 13px !important; }
-#nav-sidebar a:hover { background: rgba(201,168,76,0.1) !important; color: #c9a84c !important; }
-
-/* ── MAIN CONTENT AREA ── */
-#content { background: #111827 !important; color: #e2dcc8 !important; }
+#nav-sidebar a { color: rgba(44,32,21,0.65) !important; font-size: 13px !important; }
+#nav-sidebar a:hover { background: rgba(200,82,42,0.08) !important; color: #C8522A !important; }
+ 
+/* ── MAIN CONTENT ── */
+#content { background: #F5EDE4 !important; color: #2C2015 !important; }
 #content-main { padding: 32px 36px 48px !important; }
-
+#content-related { background: #EDE3D8 !important; }
+ 
 /* ── ALL TEXT ── */
-body, #content, .module, p, h1, h2, h3, h4, label, th, td, li, .help, .description { color: #e2dcc8 !important; }
-
+body, #content, .module, p, h1, h2, h3, h4, label, th, li, .help, .description { color: #2C2015 !important; }
+td { color: #2C2015 !important; }
+ 
 /* ── MODULE HEADERS ── */
 .module h2, .module caption, .inline-group h2 {
-    background: rgba(201,168,76,0.1) !important;
-    color: #c9a84c !important;
-    border-bottom: 1px solid rgba(201,168,76,0.15) !important;
+    background: rgba(200,82,42,0.08) !important; color: #8B2A10 !important;
+    border-bottom: 1px solid rgba(200,82,42,0.15) !important;
     font-size: 12px !important; letter-spacing: 1.5px !important; text-transform: uppercase !important;
 }
-
+ 
 /* ── TABLE HEADERS ── */
-thead th { background: #0d1117 !important; color: rgba(255,255,255,0.5) !important; font-size: 11px !important; letter-spacing: 1px !important; text-transform: uppercase !important; }
-
+thead th { background: #EDE3D8 !important; color: rgba(44,32,21,0.7) !important; font-size: 11px !important; letter-spacing: 1px !important; text-transform: uppercase !important; }
+ 
 /* ── TABLE ROWS ── */
-.results tr { background: rgba(255,255,255,0.03) !important; }
-.results tr:hover { background: rgba(201,168,76,0.06) !important; }
-.results td { color: #e2dcc8 !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; font-size: 13px !important; }
-.results th a { color: rgba(255,255,255,0.55) !important; }
-
+.results tr { background: #FAFAF7 !important; }
+.results tr:hover { background: rgba(200,82,42,0.05) !important; }
+.results td { color: #2C2015 !important; border-bottom: 1px solid rgba(200,82,42,0.08) !important; font-size: 13px !important; }
+.results th a { color: rgba(44,32,21,0.7) !important; }
+tr.alt, tr.even { background: #F5EDE4 !important; }
+ 
 /* ── LINKS ── */
-a:link, a:visited { color: #c9a84c !important; }
-a:hover { color: #e0c46a !important; }
-
+a:link, a:visited { color: #C8522A !important; }
+a:hover { color: #8B2A10 !important; }
+ 
 /* ── BUTTONS ── */
 .button, input[type=submit], input[type=button], .submit-row input, a.button {
-    background: #c9a84c !important; color: #0d1117 !important;
+    background: #C8522A !important; color: #FAFAF7 !important;
     border: none !important; border-radius: 8px !important; font-weight: 700 !important;
 }
-.button:hover, input[type=submit]:hover { background: #e0c46a !important; }
-
+.button:hover, input[type=submit]:hover { background: #d9693f !important; }
+.button.default, input[type=submit].default { background: #8B2A10 !important; }
+ 
 /* ── BREADCRUMBS ── */
-div.breadcrumbs { background: #0d1117 !important; color: rgba(255,255,255,0.4) !important; border-bottom: 1px solid rgba(201,168,76,0.1) !important; font-size: 13px !important; }
-div.breadcrumbs a { color: #c9a84c !important; }
-
+div.breadcrumbs {
+    background: #EDE3D8 !important; color: rgba(44,32,21,0.6) !important;
+    border-bottom: 1px solid rgba(200,82,42,0.12) !important; font-size: 13px !important;
+}
+div.breadcrumbs a { color: #C8522A !important; }
+ 
 /* ── FORM INPUTS ── */
 input, select, textarea {
-    background: rgba(255,255,255,0.05) !important;
-    color: #e2dcc8 !important;
-    border: 1px solid rgba(201,168,76,0.2) !important;
-    border-radius: 8px !important;
+    background: #FFFFFF !important; color: #2C2015 !important;
+    border: 1px solid rgba(200,82,42,0.2) !important; border-radius: 8px !important;
 }
-input:focus, select:focus, textarea:focus { border-color: #c9a84c !important; outline: none !important; }
-input::placeholder { color: rgba(255,255,255,0.25) !important; }
-
+input:focus, select:focus, textarea:focus { border-color: #C8522A !important; outline: none !important; }
+input::placeholder { color: rgba(44,32,21,0.35) !important; }
+ 
 /* ── HELP TEXT ── */
-.help, .help-block { color: rgba(255,255,255,0.4) !important; }
-
+.help, .help-block { color: rgba(44,32,21,0.5) !important; }
+ 
 /* ── FILTER SIDEBAR ── */
-#changelist-filter { background: #0d1117 !important; border-left: 1px solid rgba(201,168,76,0.1) !important; }
-#changelist-filter h2 { background: rgba(201,168,76,0.1) !important; color: #c9a84c !important; font-size: 11px !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; }
-#changelist-filter a { color: rgba(255,255,255,0.6) !important; }
-#changelist-filter a:hover { color: #c9a84c !important; }
-#changelist-filter li.selected a { color: #c9a84c !important; font-weight: 600 !important; }
-
+#changelist-filter { background: #EDE3D8 !important; border-left: 1px solid rgba(200,82,42,0.15) !important; }
+#changelist-filter h2 { background: rgba(200,82,42,0.08) !important; color: #8B2A10 !important; font-size: 11px !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; }
+#changelist-filter a { color: rgba(44,32,21,0.65) !important; }
+#changelist-filter a:hover { color: #C8522A !important; }
+#changelist-filter li.selected a { color: #C8522A !important; font-weight: 600 !important; }
+ 
 /* ── PAGINATOR ── */
-.paginator { background: #0d1117 !important; color: rgba(255,255,255,0.4) !important; border-top: 1px solid rgba(201,168,76,0.1) !important; }
-.paginator a:link, .paginator a:visited { color: #c9a84c !important; }
-
-/* ── DASHBOARD MODULE TABLES ── */
-.dashboard .module table { background: #111827 !important; }
-.dashboard .module caption { background: rgba(201,168,76,0.1) !important; color: #c9a84c !important; }
-
+.paginator { background: #EDE3D8 !important; color: rgba(44,32,21,0.6) !important; border-top: 1px solid rgba(200,82,42,0.1) !important; }
+.paginator a:link, .paginator a:visited { color: #C8522A !important; }
+ 
+/* ── DASHBOARD ── */
+.dashboard .module table { background: #FAFAF7 !important; }
+.dashboard .module caption { background: rgba(200,82,42,0.08) !important; color: #8B2A10 !important; }
+ 
 /* ── FOOTER ── */
-#footer { background: #0d1117 !important; color: rgba(255,255,255,0.25) !important; border-top: 1px solid rgba(201,168,76,0.08) !important; font-size: 12px !important; }
-
+#footer { background: #2C2015 !important; color: rgba(245,237,228,0.6) !important; border-top: 1px solid rgba(200,82,42,0.2) !important; font-size: 12px !important; }
+ 
 /* ── MESSAGES ── */
-.messagelist .success { background: rgba(74,222,128,0.12) !important; color: #4ade80 !important; border: 1px solid rgba(74,222,128,0.2) !important; border-radius: 10px !important; }
-.errornote { background: rgba(248,113,113,0.12) !important; color: #f87171 !important; border: 1px solid rgba(248,113,113,0.2) !important; border-radius: 10px !important; }
+.messagelist .success { background: rgba(34,139,34,0.10) !important; color: #1a6b1a !important; border: 1px solid rgba(34,139,34,0.25) !important; border-radius: 10px !important; }
+.errornote { background: rgba(180,30,30,0.10) !important; color: #8B1a1a !important; border: 1px solid rgba(180,30,30,0.25) !important; border-radius: 10px !important; }
 .messagelist li { border-radius: 10px !important; }
-
+ 
 /* ── OBJECT TOOLS ── */
-.object-tools a { background: rgba(201,168,76,0.12) !important; color: #c9a84c !important; border: 1px solid rgba(201,168,76,0.25) !important; border-radius: 20px !important; }
-.object-tools a:hover { background: rgba(201,168,76,0.22) !important; }
-
+.object-tools a { background: rgba(200,82,42,0.08) !important; color: #C8522A !important; border: 1px solid rgba(200,82,42,0.25) !important; border-radius: 20px !important; }
+.object-tools a:hover { background: rgba(200,82,42,0.18) !important; }
+ 
 /* ── SUBMIT ROW ── */
-.submit-row { background: #0d1117 !important; border-top: 1px solid rgba(201,168,76,0.1) !important; }
-
+.submit-row { background: #EDE3D8 !important; border-top: 1px solid rgba(200,82,42,0.15) !important; }
+ 
 /* ── INLINE GROUPS ── */
-.inline-related, .tabular.inline-related { background: rgba(255,255,255,0.02) !important; border: 1px solid rgba(201,168,76,0.1) !important; border-radius: 10px !important; }
-
+.inline-related, .tabular.inline-related { background: rgba(200,82,42,0.04) !important; border: 1px solid rgba(200,82,42,0.12) !important; border-radius: 10px !important; }
+ 
 /* ── SEARCH ── */
-#searchbar { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(201,168,76,0.2) !important; color: #e2dcc8 !important; border-radius: 8px !important; }
-#toolbar { background: #0d1117 !important; border-bottom: 1px solid rgba(201,168,76,0.1) !important; }
+#searchbar { background: #FFFFFF !important; border: 1px solid rgba(200,82,42,0.2) !important; color: #2C2015 !important; border-radius: 8px !important; }
+#toolbar { background: #EDE3D8 !important; border-bottom: 1px solid rgba(200,82,42,0.12) !important; }
+ 
+/* ── CALENDAR / DATE WIDGETS ── */
+.calendarbox, .clockbox { background: #FAFAF7 !important; border: 1px solid rgba(200,82,42,0.2) !important; }
+.calendar td a:hover, .calendar td.selected a { background: #C8522A !important; color: #FAFAF7 !important; }
+ 
+/* ── POPUP ── */
+.related-widget-wrapper-link:hover img { opacity: 0.8; }
+ 
+/* Force remove any dark mode media query overrides */
+@media (prefers-color-scheme: dark) {
+    html, body, #container, #content, #header, #nav-sidebar,
+    .module, .results tr, thead th, #changelist-filter,
+    .submit-row, .paginator, #footer, #toolbar {
+        background: unset !important;
+        color: unset !important;
+    }
+    html  { background: #F5EDE4 !important; }
+    body  { background: #F5EDE4 !important; color: #2C2015 !important; }
+    #header { background: #8B2A10 !important; }
+    #content { background: #F5EDE4 !important; color: #2C2015 !important; }
+    #nav-sidebar { background: #FAFAF7 !important; }
+    .module { background: #FAFAF7 !important; }
+    .results tr { background: #FAFAF7 !important; }
+    .results td { color: #2C2015 !important; }
+    thead th { background: #EDE3D8 !important; color: rgba(44,32,21,0.7) !important; }
+    #changelist-filter { background: #EDE3D8 !important; }
+    .submit-row { background: #EDE3D8 !important; }
+    .paginator { background: #EDE3D8 !important; }
+    #footer { background: #2C2015 !important; }
+    #toolbar { background: #EDE3D8 !important; }
+    a:link, a:visited { color: #C8522A !important; }
+    input, select, textarea { background: #FFFFFF !important; color: #2C2015 !important; }
+}
 </style>
 {% endblock %}
-
+ 
 {% block title %}JAM Massage & Spa Admin{% endblock %}
-
+ 
 {% block branding %}
 <h1 id="site-name"><a href="{% url 'admin:index' %}">🪷 JAM Massage & Spa</a></h1>
 {% endblock %}
-
+ 
 {% block nav-global %}{% endblock %}
-
+ 
 {% block userlinks %}
     <a href="/admin-dashboard/" class="dashboard-nav-link">📊 Dashboard</a>
     {% if user.has_usable_password %}
@@ -158,3 +244,4 @@ input::placeholder { color: rgba(255,255,255,0.25) !important; }
     {% endif %}
     <a href="{% url 'admin:logout' %}">Log out</a>
 {% endblock %}
+ 

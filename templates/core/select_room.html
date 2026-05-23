@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Room - JAM Massage & Spa</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #FAFAF7; color: #2C2015; margin: 0; padding: 24px; }
+        .card { max-width: 680px; margin: 0 auto; background: #fff; border-radius: 18px; box-shadow: 0 12px 30px rgba(0,0,0,0.08); overflow: hidden; }
+        .header { background: #C8522A; color: #fff; padding: 22px 24px; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 24px; }
+        .section { margin-bottom: 18px; }
+        .section h2 { font-size: 18px; margin-bottom: 10px; }
+        .detail { margin-bottom: 8px; font-size: 14px; }
+        .note { background: rgba(200,82,42,0.08); border: 1px solid rgba(200,82,42,0.2); border-radius: 12px; padding: 14px; margin-bottom: 18px; }
+        .select-room { width: 100%; padding: 12px 14px; border: 1px solid #d1d5db; border-radius: 12px; font-size: 14px; }
+        .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+        .btn { padding: 12px 18px; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; }
+        .btn-primary { background: #C8522A; color: #fff; }
+        .btn-secondary { background: #f4f4f4; color: #2C2015; }
+        .error { color: #b91c1c; margin-top: 12px; }
+        .room-list { display: grid; gap: 10px; margin-top: 12px; }
+        .room-card { padding: 14px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
+        .room-card.booked { opacity: 0.65; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>Select a Room for Booking #{{ booking.id }}</h1>
+        </div>
+        <div class="content">
+            <div class="note">
+                <strong>Note:</strong> This booking requires a room. Please choose one available room for the selected date and time.
+            </div>
+
+            <div class="section">
+                <h2>Booking details</h2>
+                <div class="detail"><strong>Service / Package:</strong> {% if booking.service %}{{ booking.service.name }}{% elif booking.package %}{{ booking.package.name }}{% else %}Spa Service{% endif %}</div>
+                <div class="detail"><strong>Date:</strong> {{ booking.booking_date }}</div>
+                <div class="detail"><strong>Time:</strong> {{ booking.booking_time|time:"g:i A" }}</div>
+                <div class="detail"><strong>Amount:</strong> ₱{{ booking.total_amount }}</div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="section">
+                    <label for="room_id"><strong>Choose available room</strong></label>
+                    <select id="room_id" name="room_id" class="select-room">
+                        <option value="">-- Select a room --</option>
+                        {% for room in all_rooms %}
+                            {% if room.id in booked_room_ids %}
+                                <option value="{{ room.id }}" disabled>🔴 Room {{ room.room_number }} — {{ room.get_room_type_display }} (Booked)</option>
+                            {% else %}
+                                <option value="{{ room.id }}">🟢 Room {{ room.room_number }} — {{ room.get_room_type_display }} (Available)</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="btn-row">
+                    <button type="submit" class="btn btn-primary">Assign Room</button>
+                    <a href="{% url 'customer_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+                {% if not available_rooms %}
+                    <p class="error">No available rooms were found for this time. Please go back and choose another time if needed.</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

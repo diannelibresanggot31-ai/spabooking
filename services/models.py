@@ -57,6 +57,18 @@ class Package(models.Model):
     def __str__(self):
         return f"{self.name} - ₱{self.price}"
 
+    @property
+    def requires_room(self):
+        return self.services.filter(requires_room=True).exists()
+
+    @property
+    def total_duration_minutes(self):
+        return self.services.aggregate(total=models.Sum('duration_minutes'))['total'] or 60
+
+    @property
+    def service_count(self):
+        return self.services.count()
+
 class Room(models.Model):
     ROOM_TYPES = (
         ('single', 'Single Room'),

@@ -8,23 +8,23 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #c9a84c;
-            --dark: #0f1624;
-            --dark-2: #141d2e;
-            --dark-3: #1a2336;
-            --white: #ffffff;
-            --text-light: #a8b8d0;
-            --text-mid: #d8d9e0;
+            --primary: #C8522A;
+            --dark: #F5EDE4;
+            --dark-2: #FAFAF7;
+            --dark-3: #EDE3D8;
+            --white: #2C2015;
+            --text-light: #7A5040;
+            --text-mid: #3D2518;
             --radius: 16px;
-            --shadow: 0 18px 48px rgba(0,0,0,0.35);
-            --success: #49d246;
-            --warning: #fbbf24;
+            --shadow: 0 18px 48px rgba(44,32,21,0.12);
+            --success: #1a6b1a;
+            --warning: #7a4f00;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'DM Sans', sans-serif;
-            background: radial-gradient(circle at top, rgba(201,168,76,0.12), transparent 32%),
-                        linear-gradient(180deg, #0f1624 0%, #0b1220 100%);
+            background: radial-gradient(circle at top, rgba(200,82,42,0.07), transparent 32%),
+                        linear-gradient(180deg, #F5EDE4 0%, #EDE3D8 100%);
             color: var(--white);
             min-height: 100vh;
         }
@@ -33,8 +33,8 @@
         .sidebar {
             position: fixed; inset: 0 auto 0 0;
             width: 260px; max-width: 100%;
-            background: rgba(13,18,32,0.97);
-            border-right: 1px solid rgba(255,255,255,0.06);
+            background: rgba(250,250,247,0.98);
+            border-right: 1px solid rgba(200,82,42,0.15);
             transform: translateX(-100%);
             transition: transform 0.28s ease;
             z-index: 40;
@@ -48,23 +48,23 @@
         .nav-list { list-style: none; margin-top: 20px; display: grid; gap: 10px; }
         .nav-list a {
             display: block; padding: 12px 14px; border-radius: 14px;
-            background: rgba(255,255,255,0.04); color: var(--text-mid);
+            background: rgba(200,82,42,0.06); color: var(--text-mid);
             transition: background 0.2s ease;
         }
-        .nav-list a:hover { background: rgba(201,168,76,0.15); color: var(--white); }
-        .nav-list a.active { background: rgba(201,168,76,0.15); color: var(--primary); }
-        .sidebar-footer { margin-top: auto; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-list a:hover { background: rgba(200,82,42,0.14); color: #8B2A10; }
+        .nav-list a.active { background: rgba(200,82,42,0.14); color: #8B2A10; }
+        .sidebar-footer { margin-top: auto; padding-top: 22px; border-top: 1px solid rgba(200,82,42,0.12); }
         .sidebar-footer p { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
         .logout-btn {
             width: 100%; padding: 11px 14px; border-radius: 10px;
-            background: rgba(248,113,113,0.15); color: #f8a8a8;
+            background: rgba(180,30,30,0.1); color: #8B1a1a;
             border: none; font-size: 13px; font-weight: 600;
             transition: background 0.2s ease;
         }
-        .logout-btn:hover { background: rgba(248,113,113,0.25); }
+        .logout-btn:hover { background: rgba(180,30,30,0.2); }
         .overlay {
             position: fixed; inset: 0; z-index: 30;
-            background: rgba(0,0,0,0.55); opacity: 0; pointer-events: none; 
+            background: rgba(44,32,21,0.45); opacity: 0; pointer-events: none; 
             transition: opacity 0.25s ease;
         }
         .overlay.show { opacity: 1; pointer-events: auto; }
@@ -81,15 +81,15 @@
         }
         .hamburger {
             width: 44px; height: 44px; border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(200,82,42,0.18);
+            background: rgba(200,82,42,0.07);
             display: inline-flex; align-items: center; justify-content: center;
             padding: 8px;
             transition: background 0.2s ease;
         }
-        .hamburger:hover { background: rgba(201,168,76,0.14); }
+        .hamburger:hover { background: rgba(200,82,42,0.14); }
         .hamburger span {
-            display: block; width: 18px; height: 2px; background: var(--white); border-radius: 2px;
+            display: block; width: 18px; height: 2px; background: #C8522A; border-radius: 2px;
         }
         .hamburger span + span { margin-top: 5px; }
         .topbar-title {
@@ -103,50 +103,50 @@
             margin-bottom: 24px;
         }
         .schedule-card {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            background: #FAFAF7; border: 1px solid rgba(200,82,42,0.12);
             border-radius: 18px; padding: 20px; box-shadow: var(--shadow);
         }
         .schedule-date {
-            font-size: 14px; color: var(--text-light); text-transform: uppercase;
+            font-size: 14px; color: #7A5040; text-transform: uppercase;
             letter-spacing: 0.5px; margin-bottom: 12px;
         }
         .schedule-time {
-            font-size: 24px; font-weight: 700; color: var(--primary);
+            font-size: 24px; font-weight: 700; color: #C8522A;
             margin-bottom: 8px;
         }
         .schedule-time-details {
-            font-size: 13px; color: var(--text-mid); margin-bottom: 12px;
+            font-size: 13px; color: #3D2518; margin-bottom: 12px;
         }
         .schedule-availability {
             display: inline-block; padding: 6px 10px; border-radius: 999px;
             font-size: 11px; font-weight: 600; text-transform: uppercase;
         }
         .availability-available {
-            background: rgba(73,210,70,0.15); color: #a4f1a0;
+            background: rgba(34,139,34,0.12); color: #1a6b1a;
         }
         .availability-unavailable {
-            background: rgba(248,113,113,0.15); color: #f8a8a8;
+            background: rgba(180,30,30,0.12); color: #8B1a1a;
         }
         .bookings-section {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+            background: #FAFAF7; border: 1px solid rgba(200,82,42,0.12);
             border-radius: 18px; overflow: hidden; box-shadow: var(--shadow);
         }
         .section-header {
-            background: rgba(255,255,255,0.05); padding: 16px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(200,82,42,0.07); padding: 16px 20px;
+            border-bottom: 1px solid rgba(200,82,42,0.12);
             font-size: 16px; font-weight: 600;
         }
         .bookings-list {
             padding: 0;
         }
         .booking-item {
-            padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 16px 20px; border-bottom: 1px solid rgba(200,82,42,0.08);
             display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 16px; align-items: center;
         }
         .booking-item:last-child { border-bottom: none; }
-        .booking-item:hover { background: rgba(201,168,76,0.06); }
+        .booking-item:hover { background: rgba(200,82,42,0.05); }
         .booking-time {
-            font-size: 14px; font-weight: 600; color: var(--primary);
+            font-size: 14px; font-weight: 600; color: #C8522A;
         }
         .booking-customer {
             font-size: 13px;
@@ -159,10 +159,10 @@
             font-size: 11px; font-weight: 600; text-transform: uppercase;
         }
         .status-pending {
-            background: rgba(251,191,36,0.15); color: #fbe08a;
+            background: rgba(180,120,0,0.12); color: #7a4f00;
         }
         .status-confirmed {
-            background: rgba(73,210,70,0.15); color: #a4f1a0;
+            background: rgba(34,139,34,0.12); color: #1a6b1a;
         }
         .empty-state {
             text-align: center; padding: 48px 24px; color: var(--text-light);
@@ -182,15 +182,15 @@
             <p>Quick navigation</p>
         </div>
         <ul class="nav-list">
-            <li><a href="{% url 'staff:staff_dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'staff:dashboard' %}">Dashboard</a></li>
             <li><a href="{% url 'staff:attendance' %}">Attendance</a></li>
-            <li><a href="{% url 'staff:staff_payments' %}">Payments</a></li>
-            <li><a href="{% url 'staff:staff_schedule' %}" class="active">Schedule</a></li>
+            <li><a href="{% url 'staff:payments' %}">Payments</a></li>
+            <li><a href="{% url 'staff:schedule' %}" class="active">Schedule</a></li>
             <li><a href="/">Customer home</a></li>
         </ul>
         <div class="sidebar-footer">
             <p>View your work schedule and upcoming bookings.</p>
-            <form action="{% url 'staff:staff_logout' %}" method="post" style="margin: 0;">
+            <form action="{% url 'staff:logout' %}" method="post" style="margin: 0;">
                 {% csrf_token %}
                 <button type="submit" class="logout-btn">🚪 Log Out</button>
             </form>
@@ -208,10 +208,10 @@
                 <p style="color: var(--text-light); font-size: 13px; margin-top: 4px;">Work schedule and bookings for the next 30 days</p>
             </div>
         </div>
-
+ 
         <!-- Calendar -->
         <div class="bookings-section">
-            <div class="section-header">📅 Calendar — {{ calendar_year }} / {{ calendar_month }}</div>
+            <div class="section-header">📅 Calendar — {{ month_name }} {{ year }}</div>
             <div style="padding:16px">
                 <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-bottom:8px; color:var(--text-light);">
                     <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
@@ -219,12 +219,12 @@
                 <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:8px;">
                     {% for cell in calendar_cells %}
                         {% if not cell.in_month %}
-                            <div style="padding:10px; background:rgba(255,255,255,0.02); border-radius:8px; color:var(--text-light);">{{ cell.day }}</div>
+                            <div style="padding:10px; background:rgba(44,32,21,0.04); border-radius:8px; color:#7A5040;">{{ cell.day }}</div>
                         {% else %}
-                            <div style="padding:10px; background:rgba(201,168,76,0.06); border-radius:8px; position:relative;">
+                            <div style="padding:10px; background:rgba(200,82,42,0.08); border-radius:8px; position:relative;">
                                 <div style="font-weight:700">{{ cell.day }}</div>
                                 {% if cell.booking_count and cell.booking_count > 0 %}
-                                    <div style="position:absolute; top:8px; right:8px; background:rgba(255,255,255,0.08); padding:4px 6px; border-radius:999px; font-size:12px;">{{ cell.booking_count }}</div>
+                                    <div style="position:absolute; top:8px; right:8px; background:rgba(200,82,42,0.2); padding:4px 6px; border-radius:999px; font-size:12px;">{{ cell.booking_count }}</div>
                                 {% endif %}
                             </div>
                         {% endif %}
@@ -232,43 +232,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Bookings list below calendar -->
-        <div class="bookings-section" style="margin-top:16px;">
-            <div class="section-header">📋 Bookings This Month</div>
-            <div style="padding:16px;">
-                {% if bookings_by_day %}
-                    {% for cell in calendar_cells %}
-                        {% if cell.in_month and cell.bookings %}
-                            <div style="margin-bottom:12px;">
-                                <div style="font-weight:700;">{{ cell.date|date:"F j, Y" }} ({{ cell.booking_count }})</div>
-                                <div>
-                                    {% for b in cell.bookings %}
-                                        <div style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);margin-top:6px;">
-                                            <div style="font-weight:600;">
-                                                {% if b.customer.first_name or b.customer.last_name %}
-                                                    {{ b.customer.first_name }} {{ b.customer.last_name }}
-                                                {% else %}
-                                                    {{ b.customer.username }}
-                                                {% endif %}
-                                                <span style="font-weight:400;color:var(--text-light);"> ({{ b.customer.username }})</span>
-                                            </div>
-                                            <div style="font-size:13px;color:var(--text-light);">{{ b.booking_time|time:"H:i" }} · {% if b.service %}{{ b.service.name }}{% else %}N/A{% endif %}</div>
-                                            {% if b.customer.email %}
-                                                <div style="font-size:12px;color:var(--text-light);">{{ b.customer.email }}</div>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-state">No bookings for this month.</div>
-                {% endif %}
-            </div>
-        </div>
-
+ 
         <!-- Schedules -->
         {% if schedules %}
             <div class="schedule-grid">
@@ -295,7 +259,7 @@
                 <p>Your work schedule will appear here once it's assigned.</p>
             </div>
         {% endif %}
-
+ 
         <!-- Upcoming Bookings -->
         {% if upcoming_bookings %}
             <div class="bookings-section">
@@ -307,12 +271,12 @@
                                 {{ booking.booking_date|date:"M d" }} at {{ booking.booking_time|time:"H:i" }}
                             </div>
                             <div class="booking-customer">
-                                👤 {{ booking.customer.first_name }} {{ booking.customer.last_name }}
+                                👤 {{ booking.customer.get_full_name|default:booking.customer.username }}
                             </div>
                             <div class="booking-service">
-                                🛀 {{ booking.service.name }}
+                                🛀 {% if booking.service %}{{ booking.service.name }}{% elif booking.package %}{{ booking.package.name }}{% else %}Service{% endif %}
                             </div>
-                            <span class="booking-status status-{{ booking.status }}">
+                            <span class="booking-status status-{% if booking.status == 'verify' %}confirmed{% else %}{{ booking.status }}{% endif %}">
                                 {{ booking.get_status_display }}
                             </span>
                         </div>
@@ -321,7 +285,7 @@
             </div>
         {% endif %}
     </div>
-
+ 
     <script>
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');

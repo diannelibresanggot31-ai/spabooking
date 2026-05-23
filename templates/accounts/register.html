@@ -9,7 +9,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #0d1117;
+            background: #F5EDE4;
             min-height: 100vh;
             display: flex;
         }
@@ -17,83 +17,83 @@
         .left-panel {
             flex: 1;
             background:
-                linear-gradient(135deg, rgba(10,12,20,0.92) 0%, rgba(10,12,20,0.55) 100%),
+                linear-gradient(135deg, rgba(122, 103, 91, 0.92) 0%, rgba(0, 0, 0, 0.55) 100%),
                 url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=1200&q=80') center/cover no-repeat;
             display: flex; flex-direction: column;
             justify-content: space-between;
             padding: 52px 56px;
             position: relative; overflow: hidden;
         }
-        .left-panel::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 30% 50%, rgba(255,215,0,0.05) 0%, transparent 70%); }
+        .left-panel::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 30% 50%, rgba(200,82,42,0.08) 0%, transparent 70%); }
         .lp-logo { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; }
         .lp-logo-icon { font-size: 1.6rem; }
-        .lp-logo-name { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #ffd700; }
-        .lp-logo-name small { display: block; font-size: 0.55rem; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; font-family: 'Inter', sans-serif; }
+        .lp-logo-name { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #F5EDE4; }
+        .lp-logo-name small { display: block; font-size: 0.55rem; color: rgba(245,237,228,0.55); letter-spacing: 2px; text-transform: uppercase; font-family: 'Inter', sans-serif; }
         .lp-content { position: relative; z-index: 1; }
-        .lp-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #ffd700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .lp-eyebrow::before { content: ''; display: block; width: 24px; height: 2px; background: #ffd700; }
+        .lp-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #F5EDE4; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .lp-eyebrow::before { content: ''; display: block; width: 24px; height: 2px; background: #F5EDE4; }
         .lp-title { font-family: 'Playfair Display', serif; font-size: 2.9rem; font-weight: 700; color: white; line-height: 1.2; margin-bottom: 20px; }
-        .lp-title em { color: #ffd700; font-style: normal; }
+        .lp-title em { color: #D4A882; font-style: normal; }
         .lp-desc { font-size: 0.95rem; color: rgba(255,255,255,0.6); line-height: 1.8; max-width: 380px; }
         .lp-perks { margin-top: 32px; display: flex; flex-direction: column; gap: 14px; }
         .lp-perk { display: flex; align-items: center; gap: 12px; font-size: 0.87rem; color: rgba(255,255,255,0.6); }
-        .lp-perk-dot { width: 8px; height: 8px; border-radius: 50%; background: #ffd700; flex-shrink: 0; }
+        .lp-perk-dot { width: 8px; height: 8px; border-radius: 50%; background: #D4A882; flex-shrink: 0; }
         .lp-footer { position: relative; z-index: 1; font-size: 0.75rem; color: rgba(255,255,255,0.28); font-style: italic; }
  
         /* RIGHT PANEL */
         .right-panel {
             width: 520px; flex-shrink: 0;
-            background: #0f1520;
+            background: #FAFAF7;
             display: flex; flex-direction: column;
             padding: 48px 52px 36px;
-            border-left: 1px solid rgba(255,215,0,0.08);
+            border-left: 1px solid rgba(200,82,42,0.15);
             overflow-y: auto;
         }
         .form-body { flex: 1; }
         .form-heading { margin-bottom: 32px; }
-        .form-heading h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
-        .form-heading p { font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+        .form-heading h1 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #2C2015; margin-bottom: 8px; }
+        .form-heading p { font-size: 0.88rem; color: rgba(44,32,21,0.55); line-height: 1.6; }
  
         /* error */
         .error-message { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 12px 16px; border-radius: 10px; margin-bottom: 22px; font-size: 0.83rem; }
  
         /* fields */
         .field-group { margin-bottom: 18px; }
-        .field-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 8px; display: block; }
+        .field-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(44,32,21,0.5); margin-bottom: 8px; display: block; }
         .field-row { position: relative; display: flex; align-items: center; }
-        .field-icon { position: absolute; left: 15px; font-size: 0.9rem; color: rgba(255,255,255,0.22); pointer-events: none; }
-        .field-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 14px 14px 14px 42px; color: rgba(255,255,255,0.85); font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s, background 0.2s; }
-        .field-input:focus { border-color: rgba(255,215,0,0.4); background: rgba(255,215,0,0.02); }
-        .field-input::placeholder { color: rgba(255,255,255,0.18); }
-        .toggle-pw { position: absolute; right: 14px; background: none; border: none; color: rgba(255,255,255,0.22); cursor: pointer; font-size: 1rem; padding: 4px; transition: color 0.2s; }
-        .toggle-pw:hover { color: #ffd700; }
+        .field-icon { position: absolute; left: 15px; font-size: 0.9rem; color: rgba(44,32,21,0.35); pointer-events: none; }
+        .field-input { width: 100%; background: #FFFFFF; border: 1px solid rgba(200,82,42,0.18); border-radius: 12px; padding: 14px 14px 14px 42px; color: #2C2015; font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s, background 0.2s; }
+        .field-input:focus { border-color: rgba(200,82,42,0.5); background: rgba(200,82,42,0.02); }
+        .field-input::placeholder { color: rgba(44,32,21,0.3); }
+        .toggle-pw { position: absolute; right: 14px; background: none; border: none; color: rgba(44,32,21,0.3); cursor: pointer; font-size: 1rem; padding: 4px; transition: color 0.2s; }
+        .toggle-pw:hover { color: #C8522A; }
  
         /* two col row */
         .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
  
         /* terms */
         .terms-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 24px; margin-top: 4px; }
-        .terms-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #ffd700; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
-        .terms-row label { font-size: 0.82rem; color: rgba(255,255,255,0.42); line-height: 1.5; cursor: pointer; }
-        .terms-row label a { color: #ffd700; text-decoration: none; font-weight: 600; }
+        .terms-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #C8522A; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+        .terms-row label { font-size: 0.82rem; color: rgba(44,32,21,0.55); line-height: 1.5; cursor: pointer; }
+        .terms-row label a { color: #C8522A; text-decoration: none; font-weight: 600; }
         .terms-row label a:hover { text-decoration: underline; }
  
         /* submit */
-        .submit-btn { width: 100%; background: #ffd700; color: #0d1117; border: none; border-radius: 12px; padding: 15px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.4px; transition: all 0.2s; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .submit-btn:hover { background: #ffec6e; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,215,0,0.22); }
+        .submit-btn { width: 100%; background: #C8522A; color: #FAFAF7; border: none; border-radius: 12px; padding: 15px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.4px; transition: all 0.2s; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .submit-btn:hover { background: #d9693f; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,82,42,0.25); }
  
         /* bottom link */
-        .bottom-link { text-align: center; font-size: 0.86rem; color: rgba(255,255,255,0.38); margin-bottom: 4px; }
-        .bottom-link a { color: #ffd700; text-decoration: none; font-weight: 700; }
+        .bottom-link { text-align: center; font-size: 0.86rem; color: rgba(44,32,21,0.55); margin-bottom: 4px; }
+        .bottom-link a { color: #C8522A; text-decoration: none; font-weight: 700; }
         .bottom-link a:hover { text-decoration: underline; }
  
         /* quote */
-        .quote-line { text-align: center; font-size: 0.78rem; color: rgba(255,255,255,0.2); font-style: italic; margin-top: 16px; }
+        .quote-line { text-align: center; font-size: 0.78rem; color: rgba(44,32,21,0.35); font-style: italic; margin-top: 16px; }
  
         /* footer links */
-        .form-footer { margin-top: 36px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .form-footer a { font-size: 0.72rem; color: rgba(255,255,255,0.22); text-decoration: none; transition: color 0.2s; }
-        .form-footer a:hover { color: rgba(255,215,0,0.6); }
+        .form-footer { margin-top: 36px; padding-top: 20px; border-top: 1px solid rgba(200,82,42,0.12); display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .form-footer a { font-size: 0.72rem; color: rgba(44,32,21,0.45); text-decoration: none; transition: color 0.2s; }
+        .form-footer a:hover { color: #C8522A; }
  
         @media (max-width: 900px) {
             .left-panel { display: none; }

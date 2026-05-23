@@ -5,9 +5,9 @@ import uuid
 
 class Booking(models.Model):
     STATUS_CHOICES = (
-        ('pending', 'Pending'),
-        ('verify', 'Verify'),
-        ('complete', 'Complete'),
+        ('pending', 'Pending'),          # Waiting for payment verification (GCash)
+        ('verify', 'Verify'),            # Payment verified, ready for service
+        ('complete', 'Complete Session'), # Service completed
         ('cancelled', 'Cancelled'),
     )
     
@@ -25,7 +25,7 @@ class Booking(models.Model):
     booking_time = models.TimeField()
     duration_minutes = models.IntegerField()
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD_CHOICES, default='gcash')
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD_CHOICES, default='cash')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     special_requests = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -39,7 +39,9 @@ class Booking(models.Model):
     def __str__(self):
         return f"Booking {self.booking_number} - {self.customer.username}"
     
-    def get_total_revenue(self):
-        if self.status == 'verify' or self.status == 'complete':
-            return self.total_amount
-        return 0
+    def can_cancel(self):
+        return self.status == 'pending' and self.payment_method == 'cash'
+    
+    def can_view_receipt(self):
+        """Customer can view receipt when status is verify or complete"""
+        return self.status in ['verify', 'complete']

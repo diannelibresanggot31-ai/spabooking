@@ -1,0 +1,451 @@
+﻿{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}{% if schedule %}Edit Schedule{% else %}Add Schedule{% endif %} - Admin Panel{% endblock %}
+
+{% block page_title %}{% if schedule %}Edit Staff Schedule{% else %}Add New Staff Schedule{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #C8522A;
+        --primary-dark: #a03f1c;
+        --primary-light: #fdf5f0;
+        --success: #28a745;
+        --danger: #dc3545;
+        --warning: #ffc107;
+        --info: #17a2b8;
+        --border-radius: 16px;
+        --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .schedule-form-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        border: none;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 25px 30px;
+        border-bottom: none;
+    }
+
+    .card-header-custom h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .card-header-custom p {
+        margin: 8px 0 0;
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+
+    .form-body {
+        padding: 30px;
+    }
+
+    .form-group-modern {
+        margin-bottom: 25px;
+    }
+
+    .form-label-modern {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2C2015;
+        font-size: 0.9rem;
+    }
+
+    .form-label-modern .required {
+        color: var(--danger);
+        margin-left: 4px;
+    }
+
+    .input-modern {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #E8E8E8;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        background: white;
+    }
+
+    .input-modern:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(200, 82, 42, 0.1);
+    }
+
+    .select-modern {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #E8E8E8;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        background: white;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .select-modern:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(200, 82, 42, 0.1);
+    }
+
+    .time-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .checkbox-modern {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+        background: var(--primary-light);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .checkbox-modern:hover {
+        background: #fae6df;
+    }
+
+    .checkbox-modern input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: var(--primary-color);
+    }
+
+    .checkbox-modern label {
+        margin: 0;
+        cursor: pointer;
+        font-weight: 500;
+        color: #2C2015;
+    }
+
+    .checkbox-modern small {
+        display: block;
+        margin-top: 4px;
+        color: #6c757d;
+        font-size: 0.8rem;
+    }
+
+    .btn-modern {
+        padding: 12px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        cursor: pointer;
+        border: none;
+    }
+
+    .btn-primary-modern {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+    }
+
+    .btn-primary-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(200, 82, 42, 0.3);
+    }
+
+    .btn-secondary-modern {
+        background: #f8f9fa;
+        color: #6c757d;
+        border: 1px solid #dee2e6;
+    }
+
+    .btn-secondary-modern:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #E8E8E8;
+    }
+
+    .alert-custom {
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .alert-info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+
+    .alert-icon {
+        font-size: 1.2rem;
+    }
+
+    .staff-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        margin-right: 12px;
+    }
+
+    @media (max-width: 768px) {
+        .form-body {
+            padding: 20px;
+        }
+        .time-group {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .form-actions {
+            flex-direction: column;
+        }
+        .btn-modern {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="schedule-form-card">
+        <div class="card-header-custom">
+            <h3>
+                <i class="fas fa-calendar-plus"></i> 
+                {% if schedule %}Edit Schedule{% else %}Create New Schedule{% endif %}
+            </h3>
+            <p>{% if schedule %}Update staff work schedule information{% else %}Add a new work schedule for staff member{% endif %}</p>
+        </div>
+
+        <div class="form-body">
+            <!-- Info Alert -->
+            <div class="alert-custom alert-info">
+                <span class="alert-icon">ℹ️</span>
+                <span>All fields marked with <span class="required" style="color: var(--danger);">*</span> are required.</span>
+            </div>
+
+            <form method="post" id="scheduleForm">
+                {% csrf_token %}
+                
+                <!-- Staff Selection -->
+                <div class="form-group-modern">
+                    <label class="form-label-modern">
+                        Select Staff Member <span class="required">*</span>
+                    </label>
+                    <select name="staff" id="staff" class="select-modern" required>
+                        <option value="">-- Choose a staff member --</option>
+                        {% for staff_member in staff_members %}
+                        <option value="{{ staff_member.id }}" 
+                                {% if schedule and schedule.staff.id == staff_member.id %}selected{% endif %}
+                                data-email="{{ staff_member.email }}"
+                                data-name="{{ staff_member.get_full_name|default:staff_member.username }}">
+                            {{ staff_member.get_full_name|default:staff_member.username }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <small style="color: #6c757d; display: block; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Select the staff member for this schedule
+                    </small>
+                </div>
+
+                <!-- Date Selection -->
+                <div class="form-group-modern">
+                    <label class="form-label-modern">
+                        Schedule Date <span class="required">*</span>
+                    </label>
+                    <input type="date" name="date" id="date" class="input-modern" 
+                           value="{% if schedule %}{{ schedule.date|date:'Y-m-d' }}{% endif %}" required>
+                    <small style="color: #6c757d; display: block; margin-top: 5px;">
+                        <i class="fas fa-calendar-alt"></i> Select the date for this schedule
+                    </small>
+                </div>
+
+                <!-- Time Selection -->
+                <div class="time-group">
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">
+                            Start Time <span class="required">*</span>
+                        </label>
+                        <input type="time" name="start_time" id="start_time" class="input-modern" 
+                               value="{% if schedule %}{{ schedule.start_time|time:'H:i' }}{% endif %}" required>
+                        <small style="color: #6c757d;">When shift begins</small>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">
+                            End Time <span class="required">*</span>
+                        </label>
+                        <input type="time" name="end_time" id="end_time" class="input-modern" 
+                               value="{% if schedule %}{{ schedule.end_time|time:'H:i' }}{% endif %}" required>
+                        <small style="color: #6c757d;">When shift ends</small>
+                    </div>
+                </div>
+
+                <!-- Availability Checkbox -->
+                <div class="form-group-modern">
+                    <div class="checkbox-modern" onclick="toggleCheckbox()">
+                        <input type="checkbox" name="is_available" id="is_available" 
+                               {% if schedule and schedule.is_available %}checked{% endif %}
+                               onclick="event.stopPropagation()">
+                        <div>
+                            <label for="is_available">✅ Available for bookings</label>
+                            <small>If checked, this staff member will be marked as available for customer bookings during this schedule</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{% url 'admin_panel:staff_schedule_list' %}" class="btn-modern btn-secondary-modern">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn-modern btn-primary-modern">
+                        <i class="fas fa-save"></i> 
+                        {% if schedule %}Update Schedule{% else %}Save Schedule{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleCheckbox() {
+        const checkbox = document.getElementById('is_available');
+        checkbox.checked = !checkbox.checked;
+    }
+
+    // Form validation
+    document.getElementById('scheduleForm')?.addEventListener('submit', function(e) {
+        const staff = document.getElementById('staff')?.value;
+        const date = document.getElementById('date')?.value;
+        const startTime = document.getElementById('start_time')?.value;
+        const endTime = document.getElementById('end_time')?.value;
+        
+        if (!staff) {
+            e.preventDefault();
+            alert('Please select a staff member.');
+            document.getElementById('staff')?.focus();
+            return false;
+        }
+        
+        if (!date) {
+            e.preventDefault();
+            alert('Please select a date.');
+            document.getElementById('date')?.focus();
+            return false;
+        }
+        
+        if (!startTime) {
+            e.preventDefault();
+            alert('Please select a start time.');
+            document.getElementById('start_time')?.focus();
+            return false;
+        }
+        
+        if (!endTime) {
+            e.preventDefault();
+            alert('Please select an end time.');
+            document.getElementById('end_time')?.focus();
+            return false;
+        }
+        
+        if (startTime >= endTime) {
+            e.preventDefault();
+            alert('End time must be after start time. Please adjust the schedule times.');
+            document.getElementById('end_time')?.focus();
+            return false;
+        }
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            submitBtn.disabled = true;
+        }
+    });
+    
+    // Set minimum date to today
+    const dateInput = document.getElementById('date');
+    if (dateInput) {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        dateInput.min = `${year}-${month}-${day}`;
+    }
+    
+    // Add visual feedback for time inputs
+    const startTimeInput = document.getElementById('start_time');
+    const endTimeInput = document.getElementById('end_time');
+    
+    if (startTimeInput && endTimeInput) {
+        startTimeInput.addEventListener('change', function() {
+            if (endTimeInput.value && this.value >= endTimeInput.value) {
+                endTimeInput.style.borderColor = '#dc3545';
+                endTimeInput.style.backgroundColor = '#fff8f8';
+            } else {
+                endTimeInput.style.borderColor = '#E8E8E8';
+                endTimeInput.style.backgroundColor = 'white';
+            }
+        });
+        
+        endTimeInput.addEventListener('change', function() {
+            if (startTimeInput.value && this.value <= startTimeInput.value) {
+                this.style.borderColor = '#dc3545';
+                this.style.backgroundColor = '#fff8f8';
+                alert('End time must be after start time!');
+            } else {
+                this.style.borderColor = '#E8E8E8';
+                this.style.backgroundColor = 'white';
+            }
+        });
+    }
+    
+    // Display staff info when selected
+    const staffSelect = document.getElementById('staff');
+    if (staffSelect) {
+        staffSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const email = selectedOption.getAttribute('data-email');
+            const name = selectedOption.getAttribute('data-name');
+            
+            if (email && name) {
+                console.log(`Selected: ${name} (${email})`);
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -45,7 +45,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                
+                # Remove this line or fix it:
+                # 'core.context_processors.chat_unread_counts',  # Uncomment if you create the file
             ],
         },
     },
@@ -82,10 +83,35 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# Add these lines
 LOGIN_URL = 'login'
-# Logout redirects to homepage
 LOGOUT_REDIRECT_URL = '/'
-
-# Login redirects based on role (handled in your custom login view)
 LOGIN_REDIRECT_URL = '/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {name} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'werkzeug': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}

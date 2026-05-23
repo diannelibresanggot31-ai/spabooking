@@ -1,18 +1,13 @@
 # services/admin.py
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Service, Package, Room, Category, SliderImage
+from .models import Service, Package, Room, Category
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'icon', 'is_active')
     list_editable = ('is_active',)
     search_fields = ('name',)
-
-@admin.register(SliderImage)
-class SliderImageAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_active')
-    list_editable = ('is_active',)
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):

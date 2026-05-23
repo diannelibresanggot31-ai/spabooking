@@ -6,17 +6,15 @@ from django.db.models import Sum, Count
 from django.http import JsonResponse
 from django.utils import timezone
 from datetime import timedelta
-from services.models import Service, Category, SliderImage
+from services.models import Service, Category
 from bookings.models import Booking
 from payments.models import Payment
 from accounts.models import User
 from accounts.forms import CustomUserCreationForm
 
 def home(request):
-    slider_images = SliderImage.objects.filter(is_active=True)
     categories = Category.objects.filter(is_active=True)
     return render(request, 'core/home.html', {
-        'slider_images': slider_images,
         'categories': categories
     })
 

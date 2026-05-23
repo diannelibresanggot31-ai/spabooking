@@ -1,0 +1,397 @@
+{% extends "admin_panel/base.html" %}
+
+{% block page_title %}Staff Attendance Management{% endblock %}
+
+{% block content %}
+<style>
+    .attendance-container {
+        background: #FAFAF7;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .filters {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        margin-bottom: 25px;
+        padding: 20px;
+        background: rgba(200,82,42,0.05);
+        border-radius: 15px;
+    }
+    
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .filter-group label {
+        font-size: 11px;
+        font-weight: 600;
+        color: rgba(44,32,21,0.6);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .filter-group input, .filter-group select {
+        padding: 8px 12px;
+        border: 1px solid rgba(200,82,42,0.2);
+        border-radius: 10px;
+        background: white;
+        font-family: 'DM Sans', sans-serif;
+    }
+    
+    .btn-filter, .btn-reset {
+        padding: 8px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        border: none;
+    }
+    
+    .btn-filter {
+        background: #C8522A;
+        color: white;
+    }
+    
+    .btn-reset {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .stats-summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 15px;
+        text-align: center;
+        border: 1px solid rgba(200,82,42,0.1);
+    }
+    
+    .stat-number {
+        font-size: 28px;
+        font-weight: 700;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #8B6050;
+        margin-top: 5px;
+    }
+    
+    .stat-card.present .stat-number { color: #28a745; }
+    .stat-card.late .stat-number { color: #ffc107; }
+    .stat-card.absent .stat-number { color: #dc3545; }
+    .stat-card.total .stat-number { color: #C8522A; }
+    
+    .attendance-table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-x: auto;
+        display: block;
+    }
+    
+    .attendance-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .attendance-table th {
+        text-align: left;
+        padding: 12px;
+        background: rgba(200,82,42,0.08);
+        color: #2C2015;
+        font-weight: 600;
+        border-bottom: 2px solid rgba(200,82,42,0.2);
+        position: sticky;
+        top: 0;
+    }
+    
+    .attendance-table td {
+        padding: 12px;
+        border-bottom: 1px solid rgba(200,82,42,0.08);
+        vertical-align: middle;
+    }
+    
+    .attendance-table tr:hover td {
+        background: rgba(200,82,42,0.04);
+    }
+    
+    .status-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+    }
+    
+    .status-present { background: #d4edda; color: #155724; }
+    .status-late { background: #fff3cd; color: #856404; }
+    .status-absent { background: #f8d7da; color: #721c24; }
+    .status-half-day { background: #cce5ff; color: #004085; }
+    
+    .photo-thumb {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        object-fit: cover;
+        cursor: pointer;
+    }
+    
+    .status-form {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .status-select {
+        padding: 6px 10px;
+        border: 1px solid rgba(200,82,42,0.3);
+        border-radius: 20px;
+        font-size: 12px;
+        font-family: 'DM Sans', sans-serif;
+    }
+    
+    .update-btn {
+        background: #C8522A;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    
+    .delete-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .modal-content img {
+        width: 100%;
+        border-radius: 10px;
+    }
+    
+    .admin-notes {
+        font-size: 12px;
+        color: #888;
+        margin-top: 5px;
+        max-width: 200px;
+        word-wrap: break-word;
+    }
+    
+    @media (max-width: 900px) {
+        .stats-summary {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .attendance-table {
+            overflow-x: scroll;
+        }
+        .attendance-table table {
+            min-width: 800px;
+        }
+    }
+</style>
+
+<div style="margin-bottom: 25px;">
+    <h2 style="margin: 0; color: #2C2015;">📋 Staff Attendance Management</h2>
+    <p style="color: rgba(44,32,21,0.6); margin-top: 5px;">Review attendance records, verify photos, and update statuses</p>
+</div>
+
+<!-- Statistics Summary -->
+<div class="stats-summary">
+    <div class="stat-card total">
+        <div class="stat-number">{{ attendances|length }}</div>
+        <div class="stat-label">Total Records</div>
+    </div>
+    <div class="stat-card present">
+        <div class="stat-number">{{ present_count|default:0 }}</div>
+        <div class="stat-label">Present</div>
+    </div>
+    <div class="stat-card late">
+        <div class="stat-number">{{ late_count|default:0 }}</div>
+        <div class="stat-label">Late</div>
+    </div>
+    <div class="stat-card absent">
+        <div class="stat-number">{{ absent_count|default:0 }}</div>
+        <div class="stat-label">Absent</div>
+    </div>
+</div>
+
+<div class="attendance-container">
+    <!-- Filters -->
+    <form method="get" class="filters">
+        <div class="filter-group">
+            <label>Staff Member</label>
+            <select name="staff">
+                <option value="">All Staff</option>
+                {% for staff in staff_members %}
+                <option value="{{ staff.id }}" {% if staff_filter == staff.id|stringformat:"s" %}selected{% endif %}>
+                    {{ staff.username }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Status</label>
+            <select name="status">
+                <option value="">All Status</option>
+                <option value="present" {% if status_filter == 'present' %}selected{% endif %}>Present</option>
+                <option value="late" {% if status_filter == 'late' %}selected{% endif %}>Late</option>
+                <option value="absent" {% if status_filter == 'absent' %}selected{% endif %}>Absent</option>
+                <option value="half_day" {% if status_filter == 'half_day' %}selected{% endif %}>Half Day</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Date From</label>
+            <input type="date" name="date_from" value="{{ date_from }}">
+        </div>
+        <div class="filter-group">
+            <label>Date To</label>
+            <input type="date" name="date_to" value="{{ date_to }}">
+        </div>
+        <div class="filter-group">
+            <button type="submit" class="btn-filter">🔍 Filter</button>
+        </div>
+        <div class="filter-group">
+            <a href="{% url 'admin_panel:staff_attendance_review' %}" class="btn-reset">Reset</a>
+        </div>
+    </form>
+    
+    <!-- Attendance Table -->
+    <div class="attendance-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Staff</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Photo</th>
+                    <th>Status</th>
+                    <th>Admin Notes</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance in attendances %}
+                <tr>
+                    <td>{{ attendance.date|date:"M d, Y" }}<br><small>{{ attendance.date|date:"l" }}</small></td>
+                    <td>
+                        <strong>{{ attendance.staff.username }}</strong><br>
+                        <small style="color:#888;">{{ attendance.staff.email }}</small>
+                    </td>
+                    <td>{% if attendance.check_in %}{{ attendance.check_in|time:"g:i A" }}{% else %}—{% endif %}</td>
+                    <td>{% if attendance.check_out %}{{ attendance.check_out|time:"g:i A" }}{% else %}—{% endif %}</td>
+                    <td>
+                        {% if attendance.photo %}
+                        <img src="{{ attendance.photo.url }}" class="photo-thumb" onclick="showPhoto('{{ attendance.photo.url }}', '{{ attendance.staff.username }} - {{ attendance.date|date:"M d, Y" }}')">
+                        {% else %}
+                        <span style="color:#888;">No photo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="status-badge status-{{ attendance.status }}">
+                            {{ attendance.status|upper }}
+                        </span>
+                        {% if attendance.reason %}
+                        <div class="admin-notes" style="color:#dc3545;">Reason: {{ attendance.reason|truncatechars:30 }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if attendance.admin_notes %}
+                        <div class="admin-notes">{{ attendance.admin_notes|truncatechars:40 }}</div>
+                        {% else %}
+                        <span style="color:#888;">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" style="display: inline-flex; gap: 5px; flex-wrap: wrap;">
+                            {% csrf_token %}
+                            <input type="hidden" name="attendance_id" value="{{ attendance.id }}">
+                            <select name="new_status" class="status-select">
+                                <option value="present" {% if attendance.status == 'present' %}selected{% endif %}>✅ Present</option>
+                                <option value="late" {% if attendance.status == 'late' %}selected{% endif %}>⚠️ Late</option>
+                                <option value="absent" {% if attendance.status == 'absent' %}selected{% endif %}>❌ Absent</option>
+                                <option value="half_day" {% if attendance.status == 'half_day' %}selected{% endif %}>⏳ Half Day</option>
+                            </select>
+                            <input type="text" name="admin_notes" placeholder="Add note..." value="{{ attendance.admin_notes }}" style="padding: 5px; border-radius: 15px; border: 1px solid #ddd; font-size: 11px; width: 120px;">
+                            <button type="submit" class="update-btn">Update</button>
+                        </form>
+                        <form method="post" action="{% url 'admin_panel:delete_attendance' attendance.id %}" style="display: inline; margin-top: 5px;" onsubmit="return confirm('Delete this attendance record? This cannot be undone.');">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn" style="margin-top: 5px;">🗑️ Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 40px;">No attendance records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Photo Modal -->
+<div id="photoModal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 id="modalTitle" style="margin-bottom: 15px;"></h3>
+        <img id="modalImage" src="" alt="Attendance Photo">
+        <button onclick="closeModal()" style="margin-top: 15px; padding: 8px 20px; background: #C8522A; color: white; border: none; border-radius: 20px; cursor: pointer;">Close</button>
+    </div>
+</div>
+
+<script>
+    function showPhoto(url, title) {
+        document.getElementById('modalImage').src = url;
+        document.getElementById('modalTitle').innerHTML = title;
+        document.getElementById('photoModal').style.display = 'flex';
+    }
+    
+    function closeModal() {
+        document.getElementById('photoModal').style.display = 'none';
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,485 @@
+﻿{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}Staff Schedules - Admin Panel{% endblock %}
+
+{% block page_title %}Staff Schedules Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Staff Schedules Styling */
+    .schedules-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    
+    .schedules-header h2 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2C2015;
+        margin: 0;
+    }
+    
+    .schedules-header p {
+        color: #8B6050;
+        margin: 4px 0 0 0;
+        font-size: 14px;
+    }
+    
+    .btn-add {
+        background: #C8522A;
+        color: white;
+        padding: 10px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn-add:hover {
+        background: #b8451f;
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    .filter-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 32px;
+        border: 1px solid rgba(200,82,42,0.1);
+    }
+    
+    .filter-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #5a4035;
+        margin-bottom: 8px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .filter-select, .filter-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #e0d4c8;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.2s;
+        background: white;
+    }
+    
+    .filter-select:focus, .filter-input:focus {
+        outline: none;
+        border-color: #C8522A;
+    }
+    
+    .btn-filter {
+        background: #C8522A;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.2s;
+        width: 100%;
+    }
+    
+    .btn-filter:hover {
+        background: #b8451f;
+    }
+    
+    .btn-clear {
+        background: #f0ebe6;
+        color: #5a4035;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 13px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    
+    .btn-clear:hover {
+        background: #e6dfd8;
+        color: #2C2015;
+    }
+    
+    .schedules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 24px;
+        margin-top: 24px;
+    }
+    
+    .schedule-card {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid rgba(200,82,42,0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .schedule-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        border-color: rgba(200,82,42,0.2);
+    }
+    
+    .card-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(200,82,42,0.08);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    
+    .staff-avatar {
+        width: 52px;
+        height: 52px;
+        background: linear-gradient(135deg, #C8522A, #8B2A10);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+    
+    .staff-info {
+        flex: 1;
+    }
+    
+    .staff-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2C2015;
+        margin-bottom: 4px;
+    }
+    
+    .staff-email {
+        font-size: 12px;
+        color: #8B6050;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .date-info {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(200,82,42,0.08);
+    }
+    
+    .date-badge {
+        background: rgba(200,82,42,0.08);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #C8522A;
+        display: inline-block;
+    }
+    
+    .time-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+    
+    .time-block {
+        text-align: center;
+        flex: 1;
+    }
+    
+    .time-label {
+        font-size: 10px;
+        color: #8B6050;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+    }
+    
+    .time-value {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2C2015;
+    }
+    
+    .time-arrow {
+        color: #C8522A;
+        font-size: 18px;
+        font-weight: 600;
+        padding: 0 8px;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    
+    .status-available {
+        background: rgba(45,138,78,0.12);
+        color: #2d8a4e;
+    }
+    
+    .status-unavailable {
+        background: rgba(220,53,69,0.12);
+        color: #dc3545;
+    }
+    
+    .card-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(200,82,42,0.08);
+    }
+    
+    .btn-edit, .btn-delete {
+        flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 13px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .btn-edit {
+        background: rgba(200,82,42,0.1);
+        color: #C8522A;
+    }
+    
+    .btn-edit:hover {
+        background: rgba(200,82,42,0.2);
+        color: #8B2A10;
+    }
+    
+    .btn-delete {
+        background: rgba(220,53,69,0.1);
+        color: #dc3545;
+    }
+    
+    .btn-delete:hover {
+        background: rgba(220,53,69,0.2);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 20px;
+        border: 1px solid rgba(200,82,42,0.1);
+    }
+    
+    .empty-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    .empty-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2C2015;
+        margin-bottom: 8px;
+    }
+    
+    .empty-text {
+        color: #8B6050;
+        margin-bottom: 24px;
+    }
+    
+    @media (max-width: 768px) {
+        .schedules-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .schedules-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="schedules-container">
+    <div class="schedules-header">
+        <div>
+            <h2>Staff Work Schedules</h2>
+            <p>Manage work schedules, shifts, and staff availability</p>
+        </div>
+        <a href="{% url 'admin_panel:staff_schedule_add' %}" class="btn-add">
+            <i class="fas fa-plus"></i> Add Schedule
+        </a>
+    </div>
+
+    <div class="filter-card">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="filter-label">Staff Member</label>
+                <select name="staff" class="filter-select">
+                    <option value="">All Staff</option>
+                    {% for staff in staff_members %}
+                    <option value="{{ staff.id }}" {% if selected_staff == staff.id|stringformat:"s" %}selected{% endif %}>
+                        {{ staff.get_full_name|default:staff.username }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="filter-label">From Date</label>
+                <input type="date" name="date_from" class="filter-input" value="{{ date_from }}">
+            </div>
+            <div class="col-md-3">
+                <label class="filter-label">To Date</label>
+                <input type="date" name="date_to" class="filter-input" value="{{ date_to }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end gap-2">
+                <button type="submit" class="btn-filter">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+                <a href="{% url 'admin_panel:staff_schedule_list' %}" class="btn-clear">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+            </div>
+        </form>
+    </div>
+
+    {% if schedules %}
+    <div class="schedules-grid">
+        {% for schedule in schedules %}
+        <div class="schedule-card">
+            <div class="card-header">
+                <div class="staff-avatar">
+                    {{ schedule.staff.get_full_name|default:schedule.staff.username|slice:":1"|upper }}
+                </div>
+                <div class="staff-info">
+                    <div class="staff-name">{{ schedule.staff.get_full_name|default:schedule.staff.username }}</div>
+                    <div class="staff-email">{{ schedule.staff.email }}</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="date-info">
+                    <span class="date-badge">
+                        <i class="far fa-calendar-alt"></i> {{ schedule.date|date:"l, F d, Y" }}
+                    </span>
+                </div>
+                
+                <div class="time-info">
+                    <div class="time-block">
+                        <div class="time-label">Start Time</div>
+                        <div class="time-value">{{ schedule.start_time|time:"g:i A" }}</div>
+                    </div>
+                    <div class="time-arrow">→</div>
+                    <div class="time-block">
+                        <div class="time-label">End Time</div>
+                        <div class="time-value">{{ schedule.end_time|time:"g:i A" }}</div>
+                    </div>
+                </div>
+                
+                <div class="status-badge {% if schedule.is_available %}status-available{% else %}status-unavailable{% endif %}">
+                    <i class="fas {% if schedule.is_available %}fa-check-circle{% else %}fa-ban{% endif %}"></i>
+                    {% if schedule.is_available %}Available for Bookings{% else %}Unavailable{% endif %}
+                </div>
+                
+                <div class="card-actions">
+                    <a href="{% url 'admin_panel:staff_schedule_edit' schedule.id %}" class="btn-edit">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <button type="button" class="btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal{{ schedule.id }}">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal{{ schedule.id }}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Schedule</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div style="font-size: 48px; margin-bottom: 16px;">⚠️</div>
+                        <p>Are you sure you want to delete the schedule for <strong>{{ schedule.staff.get_full_name|default:schedule.staff.username }}</strong>?</p>
+                        <p class="text-muted small">
+                            Date: {{ schedule.date|date:"F d, Y" }}<br>
+                            Time: {{ schedule.start_time|time:"g:i A" }} - {{ schedule.end_time|time:"g:i A" }}
+                        </p>
+                        <p class="text-danger small mt-3">This action cannot be undone.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form method="post" action="{% url 'admin_panel:staff_schedule_delete' schedule.id %}" style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete Schedule</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📅</div>
+        <div class="empty-title">No Schedules Found</div>
+        <div class="empty-text">
+            {% if selected_staff or date_from or date_to %}
+                No schedules match your filter criteria.
+            {% else %}
+                You haven't created any staff schedules yet.
+            {% endif %}
+        </div>
+        <a href="{% url 'admin_panel:staff_schedule_add' %}" class="btn-add" style="display: inline-block;">
+            <i class="fas fa-plus"></i> Add Your First Schedule
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelector('.filter-select')?.addEventListener('change', function() {
+        this.form.submit();
+    });
+</script>
+{% endblock %}

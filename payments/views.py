@@ -6,6 +6,8 @@ from .models import Payment
 from bookings.models import Booking
 
 
+@login_required
+@user_passes_test(lambda u: getattr(u, 'role', None) in ['admin', 'staff'])
 def verify_payment_direct(request, payment_id):
     payment = get_object_or_404(Payment, id=payment_id)
     payment.status = 'verified'
@@ -31,7 +33,7 @@ def staff_payment_overview(request):
     # Show upcoming bookings (pending or confirmed) with payment info so staff
     # can see who still needs to pay and who already paid.
     bookings = (
-        Booking.objects.filter(status__in=['pending', 'confirmed'])
+        Booking.objects.filter(status__in=['pending', 'verify', 'confirmed'])
         .select_related('payment', 'customer')
         .order_by('-booking_date', '-booking_time')
     )
