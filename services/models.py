@@ -1,9 +1,10 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
     icon = models.CharField(max_length=10, default='🌸')
-    image = models.ImageField(upload_to='categories/', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
@@ -15,7 +16,7 @@ class Category(models.Model):
 class SliderImage(models.Model):
     title = models.CharField(max_length=100, blank=True)
     subtitle = models.CharField(max_length=200, blank=True)
-    image = models.ImageField(upload_to='slider/')
+    image = CloudinaryField('image')
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
@@ -35,7 +36,7 @@ class Service(models.Model):
     service_category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='services')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     duration_minutes = models.IntegerField(default=60)
-    image = models.ImageField(upload_to='services/', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     requires_room = models.BooleanField(default=False)
     likes = models.ManyToManyField('accounts.User', blank=True, related_name='liked_services')
