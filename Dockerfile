@@ -11,13 +11,15 @@ RUN pip install --no-cache-dir setuptools==65.5.0
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all application code
 COPY . .
 
-# DEBUG: List template files to verify they exist in the container
-RUN echo "Checking templates/admin directory:" && ls -la /app/templates/admin/
+# ✅ FORCE COPY TEMPLATES
+COPY templates/ /app/templates/
 
-# Run migrations
+# ✅ VERIFY TEMPLATES ARE THERE (this runs during Docker build)
+RUN ls -la /app/templates/admin/
+
+RUN python manage.py collectstatic --noinput
 RUN python manage.py migrate --noinput
 
 CMD ["gunicorn", "spa_booking.wsgi:application", "--bind", "0.0.0.0:10000"]
