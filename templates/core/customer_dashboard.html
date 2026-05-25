@@ -1167,14 +1167,11 @@
     // Fetch available slots for a date
     function fetchSlotsForDate(dateStr) {
         if (!dateStr) return;
-        var url = '/available-slots/?date=' + dateStr + '&duration=' + currentDuration + '&requires_room=' + currentRequiresRoom;
+        var url = '/booked-slots/?date=' + dateStr + '&duration=' + currentDuration + '&service_id=' + currentServiceId;
         fetch(url)
             .then(function(r) { return r.json(); })
             .then(function(data) {
-                bookedSlotsForDate = data.booked || [];
-                roomAvailability = data.room_availability || {};
-                allRooms = data.all_rooms || [];
-                totalRooms = data.total_rooms || allRooms.length || 4;
+                bookedSlotsForDate = data.booked_slots || [];
                 populateTimeDropdown(currentDuration);
             })
             .catch(function(error) {
