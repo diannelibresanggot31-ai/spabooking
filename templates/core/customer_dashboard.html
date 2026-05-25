@@ -1138,21 +1138,9 @@
             var isFullyBooked = false;
             var label = formatTime(slot);
             
-            if (currentRequiresRoom) {
-                var available = roomAvailability[slot] ? roomAvailability[slot] : allRooms;
-                var availCount = available.length;
-                var totalCount = totalRooms || allRooms.length || 4;
-                if (availCount === 0) {
-                    isFullyBooked = true;
-                    label += ' — All ' + totalCount + ' rooms fully booked';
-                } else {
-                    label += ' (' + availCount + '/' + totalCount + ' rooms available)';
-                }
-            } else {
-                if (bookedSlotsForDate.indexOf(slot) !== -1) {
-                    isFullyBooked = true;
-                    label += ' — Fully Booked';
-                }
+            if (bookedSlotsForDate.indexOf(slot) !== -1) {
+                isFullyBooked = true;
+                label += ' - Fully Booked';
             }
             
             if (isFullyBooked) {
