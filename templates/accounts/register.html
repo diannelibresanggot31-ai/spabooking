@@ -115,7 +115,7 @@
                 {% endfor %}
             {% endif %}
 
-            <form method="post" id="registerForm">
+            <form method="post" action="/register/" id="registerForm">
                 {% csrf_token %}
 
                 <div class="field-group">
@@ -210,3 +210,4 @@
     </script>
 </body>
 </html>
+
