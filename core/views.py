@@ -6,7 +6,7 @@ from django.db.models import Sum, Count, Q
 from django.http import JsonResponse
 from django.utils import timezone
 from django.urls import reverse
-from datetime import datetime, timedelta
+from datetime import datetime
 from services.models import Service, Category, Room, Package
 from staff.models import ChatMessage, StaffAttendance
 from bookings.models import Booking
@@ -26,6 +26,17 @@ CATEGORY_CAPACITY = {
     'Foot Spa': 1,        # 1 staff available
 }
 
+ROOM_BASED_CATEGORIES = {
+    'Massage',
+    'Hair Waxing',
+}
+
+ACTIVE_BOOKING_STATUSES = ['pending', 'verify', 'complete']
+OPEN_MINUTES = 8 * 60
+CLOSE_MINUTES = 17 * 60
+LUNCH_START_MINUTES = 12 * 60
+LUNCH_END_MINUTES = 13 * 60
+
 
 # ── HELPER FUNCTIONS ──────────────────────────────────────────────────────────
 def is_admin(user):
@@ -38,6 +49,130 @@ def is_staff(user):
 
 def is_customer(user):
     return user.is_authenticated and user.role == 'customer'
+
+
+def normalize_category(value):
+    return (value or '').strip().lower()
+
+
+def service_category_name(service):
+    if not service:
+        return ''
+    if service.service_category:
+        return service.service_category.name
+    if hasattr(service, 'get_category_display'):
+        return service.get_category_display()
+    return service.category
+
+
+def service_category_keys(service):
+    if not service:
+        return set()
+    keys = {
+        normalize_category(service.category),
+        normalize_category(service_category_name(service)),
+    }
+    return {key for key in keys if key}
+
+
+def category_capacity_for_keys(category_keys):
+    for category_name, capacity in CATEGORY_CAPACITY.items():
+        if normalize_category(category_name) in category_keys:
+            return category_name, capacity
+    return None, None
+
+
+def service_is_room_based(service):
+    if not service:
+        return False
+    if service.requires_room:
+        return True
+    room_category_keys = {normalize_category(name) for name in ROOM_BASED_CATEGORIES}
+    return bool(service_category_keys(service) & room_category_keys)
+
+
+def package_services(package):
+    if not package:
+        return []
+    return list(package.services.all())
+
+
+def package_is_room_based(package):
+    return any(service_is_room_based(service) for service in package_services(package))
+
+
+def package_category_keys(package):
+    keys = set()
+    for service in package_services(package):
+        keys.update(service_category_keys(service))
+    return keys
+
+
+def minutes_from_time(value):
+    if isinstance(value, str):
+        parsed = datetime.strptime(value, '%H:%M').time()
+    else:
+        parsed = value
+    return parsed.hour * 60 + parsed.minute
+
+
+def booking_start_minutes(booking):
+    return booking.booking_time.hour * 60 + booking.booking_time.minute
+
+
+def intervals_overlap(start_a, end_a, start_b, end_b):
+    return start_a < end_b and end_a > start_b
+
+
+def validate_booking_schedule(date_obj, start_minutes, duration_minutes):
+    end_minutes = start_minutes + duration_minutes
+    if date_obj.weekday() == 6:
+        return False, 'We are closed on Sundays. Please choose Monday to Saturday.'
+    if start_minutes < OPEN_MINUTES or end_minutes > CLOSE_MINUTES:
+        return False, 'Booking must be within business hours: 8 AM to 5 PM.'
+    if intervals_overlap(start_minutes, end_minutes, LUNCH_START_MINUTES, LUNCH_END_MINUTES):
+        return False, 'We are closed from 12 PM to 1 PM for lunch. Please choose another time.'
+    return True, ''
+
+
+def active_bookings_for_date(date_obj):
+    return Booking.objects.filter(
+        booking_date=date_obj,
+        status__in=ACTIVE_BOOKING_STATUSES
+    ).select_related('service', 'package', 'room').prefetch_related('package__services')
+
+
+def booking_overlaps(booking, start_minutes, duration_minutes):
+    existing_start = booking_start_minutes(booking)
+    existing_end = existing_start + (booking.duration_minutes or 60)
+    return intervals_overlap(existing_start, existing_end, start_minutes, start_minutes + duration_minutes)
+
+
+def booking_matches_category_capacity(booking, category_keys):
+    if booking.service and service_category_keys(booking.service) & category_keys:
+        return True
+    if booking.package and package_category_keys(booking.package) & category_keys:
+        return True
+    return False
+
+
+def count_overlapping_category_bookings(date_obj, start_minutes, duration_minutes, category_keys):
+    count = 0
+    for booking in active_bookings_for_date(date_obj):
+        if booking_overlaps(booking, start_minutes, duration_minutes) and booking_matches_category_capacity(booking, category_keys):
+            count += 1
+    return count
+
+
+def count_overlapping_room_bookings(date_obj, start_minutes, duration_minutes, room=None):
+    count = 0
+    for booking in active_bookings_for_date(date_obj).filter(room__isnull=False):
+        if room and booking.room_id != room.id:
+            continue
+        if booking_overlaps(booking, start_minutes, duration_minutes):
+            count += 1
+    return count
+
 
 
 def custom_login(request):
@@ -333,6 +468,7 @@ def create_booking_simple(request):
 @login_required
 def available_slots_api(request):
     date_str = request.GET.get('date', '')
+    duration = int(request.GET.get('duration', 60))
 
     if not date_str:
         return JsonResponse({'booked_slots': [], 'all_slots': []})
@@ -341,16 +477,12 @@ def available_slots_api(request):
         date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
 
         all_slots = []
-        for hour in range(9, 17):
-            all_slots.append(f"{hour:02d}:00")
-            all_slots.append(f"{hour:02d}:30")
+        for t in range(OPEN_MINUTES, CLOSE_MINUTES - duration + 1, duration):
+            is_valid, _ = validate_booking_schedule(date_obj, t, duration)
+            if is_valid:
+                all_slots.append(f"{t // 60:02d}:{t % 60:02d}")
 
-        booked = Booking.objects.filter(
-            booking_date=date_obj,
-            status__in=['pending', 'verify', 'complete']
-        ).values_list('booking_time', flat=True)
-
-        booked_slots = {str(t)[:5] for t in booked}
+        booked_slots = set()
 
         return JsonResponse({
             'booked_slots': list(booked_slots),
@@ -366,6 +498,7 @@ def available_slots_api(request):
 def available_rooms_api(request):
     date_str = request.GET.get('date')
     time_str = request.GET.get('time')
+    duration = int(request.GET.get('duration', 60))
 
     if not date_str or not time_str:
         return JsonResponse({
@@ -377,19 +510,25 @@ def available_rooms_api(request):
 
     try:
         date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
-        hour = int(time_str[:2])
-        minute = int(time_str[3:5])
+        start_minutes = minutes_from_time(time_str)
+
+        is_valid, error_message = validate_booking_schedule(date_obj, start_minutes, duration)
+        if not is_valid:
+            return JsonResponse({
+                'available_rooms': [],
+                'total_rooms': 0,
+                'booked_count': 0,
+                'available_count': 0,
+                'message': error_message
+            })
 
         all_rooms = Room.objects.filter(is_available=True)
         total_rooms = all_rooms.count()
 
-        booked_room_ids = Booking.objects.filter(
-            booking_date=date_obj,
-            booking_time__hour=hour,
-            booking_time__minute=minute,
-            status__in=['pending', 'verify', 'complete'],
-            room__isnull=False
-        ).values_list('room_id', flat=True)
+        booked_room_ids = []
+        for room in all_rooms:
+            if count_overlapping_room_bookings(date_obj, start_minutes, duration, room=room) > 0:
+                booked_room_ids.append(room.id)
 
         available_rooms = all_rooms.exclude(id__in=booked_room_ids)
 
@@ -425,24 +564,28 @@ def booked_slots_api(request):
         date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
 
         requires_room = False
-        category_name = None
-        if service_id and not str(service_id).startswith('pkg_'):
+        category_keys = set()
+        if service_id and str(service_id).startswith('pkg_'):
+            try:
+                package = Package.objects.get(id=str(service_id).split('pkg_', 1)[-1])
+                requires_room = package.requires_room or package_is_room_based(package)
+                category_keys = package_category_keys(package)
+            except Exception:
+                pass
+        elif service_id:
             try:
                 service = Service.objects.get(id=service_id)
-                requires_room = service.requires_room
-                category_name = service.service_category.name if service.service_category else service.category
-            except:
+                requires_room = service_is_room_based(service)
+                category_keys = service_category_keys(service)
+            except Exception:
                 pass
 
-        start_minutes = 8 * 60
-        end_minutes = 17 * 60
-        break_start = 12 * 60
-        break_end = 13 * 60
         step = duration
 
         all_slots = []
-        for t in range(start_minutes, end_minutes - step + 1, step):
-            if t < break_end and t + step > break_start:
+        for t in range(OPEN_MINUTES, CLOSE_MINUTES - step + 1, step):
+            is_valid, _ = validate_booking_schedule(date_obj, t, step)
+            if not is_valid:
                 continue
             h = t // 60
             m = t % 60
@@ -455,34 +598,17 @@ def booked_slots_api(request):
             # Room-based: slot is full when all rooms are booked
             total_rooms = Room.objects.filter(is_available=True).count()
             for slot in all_slots:
-                hour = int(slot[:2])
-                minute = int(slot[3:5])
-                booked_count = Booking.objects.filter(
-                    booking_date=date_obj,
-                    booking_time__hour=hour,
-                    booking_time__minute=minute,
-                    status__in=['pending', 'verify', 'complete'],
-                    room__isnull=False
-                ).count()
+                slot_minutes = minutes_from_time(slot)
+                booked_count = count_overlapping_room_bookings(date_obj, slot_minutes, duration)
                 if total_rooms > 0 and booked_count >= total_rooms:
                     booked_slots.add(slot)
         else:
             # Category capacity check
-            if category_name and category_name in CATEGORY_CAPACITY:
-                max_capacity = CATEGORY_CAPACITY[category_name]
+            category_name, max_capacity = category_capacity_for_keys(category_keys)
+            if category_name and max_capacity:
                 for slot in all_slots:
-                    hour = int(slot[:2])
-                    minute = int(slot[3:5])
-                    booked_count = Booking.objects.filter(
-                        booking_date=date_obj,
-                        booking_time__hour=hour,
-                        booking_time__minute=minute,
-                        status__in=['pending', 'verify', 'complete'],
-                        room__isnull=True
-                    ).filter(
-                        Q(service__service_category__name=category_name) |
-                        Q(service__category=category_name)
-                    ).count()
+                    slot_minutes = minutes_from_time(slot)
+                    booked_count = count_overlapping_category_bookings(date_obj, slot_minutes, duration, category_keys)
                     if booked_count >= max_capacity:
                         booked_slots.add(slot)
             # Categories not in CATEGORY_CAPACITY = unlimited, no slots blocked
@@ -555,37 +681,35 @@ def create_booking(request):
 
         try:
             date_obj = datetime.strptime(booking_date, '%Y-%m-%d').date()
-            if date_obj.weekday() == 6:
-                return JsonResponse({'success': False, 'error': 'We are closed on Sundays.'}, status=400)
-        except:
-            pass
+            start_minutes = minutes_from_time(booking_time)
+        except ValueError:
+            return JsonResponse({'success': False, 'error': 'Invalid booking date or time.'}, status=400)
 
         service = None
         package = None
         requires_room = False
         booking_duration = 60
         total_amount = 0
-        category_name = None
+        category_keys = set()
 
         if str(service_id).startswith('pkg_'):
             package_id = service_id.split('pkg_', 1)[-1]
             package = get_object_or_404(Package, id=package_id)
-            requires_room = package.requires_room
+            requires_room = package.requires_room or package_is_room_based(package)
             total_duration = package.services.aggregate(total=Sum('duration_minutes'))['total']
             booking_duration = total_duration if total_duration else 60
             total_amount = package.price
-            first_service = package.services.first()
-            if first_service:
-                category_name = first_service.service_category.name if first_service.service_category else first_service.category
+            category_keys = package_category_keys(package)
         else:
             service = get_object_or_404(Service, id=service_id)
-            requires_room = service.requires_room
+            requires_room = service_is_room_based(service)
             booking_duration = service.duration_minutes
             total_amount = service.price
-            category_name = service.service_category.name if service.service_category else service.category
+            category_keys = service_category_keys(service)
 
-        hour = int(booking_time[:2])
-        minute = int(booking_time[3:5])
+        is_valid, schedule_error = validate_booking_schedule(date_obj, start_minutes, booking_duration)
+        if not is_valid:
+            return JsonResponse({'success': False, 'error': schedule_error}, status=400)
 
         room = None
         if requires_room:
@@ -594,53 +718,29 @@ def create_booking(request):
 
             room = get_object_or_404(Room, id=room_id, is_available=True)
 
-            # Check if this specific room is already booked
-            room_conflict = Booking.objects.filter(
-                room=room,
-                booking_date=booking_date,
-                booking_time__hour=hour,
-                booking_time__minute=minute,
-                status__in=['pending', 'verify', 'complete']
-            ).exists()
+            room_conflict = count_overlapping_room_bookings(date_obj, start_minutes, booking_duration, room=room) > 0
 
             if room_conflict:
-                return JsonResponse({'success': False, 'error': f'Room {room.room_number} is already booked at {booking_time}. Please choose another room or time.'}, status=400)
+                return JsonResponse({'success': False, 'error': f'Room {room.room_number} is unavailable at {booking_time}. Please choose another room or time.'}, status=400)
 
-            # Check if all rooms are fully booked
             total_rooms = Room.objects.filter(is_available=True).count()
             if total_rooms == 0:
                 return JsonResponse({'success': False, 'error': 'No rooms available.'}, status=400)
 
-            booked_rooms_count = Booking.objects.filter(
-                booking_date=booking_date,
-                booking_time__hour=hour,
-                booking_time__minute=minute,
-                status__in=['pending', 'verify', 'complete'],
-                room__isnull=False
-            ).count()
+            booked_rooms_count = count_overlapping_room_bookings(date_obj, start_minutes, booking_duration)
 
             if booked_rooms_count >= total_rooms:
-                return JsonResponse({'success': False, 'error': f'All rooms are fully booked at {booking_time}. Please choose a different time.'}, status=400)
+                return JsonResponse({'success': False, 'error': f'All rooms are unavailable at {booking_time}. Please choose a different time.'}, status=400)
 
         else:
-            # Non-room services: check category capacity
-            if category_name and category_name in CATEGORY_CAPACITY:
-                max_capacity = CATEGORY_CAPACITY[category_name]
-                current_bookings = Booking.objects.filter(
-                    booking_date=booking_date,
-                    booking_time__hour=hour,
-                    booking_time__minute=minute,
-                    status__in=['pending', 'verify', 'complete'],
-                    room__isnull=True
-                ).filter(
-                    Q(service__service_category__name=category_name) |
-                    Q(service__category=category_name)
-                ).count()
+            category_name, max_capacity = category_capacity_for_keys(category_keys)
+            if category_name and max_capacity:
+                current_bookings = count_overlapping_category_bookings(date_obj, start_minutes, booking_duration, category_keys)
 
                 if current_bookings >= max_capacity:
                     return JsonResponse({
                         'success': False,
-                        'error': f'{category_name} is fully booked at {booking_time}. Maximum {max_capacity} booking(s) allowed at this time. Please choose a different time.'
+                        'error': f'{category_name} is unavailable at {booking_time}. Maximum {max_capacity} booking(s) allowed at this time. Please choose a different time.'
                     }, status=400)
             # Categories not in CATEGORY_CAPACITY = unlimited bookings allowed
 
@@ -709,13 +809,16 @@ def select_room(request, booking_id):
 
     room_conflict_qs = Booking.objects.filter(
         booking_date=booking.booking_date,
-        booking_time__hour=booking.booking_time.hour,
-        booking_time__minute=booking.booking_time.minute,
         status__in=['pending', 'verify', 'complete'],
         room__isnull=False
     ).exclude(id=booking.id)
-    booked_room_ids = list(room_conflict_qs.values_list('room_id', flat=True))
     all_rooms = Room.objects.filter(is_available=True)
+    booking_start = booking_start_minutes(booking)
+    booking_duration = booking.duration_minutes or 60
+    booked_room_ids = []
+    for existing_booking in room_conflict_qs:
+        if booking_overlaps(existing_booking, booking_start, booking_duration):
+            booked_room_ids.append(existing_booking.room_id)
     available_rooms = all_rooms.exclude(id__in=booked_room_ids)
 
     if request.method == 'POST':
@@ -725,14 +828,13 @@ def select_room(request, booking_id):
             return redirect('select_room', booking_id=booking.id)
 
         room = get_object_or_404(Room, id=selected_room_id, is_available=True)
-        if Booking.objects.filter(
-            booking_date=booking.booking_date,
-            booking_time__hour=booking.booking_time.hour,
-            booking_time__minute=booking.booking_time.minute,
-            room=room,
-            status__in=['pending', 'verify', 'complete']
-        ).exclude(id=booking.id).exists():
-            messages.error(request, f'Room {room.room_number} is already booked at that time. Please choose another room.')
+        room_conflict = False
+        for existing_booking in room_conflict_qs.filter(room=room):
+            if booking_overlaps(existing_booking, booking_start, booking_duration):
+                room_conflict = True
+                break
+        if room_conflict:
+            messages.error(request, f'Room {room.room_number} is unavailable at that time. Please choose another room.')
             return redirect('select_room', booking_id=booking.id)
 
         booking.room = room
