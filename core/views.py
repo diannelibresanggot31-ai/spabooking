@@ -52,7 +52,7 @@ def is_customer(user):
 
 
 def normalize_category(value):
-    return (value or '').strip().lower()
+    return (value or '').replace('_', ' ').replace('-', ' ').strip().lower()
 
 
 def service_category_name(service):
@@ -69,6 +69,7 @@ def service_category_keys(service):
     if not service:
         return set()
     keys = {
+        normalize_category(service.name),
         normalize_category(service.category),
         normalize_category(service_category_name(service)),
     }
@@ -77,7 +78,8 @@ def service_category_keys(service):
 
 def category_capacity_for_keys(category_keys):
     for category_name, capacity in CATEGORY_CAPACITY.items():
-        if normalize_category(category_name) in category_keys:
+        capacity_key = normalize_category(category_name)
+        if any(key == capacity_key or capacity_key in key for key in category_keys):
             return category_name, capacity
     return None, None
 
