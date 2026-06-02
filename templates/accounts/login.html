@@ -58,7 +58,7 @@
         .form-heading p { font-size: 0.88rem; color: rgba(44,32,21,0.55); line-height: 1.6; }
  
         /* error */
-        .error-message { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; font-size: 0.83rem; }
+        .error-message { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #dc2626; padding: 12px 16px; border-radius: 10px; margin-bottom: 24px; font-size: 0.83rem; }
  
         /* fields */
         .field-group { margin-bottom: 20px; }
@@ -144,14 +144,14 @@
                     <div class="field-label">Username or Email</div>
                     <div class="field-row">
                         <span class="field-icon">👤</span>
-                        <input class="field-input" type="text" name="username" placeholder="Enter your credentials" required>
+                        <input class="field-input" type="text" name="username" placeholder="Enter your credentials" value="{{ username_or_email|default:'' }}" required>
                     </div>
                 </div>
  
                 <div class="field-group">
                     <div class="field-label">
                         Password
-                        <a href="#">Forgot Password?</a>
+                        <span style="font-size:0.75rem; letter-spacing:0; text-transform:none; color:rgba(44,32,21,0.45);">Contact admin if forgotten</span>
                     </div>
                     <div class="field-row">
                         <span class="field-icon">🔒</span>

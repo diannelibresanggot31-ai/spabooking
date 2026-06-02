@@ -176,18 +176,45 @@ def count_overlapping_room_bookings(date_obj, start_minutes, duration_minutes, r
 
 
 def custom_login(request):
+    context = {}
     if request.method == 'POST':
-        username_or_email = request.POST.get('username')
-        password = request.POST.get('password')
+        username_or_email = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
+        context['username_or_email'] = username_or_email
 
-        user = authenticate(request, username=username_or_email, password=password)
+        if not username_or_email:
+            messages.error(request, 'Please enter your username or email.')
+            return render(request, 'accounts/login.html', context)
+        if not password:
+            messages.error(request, 'Please enter your password.')
+            return render(request, 'accounts/login.html', context)
 
-        if user is None:
+        login_username = username_or_email
+        matched_user = None
+
+        if '@' in username_or_email:
+            users = User.objects.filter(email__iexact=username_or_email)
+            if users.count() > 1:
+                messages.error(request, 'More than one account uses this email. Please log in with your username or contact admin.')
+                return render(request, 'accounts/login.html', context)
+            matched_user = users.first()
+            if not matched_user:
+                messages.error(request, 'No account found with that email address.')
+                return render(request, 'accounts/login.html', context)
+            login_username = matched_user.username
+        else:
             try:
-                user_obj = User.objects.get(email=username_or_email)
-                user = authenticate(request, username=user_obj.username, password=password)
+                matched_user = User.objects.get(username__iexact=username_or_email)
+                login_username = matched_user.username
             except User.DoesNotExist:
-                pass
+                messages.error(request, 'No account found with that username.')
+                return render(request, 'accounts/login.html', context)
+
+        if matched_user and not matched_user.is_active:
+            messages.error(request, 'Your account is inactive. Please contact admin.')
+            return render(request, 'accounts/login.html', context)
+
+        user = authenticate(request, username=login_username, password=password)
 
         if user is not None:
             login(request, user)
@@ -198,10 +225,10 @@ def custom_login(request):
             else:
                 return redirect('/')
         else:
-            messages.error(request, 'Invalid username/email or password.')
-            return redirect('login')
+            messages.error(request, 'The password you entered is incorrect.')
+            return render(request, 'accounts/login.html', context)
 
-    return render(request, 'accounts/login.html')
+    return render(request, 'accounts/login.html', context)
 
 
 # ── HOME ──────────────────────────────────────────────────────────────────────
@@ -224,8 +251,7 @@ def register_view(request):
             messages.success(request, f'Welcome {user.username}!')
             return redirect('customer_dashboard')
         else:
-            for error in form.errors.values():
-                messages.error(request, error)
+            messages.error(request, 'Please fix the highlighted fields below.')
     else:
         form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
